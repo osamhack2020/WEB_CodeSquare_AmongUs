@@ -8,6 +8,7 @@ import { Global } from "@emotion/core";
 import { createStore } from "@reduxjs/toolkit";
 import { Provider } from "react-redux";
 import { composeWithDevTools } from "redux-devtools-extension/developmentOnly";
+import { BrowserRouter } from "react-router-dom";
 
 const store = createStore(
   rootReducer,
@@ -18,8 +19,10 @@ const store = createStore(
 ReactDOM.render(
   <React.StrictMode>
     <Provider store={store}>
-      <Global styles={GlobalStyles} />
-      <App />
+      <BrowserRouter>
+        <Global styles={GlobalStyles} />
+        <App />
+      </BrowserRouter>
     </Provider>
   </React.StrictMode>,
   document.getElementById("root"),

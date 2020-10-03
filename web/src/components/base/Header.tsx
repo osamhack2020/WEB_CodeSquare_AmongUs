@@ -4,6 +4,13 @@ import styled from "@emotion/styled";
 import { Button } from "../common/Button";
 import { TextButton } from "../common/TextButton";
 import useHeader from "./hooks/useHeader";
+import { Link } from "react-router-dom";
+
+const WrapperLink = styled(Link)`
+  display: block;
+  color: inherit;
+  text-decoration: none;
+`;
 
 const HeaderBlock = styled.div`
   display: flex;
@@ -21,17 +28,19 @@ const ButtonBlock = styled.div`
 `;
 
 export const Header: React.FC = ({ ...props }) => {
-  const { user, onLoginClick, onLogout } = useHeader();
+  const { user, onLogout } = useHeader();
   return (
     <HeaderBlock {...props}>
-      <div
-        css={css`
-          font-size: 1.125rem;
-          font-weight: 800;
-        `}
-      >
-        CodeSquare
-      </div>
+      <WrapperLink to="/">
+        <div
+          css={css`
+            font-size: 1.125rem;
+            font-weight: 800;
+          `}
+        >
+          CodeSquare
+        </div>
+      </WrapperLink>
       <div
         css={css`
           display: flex;
@@ -48,17 +57,19 @@ export const Header: React.FC = ({ ...props }) => {
       </div>
       {user ? (
         <ButtonBlock>
-          <TextButton label="로그인" onClick={onLoginClick} />
+          <TextButton label="로그아웃" onClick={onLogout} />
+        </ButtonBlock>
+      ) : (
+        <ButtonBlock>
+          <WrapperLink to="/login">
+            <TextButton label="로그인" />
+          </WrapperLink>
           <Button
             css={css`
               background: #c4c4c4;
             `}
             label="시작하기"
           />
-        </ButtonBlock>
-      ) : (
-        <ButtonBlock>
-          <TextButton label="로그아웃" onClick={onLogout} />
         </ButtonBlock>
       )}
     </HeaderBlock>
