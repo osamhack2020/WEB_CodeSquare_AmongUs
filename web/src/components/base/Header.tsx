@@ -3,6 +3,7 @@ import { css, jsx } from "@emotion/core";
 import styled from "@emotion/styled";
 import { Button } from "../common/Button";
 import { TextButton } from "../common/TextButton";
+import useHeader from "./hooks/useHeader";
 
 const HeaderBlock = styled.div`
   display: flex;
@@ -10,11 +11,17 @@ const HeaderBlock = styled.div`
   justify-content: space-between;
   background-color: #2c2b2b;
   color: white;
-  padding: 16px 40px;
+  padding: 14px 40px;
   align-items: center;
 `;
 
+const ButtonBlock = styled.div`
+  display: flex;
+  font-size: 1rem;
+`;
+
 export const Header: React.FC = ({ ...props }) => {
+  const { user, onLoginClick, onLogout } = useHeader();
   return (
     <HeaderBlock {...props}>
       <div
@@ -39,20 +46,21 @@ export const Header: React.FC = ({ ...props }) => {
         <div>매거진</div>
         <div>GitLab</div>
       </div>
-      <div
-        css={css`
-          display: flex;
-          font-size: 1rem;
-        `}
-      >
-        <TextButton label="로그인" />
-        <Button
-          css={css`
-            background: #c4c4c4;
-          `}
-          label="시작하기"
-        />
-      </div>
+      {user ? (
+        <ButtonBlock>
+          <TextButton label="로그인" onClick={onLoginClick} />
+          <Button
+            css={css`
+              background: #c4c4c4;
+            `}
+            label="시작하기"
+          />
+        </ButtonBlock>
+      ) : (
+        <ButtonBlock>
+          <TextButton label="로그아웃" onClick={onLogout} />
+        </ButtonBlock>
+      )}
     </HeaderBlock>
   );
 };

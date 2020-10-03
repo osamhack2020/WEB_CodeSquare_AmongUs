@@ -1,16 +1,13 @@
 /** @jsx jsx */
 import { css, jsx } from "@emotion/core";
+import { Header } from "./components/base/Header";
 
-function App() {
+const App: React.FC = () => {
   return (
-    <div
-      css={css`
-        font-size: 20px;
-      `}
-    >
-      Hello
+    <div>
+      <Header />
     </div>
   );
-}
+};
 
 export default App;
