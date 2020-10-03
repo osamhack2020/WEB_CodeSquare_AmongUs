@@ -7,9 +7,6 @@ import { TextButton, TextButtonProps } from "../components/common/TextButton";
 export default {
   title: "Common/TextButton",
   component: TextButton,
-  argTypes: {
-    backgroundColor: { control: "color" },
-  },
 } as Meta;
 
 const Template: Story<TextButtonProps & React.HTMLProps<HTMLButtonElement>> = (

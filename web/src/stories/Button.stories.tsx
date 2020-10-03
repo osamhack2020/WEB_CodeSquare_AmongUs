@@ -7,9 +7,6 @@ import { Button, ButtonProps } from "../components/common/Button";
 export default {
   title: "Common/Button",
   component: Button,
-  argTypes: {
-    backgroundColor: { control: "color" },
-  },
 } as Meta;
 
 const Template: Story<ButtonProps & React.HTMLProps<HTMLButtonElement>> = (
