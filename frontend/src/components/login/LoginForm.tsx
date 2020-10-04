@@ -2,9 +2,16 @@
 import { css, jsx } from "@emotion/core";
 import styled from "@emotion/styled";
 import { useCallback, useState } from "react";
+import { Link } from "react-router-dom";
 import useInput from "../../lib/hooks/useInput";
 import { Button } from "../common/Button";
 import { LoginInput } from "./LoginInputForm";
+
+const WrapperLink = styled(Link)`
+  display: block;
+  color: inherit;
+  text-decoration: none;
+`;
 
 const LoginFormBlock = styled.div`
   display: flex;
@@ -18,7 +25,7 @@ export interface LoginForm {
 }
 
 export const LoginForm: React.FC<LoginForm> = ({
-  onSubmit: submit,
+  onSubmit: login,
   onCancel,
   ...props
 }) => {
@@ -28,10 +35,10 @@ export const LoginForm: React.FC<LoginForm> = ({
   const [password, onChangePassword] = useInput("");
   const onSubmit = useCallback(async () => {
     setLoading(true);
-    const loggedIn = await submit(username, password);
+    const loggedIn = await login(username, password);
     setLoading(false);
     setLoginFailed(!loggedIn);
-  }, [submit, username, password, setLoading]);
+  }, [login, username, password, setLoading]);
 
   return (
     <LoginFormBlock {...props}>
@@ -135,6 +142,45 @@ export const LoginForm: React.FC<LoginForm> = ({
             로그인
           </div>
         </Button>
+      </div>
+      <div
+        css={css`
+          display: flex;
+          flex-direction: column;
+          margin-top: 27px;
+        `}
+      >
+        <div
+          css={css`
+            font-style: normal;
+            font-weight: 500;
+            font-size: 12px;
+            line-height: 17px;
+            text-align: center;
+            letter-spacing: -0.02em;
+
+            color: #676767;
+          `}
+        >
+          코드스퀘어가 처음이신가요?
+        </div>
+        <WrapperLink to="/register">
+          <div
+            css={css`
+              font-style: normal;
+              font-weight: 500;
+              font-size: 12px;
+              line-height: 17px;
+              text-align: center;
+              letter-spacing: -0.02em;
+              text-decoration-line: underline;
+
+              color: #676767;
+            `}
+          >
+            회원가입
+          </div>
+        </WrapperLink>
       </div>
     </LoginFormBlock>
   );
