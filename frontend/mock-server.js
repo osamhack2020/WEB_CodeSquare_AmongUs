@@ -21,7 +21,6 @@ router
     ctx.body = "";
   })
   .get("/authorized", (ctx) => {
-    console.log(ctx.loggedIn);
     if (ctx.loggedIn) {
       ctx.body = {
         response: "success",
@@ -40,7 +39,6 @@ router
 app
   .use(logger())
   .use(async (ctx, next) => {
-    console.log(ctx.request.header);
     if (ctx.request.header["authorization"]) {
       ctx.loggedIn = true;
     } else {
