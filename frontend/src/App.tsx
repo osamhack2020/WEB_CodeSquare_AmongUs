@@ -4,7 +4,7 @@ import { useCallback } from "react";
 import { Route } from "react-router-dom";
 import { Header } from "./components/base/Header";
 import { Button } from "./components/common/Button";
-import { LoginContainer } from "./containers/login/LoginContainer";
+import { LoginContainer } from "./containers/auth/LoginContainer";
 import apiClient from "./lib/api/apiClient";
 
 const test = () => apiClient.get("/authorized");
