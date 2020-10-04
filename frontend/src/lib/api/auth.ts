@@ -28,7 +28,7 @@ export const login = async (
 };
 
 export const logout = async () => {
-  await apiClient.post("/user/logout");
+  await apiClient.post("/user/signout");
   // Authorization 헤더 제거
   delete apiClient.defaults.headers.common["Authorization"];
 };
