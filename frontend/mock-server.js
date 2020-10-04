@@ -20,15 +20,36 @@ router
   .post("/user/signout", (ctx) => {
     ctx.body = "";
   })
-  .get("/autorized", (ctx) => {
-    ctx.body = {
-      response: "success",
-      message: "성공.",
-      data: null,
-    };
+  .get("/authorized", (ctx) => {
+    console.log(ctx.loggedIn);
+    if (ctx.loggedIn) {
+      ctx.body = {
+        response: "success",
+        message: "성공.",
+        data: null,
+      };
+    } else {
+      ctx.body = {
+        response: "error",
+        message: "실패.",
+        data: null,
+      };
+    }
   });
 
-app.use(logger()).use(router.routes()).use(router.allowedMethods());
+app
+  .use(logger())
+  .use(async (ctx, next) => {
+    console.log(ctx.request.header);
+    if (ctx.request.header["authorization"]) {
+      ctx.loggedIn = true;
+    } else {
+      ctx.loggedIn = false;
+    }
+    await next();
+  })
+  .use(router.routes())
+  .use(router.allowedMethods());
 
 const PORT = 8520;
 app.listen(PORT, () => {
