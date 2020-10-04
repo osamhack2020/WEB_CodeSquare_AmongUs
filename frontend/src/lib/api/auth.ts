@@ -13,18 +13,23 @@ export const login = async (
   username: string,
   password: string,
 ): Promise<boolean> => {
-  const response = await apiClient.post<LoginResponse>("/user/signin", {
-    username,
-    password,
-  });
-  const { data } = response;
-  if (data.response !== "success") {
+  try {
+    const response = await apiClient.post<LoginResponse>("/user/signin", {
+      username,
+      password,
+    });
+    const { data } = response;
+    if (!data || data.response !== "success") {
+      return false;
+    }
+    // accessToken을 Authorization 헤더 기본값으로 설정
+    apiClient.defaults.headers.common["Authorization"] = response.data.data;
+
+    return true;
+  } catch (e) {
+    console.error(e);
     return false;
   }
-  // accessToken을 Authorization 헤더 기본값으로 설정
-  apiClient.defaults.headers.common["Authorization"] = response.data.data;
-
-  return true;
 };
 
 export const logout = async () => {
