@@ -15,6 +15,7 @@ const WrapperLink = styled(Link)`
 const HeaderBlock = styled.div`
   display: flex;
   width: 100%;
+  height: 60px;
   justify-content: space-between;
   background-color: #2c2b2b;
   color: white;
@@ -43,33 +44,59 @@ export const Header: React.FC = ({ ...props }) => {
       </WrapperLink>
       <div
         css={css`
-          display: flex;
-          font-size: 1rem;
-          div:not(:last-child) {
-            margin-right: 36px;
-          }
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 60px;
+          pointer-events: none;
         `}
       >
-        <div>개발하기</div>
-        <div>Q&A</div>
-        <div>매거진</div>
-        <div>GitLab</div>
+        <div
+          css={css`
+            height: 60px;
+            box-sizing: border-box;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: default;
+            position: relative;
+            pointer-events: none;
+          `}
+        >
+          <div
+            css={css`
+              display: flex;
+              font-size: 1rem;
+              pointer-events: all;
+              div:not(:last-child) {
+                margin-right: 36px;
+              }
+            `}
+          >
+            <div>개발하기</div>
+            <div>Q&A</div>
+            <div>매거진</div>
+            <div>GitLab</div>
+          </div>
+        </div>
       </div>
       {user ? (
         <ButtonBlock>
-          <TextButton label="로그아웃" onClick={onLogout} />
+          <TextButton onClick={onLogout}>로그아웃</TextButton>
         </ButtonBlock>
       ) : (
         <ButtonBlock>
           <WrapperLink to="/login">
-            <TextButton label="로그인" />
+            <TextButton>로그인</TextButton>
           </WrapperLink>
           <Button
             css={css`
               background: #c4c4c4;
             `}
-            label="시작하기"
-          />
+          >
+            시작하기
+          </Button>
         </ButtonBlock>
       )}
     </HeaderBlock>
