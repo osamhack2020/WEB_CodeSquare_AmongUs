@@ -7,7 +7,7 @@ import { LoginForm } from "../../components/login/LoginForm";
 import { login } from "../../lib/api/auth";
 import core from "../../modules/core";
 
-export const LoginContainer: React.FC = () => {
+export const LoginContainer: React.FC = (props) => {
   const dispatch = useDispatch();
   const history = useHistory();
   const onSubmit = useCallback(async (id, password) => {
@@ -16,6 +16,12 @@ export const LoginContainer: React.FC = () => {
       dispatch(core.actions.setUser({ name: "CodeSquare" }));
       history.push("/");
     }
+    return loggedIn;
   }, []);
-  return <LoginForm onSubmit={onSubmit}></LoginForm>;
+  const onCancel = useCallback(() => {
+    history.push("/");
+  }, []);
+  return (
+    <LoginForm onSubmit={onSubmit} onCancel={onCancel} {...props}></LoginForm>
+  );
 };

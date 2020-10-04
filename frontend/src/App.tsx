@@ -18,12 +18,23 @@ const App: React.FC = () => {
   return (
     <div>
       <Header />
-      <Route exact path="/">
-        <Button label="연결 테스트!" onClick={onTestClick} />
-      </Route>
-      <Route path="/login">
-        <LoginContainer />
-      </Route>
+      <div
+        css={css`
+          width: 100%;
+          height: 100%;
+        `}
+      >
+        <Route exact path="/">
+          <Button onClick={onTestClick}>연결 테스트!</Button>
+        </Route>
+        <Route path="/login">
+          <LoginContainer
+            css={css`
+              margin: 0 auto;
+            `}
+          />
+        </Route>
+      </div>
     </div>
   );
 };

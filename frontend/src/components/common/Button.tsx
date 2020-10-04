@@ -3,7 +3,6 @@ import { css, jsx } from "@emotion/core";
 import styled from "@emotion/styled";
 
 export interface ButtonProps {
-  label?: string;
   onClick?: () => void;
 }
 
@@ -29,6 +28,6 @@ const ButtonBlock = styled.button`
   }
 `;
 
-export const Button: React.FC<ButtonProps> = ({ label = "", ...props }) => {
-  return <ButtonBlock {...props}>{label}</ButtonBlock>;
+export const Button: React.FC<ButtonProps> = ({ ...props }) => {
+  return <ButtonBlock {...props} />;
 };
