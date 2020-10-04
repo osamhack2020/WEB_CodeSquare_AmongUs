@@ -10,17 +10,20 @@ import core from "../../modules/core";
 export const LoginContainer: React.FC = (props) => {
   const dispatch = useDispatch();
   const history = useHistory();
-  const onSubmit = useCallback(async (id, password) => {
-    const loggedIn = await login(id, password);
-    if (loggedIn) {
-      dispatch(core.actions.setUser({ name: "CodeSquare" }));
-      history.push("/");
-    }
-    return loggedIn;
-  }, []);
+  const onSubmit = useCallback(
+    async (id, password) => {
+      const loggedIn = await login(id, password);
+      if (loggedIn) {
+        dispatch(core.actions.setUser({ name: "CodeSquare" }));
+        history.push("/");
+      }
+      return loggedIn;
+    },
+    [dispatch, history],
+  );
   const onCancel = useCallback(() => {
     history.push("/");
-  }, []);
+  }, [history]);
   return (
     <LoginForm onSubmit={onSubmit} onCancel={onCancel} {...props}></LoginForm>
   );

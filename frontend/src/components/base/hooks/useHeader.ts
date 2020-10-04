@@ -12,7 +12,7 @@ export default function useHeader() {
     await logout();
     dispatch(core.actions.setUser(null));
     window.location.href = "/";
-  }, []);
+  }, [dispatch]);
 
   return { user, onLogout };
 }
