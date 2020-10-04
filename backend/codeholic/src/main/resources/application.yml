@@ -1,0 +1,21 @@
+server:
+    port : 9191
+spring:
+  datasource:
+    url: jdbc:mariadb://blog.namkyupark.com:3306/test1?serverTimezone=Asia/Seoul
+    driver-class-name: org.mariadb.jdbc.Driver
+    username: test1
+    password: test1
+  jpa:
+    open-in-view: false
+    generate-ddl: true
+    show-sql: true
+    hibernate:
+      ddl-auto: update
+  jwt:
+    secret: codeholiccodeholiccodeholiccodeholiccodeholiccodeholiccodeholic
+  cache:
+    type: redis
+  redis:
+    host: 54.211.158.203
+    port: 6379
