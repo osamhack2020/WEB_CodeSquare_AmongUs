@@ -1,7 +1,7 @@
 /** @jsx jsx */
 import { css, jsx } from "@emotion/core";
 import { useCallback } from "react";
-import { Route, Router } from "react-router-dom";
+import { Route } from "react-router-dom";
 import { Header } from "./components/base/Header";
 import { Button } from "./components/common/Button";
 import { LoginContainer } from "./containers/login/LoginContainer";
