@@ -19,6 +19,7 @@ const ButtonBlock = styled.button`
   border-radius: 6px;
   padding: 6px 16px;
   font-size: 14px;
+  user-select: none;
   &:disabled {
     cursor: not-allowed;
     background: #c4c4c4;

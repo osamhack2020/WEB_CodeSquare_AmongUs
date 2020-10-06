@@ -3,7 +3,7 @@ import { jsx } from "@emotion/core";
 import { useCallback } from "react";
 import { useDispatch } from "react-redux";
 import { useHistory } from "react-router-dom";
-import { LoginForm } from "../../components/login/LoginForm";
+import { LoginForm } from "../../components/auth/LoginForm";
 import { login } from "../../lib/api/auth";
 import core from "../../modules/core";
 
