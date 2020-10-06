@@ -29,6 +29,16 @@ const GlobalStyles = css`
   #root {
     height: 100%;
   }
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6,
+  p {
+    margin-top: 0;
+    margin-bottom: 0.5rem;
+  }
 `;
 
 export default GlobalStyles;
