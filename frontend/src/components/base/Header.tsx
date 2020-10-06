@@ -90,13 +90,21 @@ export const Header: React.FC = ({ ...props }) => {
           <WrapperLink to="/login">
             <TextButton>로그인</TextButton>
           </WrapperLink>
-          <Button
-            css={css`
-              background: #c4c4c4;
-            `}
-          >
-            시작하기
-          </Button>
+          <WrapperLink to="/register">
+            <Button
+              css={css`
+                background: #c4c4c4;
+              `}
+            >
+              <div
+                css={css`
+                  color: black;
+                `}
+              >
+                시작하기
+              </div>
+            </Button>
+          </WrapperLink>
         </ButtonBlock>
       )}
     </HeaderBlock>
