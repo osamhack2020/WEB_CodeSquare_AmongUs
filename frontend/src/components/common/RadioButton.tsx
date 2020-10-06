@@ -32,6 +32,7 @@ export const RadioButton: React.FC<
             border: 1px solid #c4c4c4;
             border-radius: 100%;
             content: "";
+            background: #c4c4c4;
             box-sizing: border-box;
             display: block;
             position: absolute;
@@ -59,6 +60,7 @@ export const RadioButton: React.FC<
           css`
             &::before {
               border-color: #627bff;
+              background: white;
             }
             &::after {
               opacity: 1;
