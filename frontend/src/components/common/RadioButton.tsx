@@ -16,6 +16,7 @@ export const RadioButton: React.FC<
         text-align: left;
         display: flex;
         cursor: pointer;
+        user-select: none;
       `}
       onClick={onClick}
       {...props}

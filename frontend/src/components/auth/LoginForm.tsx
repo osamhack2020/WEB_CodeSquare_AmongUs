@@ -53,6 +53,8 @@ export const LoginForm: React.FC<LoginForm> = ({
 
           padding-top: 74px;
           padding-bottom: 53px;
+
+          user-select: none;
         `}
       >
         다시 만나서 반가워요!
@@ -112,7 +114,7 @@ export const LoginForm: React.FC<LoginForm> = ({
             css={css`
               font-size: 18px;
               font-style: normal;
-              font-weight: 500;
+              font-weight: 600;
               line-height: 26px;
               letter-spacing: -0.02em;
               text-align: center;
@@ -133,7 +135,7 @@ export const LoginForm: React.FC<LoginForm> = ({
             css={css`
               font-size: 18px;
               font-style: normal;
-              font-weight: 500;
+              font-weight: 600;
               line-height: 26px;
               letter-spacing: -0.02em;
               text-align: center;
