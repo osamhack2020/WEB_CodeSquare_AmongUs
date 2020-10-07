@@ -22,5 +22,5 @@
 - [CirnoV](https://github.com/CirnoV)
 - [namkyu1999](https://github.com/namkyu1999)
 
-## 저작권 및 사용 정보 (Copyright / End User License)
-- [MIT](https://github.com/Snowapril/WEB_CodeSquare_AmongUs/blob/master/README.md)
+## 저작권 및 사용 정보 (Copyleft / End User License)
+- [MIT](https://github.com/osamhack2020/WEB_CodeSquare_AmongUs/blob/master/README.md)
