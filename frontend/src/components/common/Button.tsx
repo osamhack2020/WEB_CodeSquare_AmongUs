@@ -4,6 +4,7 @@ import styled from "@emotion/styled";
 
 export interface ButtonProps {
   onClick?: () => void;
+  disabled?: boolean;
 }
 
 const ButtonBlock = styled.button`
@@ -22,6 +23,7 @@ const ButtonBlock = styled.button`
   user-select: none;
   &:disabled {
     cursor: not-allowed;
+    color: #ffffff;
     background: #c4c4c4;
     &:hover {
       background: #c4c4c4;
@@ -29,6 +31,6 @@ const ButtonBlock = styled.button`
   }
 `;
 
-export const Button: React.FC<ButtonProps> = ({ ...props }) => {
-  return <ButtonBlock {...props} />;
+export const Button: React.FC<ButtonProps> = ({ onClick, ...props }) => {
+  return <ButtonBlock onClick={onClick} {...props} />;
 };
