@@ -39,6 +39,7 @@ export const Progress: React.FC<ProgressProps> = ({ percent, ...props }) => {
 
               width: ${percent}%;
               height: 6px;
+              transition: width 0.4s 0s ease;
             `}
           ></div>
         </div>
