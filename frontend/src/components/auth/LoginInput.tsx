@@ -14,6 +14,9 @@ export interface LoginInputProps {
   password?: boolean;
   disabled?: boolean;
   label: string;
+  hint?: string | boolean;
+  valid?: boolean;
+  invalid?: boolean;
 }
 
 export const LoginInput: React.FC<LoginInputProps> = ({
@@ -23,8 +26,18 @@ export const LoginInput: React.FC<LoginInputProps> = ({
   label,
   password = false,
   disabled = false,
+  hint,
+  valid,
+  invalid,
   ...props
 }) => {
+  let hintColor = "inherit";
+  if (valid) {
+    hintColor = "#627bff";
+  }
+  if (invalid) {
+    hintColor = "#fa2d2d";
+  }
   return (
     <LoginInputBlock
       onSubmit={(e) => {
@@ -60,7 +73,22 @@ export const LoginInput: React.FC<LoginInputProps> = ({
         value={value}
         onChange={onChange}
         disabled={disabled}
-      ></input>
+      />
+      <div
+        css={css`
+          padding-top: 12px;
+          font-style: normal;
+          font-weight: normal;
+          font-size: 12px;
+          line-height: 17px;
+          letter-spacing: -0.02em;
+
+          height: 29px;
+          color: ${hintColor};
+        `}
+      >
+        {hint}
+      </div>
     </LoginInputBlock>
   );
 };

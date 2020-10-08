@@ -1,6 +1,5 @@
 /** @jsx jsx */
 import { css, jsx } from "@emotion/core";
-import { useCallback, useState } from "react";
 
 export interface RadioButtonProps {
   checked: boolean;

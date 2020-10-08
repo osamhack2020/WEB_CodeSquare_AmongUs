@@ -5,7 +5,7 @@ import { useCallback, useState } from "react";
 import { Link } from "react-router-dom";
 import useInput from "../../lib/hooks/useInput";
 import { Button } from "../common/Button";
-import { LoginInput } from "./LoginInputForm";
+import { LoginInput } from "./LoginInput";
 
 const WrapperLink = styled(Link)`
   display: block;
@@ -64,7 +64,7 @@ export const LoginForm: React.FC<LoginForm> = ({
         value={username}
         onChange={onChangeUsername}
         css={css`
-          margin-bottom: 16px;
+          margin-bottom: 4px;
         `}
         disabled={loading}
       />
@@ -75,24 +75,12 @@ export const LoginForm: React.FC<LoginForm> = ({
         onSubmit={onSubmit}
         password
         disabled={loading}
+        hint={
+          loginFailed &&
+          "존재하지 않는 아이디거나, 비밀번호가 일치하지 않습니다."
+        }
+        invalid={loginFailed}
       />
-      <div
-        css={css`
-          padding-top: 12px;
-          font-family: Noto Sans KR;
-          font-style: normal;
-          font-weight: normal;
-          font-size: 12px;
-          line-height: 17px;
-          letter-spacing: -0.02em;
-
-          height: 17px;
-          color: #fa2d2d;
-        `}
-      >
-        {loginFailed &&
-          "존재하지 않는 아이디거나, 비밀번호가 일치하지 않습니다."}
-      </div>
       <div
         css={css`
           display: flex;
@@ -109,6 +97,7 @@ export const LoginForm: React.FC<LoginForm> = ({
             height: 45px;
             margin-right: 16px;
           `}
+          disabled={loading}
         >
           <div
             css={css`
@@ -130,6 +119,7 @@ export const LoginForm: React.FC<LoginForm> = ({
             height: 45px;
             width: 100%;
           `}
+          disabled={loading}
         >
           <div
             css={css`
