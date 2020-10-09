@@ -21,15 +21,12 @@ export const RegisterForm: React.FC<RegisterFormProps> = ({
   onSubmit,
   ...props
 }) => {
-  const [username, onChangeUsername, , validUsername] = useInput(
-    "",
-    (_, next) => {
-      if (next.length < 5 || next.length > 20) {
-        return false;
-      }
-      return true;
-    },
-  );
+  const [username, onChangeUsername, , validUsername] = useInput("", (next) => {
+    if (next.length < 5 || next.length > 20) {
+      return false;
+    }
+    return true;
+  });
   const [password, onChangePassword, , validPassword] = useInput("");
   const [password2, onChangePassword2] = useInput("");
   const validPassword2 = password === password2;
@@ -137,7 +134,9 @@ export const RegisterForm: React.FC<RegisterFormProps> = ({
             height: 45px;
             width: 100%;
           `}
-          disabled={loading}
+          disabled={
+            loading || !validUsername || !validPassword || !validPassword2
+          }
         >
           <div
             css={css`
