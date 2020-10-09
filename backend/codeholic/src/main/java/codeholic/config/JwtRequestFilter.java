@@ -23,9 +23,8 @@ import codeholic.service.JwtUtil;
 import codeholic.service.RedisUtil;
 import codeholic.service.impl.MyUserDetailsService;
 import io.jsonwebtoken.ExpiredJwtException;
-import lombok.extern.java.Log;
 
-@Log
+
 @Component
 public class JwtRequestFilter extends OncePerRequestFilter {
 

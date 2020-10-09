@@ -29,7 +29,7 @@ import lombok.Data;
 public class Member {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy=GenerationType.IDENTITY)
     private int seq;
 
     @NotBlank(message = "아이디는 필수 입력 값입니다.")

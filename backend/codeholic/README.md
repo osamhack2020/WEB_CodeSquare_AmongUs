@@ -7,3 +7,22 @@
 4. signout 시 authorization에 토큰이 없을 경우 에러.... 0
 5. singout 시 이미 로그아웃된 토큰을 사용하는 경우... 프론트에서 헤더 제거
 6. signout 후에도 토큰이 유효함 ... 0
+7. 인증서버연동시, 프로젝트아이디와 역할id는 redis같은데에 저장..안바뀜
+8. 클라이언트에서 signin 할때 X-Subject-Token도 같이 헤더에 넣도록 하게 할것
+9. 자바 내에서, utc시간을 한국시간으로 바꾸어주기
+10. 댓글 및 게시글에 update_date 추가하기(자바에서 설정해주나 아니면 db로 바꿔주라나...)
+11. 테스트 완료하기
+12. qna기능 완성시키기
+
+13. 댓글이든 게시물이든 5개씩 끊어서 주는데 총 페이지수 어떻게 주는지 보기
+https://gunju-ko.github.io/spring/2018/05/01/Spring-Data-JPA-Paging.html
+내생각엔 기존의 List<object>가 아닌 Page<object> 로 해야 할거같음
+그리고 find메서드의 출력값을 객체로 해서 페이지수랑 리스트랑 둘다주는 걸로 하면 될듯...?
+
+
+
+
+테스트 없이 빌드 및 실행, 배포해야함
+
+gradle test 방법
+./gradlew test

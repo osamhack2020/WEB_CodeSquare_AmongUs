@@ -56,8 +56,6 @@ public class MemberController {
     public Response signUpUser(@Valid @RequestBody Member member){
         Response response = new Response();
 
-        //notblank 위반시 유효성 검사, 나중에 다른 코드로 빼기
-        
         //실행
         try{
             authService.signUpUser(member);

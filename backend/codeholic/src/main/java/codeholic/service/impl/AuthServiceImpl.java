@@ -1,10 +1,12 @@
 package codeholic.service.impl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 import codeholic.domain.Member;
 import codeholic.domain.Salt;
 import codeholic.repository.MemberRepository;
 import codeholic.service.AuthService;
+//import codeholic.service.OpenStackApiService;
 import codeholic.service.SaltUtil;
 import javassist.NotFoundException;
 
@@ -16,7 +18,10 @@ public class AuthServiceImpl implements AuthService {
 
     @Autowired
     private SaltUtil saltUtil;
-
+    /*
+    @Autowired
+    private OpenStackApiService openstackApiService;
+    */
     @Override
     public void signUpUser(Member member) {
         validateDuplicateMember(member);
@@ -24,6 +29,7 @@ public class AuthServiceImpl implements AuthService {
         String salt = saltUtil.genSalt();
         member.setSalt(new Salt(salt));
         member.setPassword(saltUtil.encodePassword(salt,password));
+        //openstackApiService.signinProcess(member.getUsername(), member.getPassword());
         memberRepository.save(member);
     }
     // 중복 회원 검증
@@ -36,6 +42,7 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public Member loginUser(String id, String password) throws Exception{
+        //String openstackToken = openstackApiService.signinProcess(id, password);
         Member member = memberRepository.findByUsername(id);
         if(member==null) throw new Exception ("멤버가 조회되지 않음");
         String salt = member.getSalt().getSalt();
