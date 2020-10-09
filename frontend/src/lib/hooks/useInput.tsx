@@ -1,19 +1,23 @@
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
 
 export default function useInput(
   defaultValue: string,
-  cb?: (prev: string, next: string) => boolean,
+  cb?: (next: string) => boolean,
 ) {
   const [input, setInput] = useState(defaultValue);
-  const [validate, setValidate] = useState(true);
+  const [validate, setValidate] = useState(false);
+  useEffect(() => {
+    if (cb) {
+      setValidate(cb(input));
+    } else {
+      setValidate(true);
+    }
+  }, [cb, input]);
   const onChange = useCallback(
     (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-      if (cb) {
-        setValidate(cb(input, e.target.value));
-      }
       setInput(e.target.value);
     },
-    [cb, input],
+    [],
   );
   const onReset = useCallback(() => setInput(""), []);
   return [input, onChange, onReset, validate] as [

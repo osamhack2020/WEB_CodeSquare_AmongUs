@@ -188,6 +188,7 @@ export const TermForm: React.FC<TermFormProps> = ({
           </div>
         </Button>
         <Button
+          disabled={!terms.privacy || !terms.service}
           onClick={onNext}
           css={css`
             border-radius: 4px;

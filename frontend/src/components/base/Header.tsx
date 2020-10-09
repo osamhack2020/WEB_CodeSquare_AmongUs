@@ -91,14 +91,10 @@ export const Header: React.FC = ({ ...props }) => {
             <TextButton>로그인</TextButton>
           </WrapperLink>
           <WrapperLink to="/register">
-            <Button
-              css={css`
-                background: #c4c4c4;
-              `}
-            >
+            <Button>
               <div
                 css={css`
-                  color: black;
+                  font-weight: 700;
                 `}
               >
                 시작하기

@@ -1,32 +1,28 @@
 /** @jsx jsx */
 import { css, jsx } from "@emotion/core";
-import { useCallback } from "react";
 import { Route } from "react-router-dom";
 import { Header } from "./components/base/Header";
-import { Button } from "./components/common/Button";
 import { LoginContainer } from "./containers/auth/LoginContainer";
 import { RegisterContainer } from "./containers/auth/RegisterContainer";
-import apiClient from "./lib/api/apiClient";
-
-const test = () => apiClient.get("/authorized");
+import { MainContainer } from "./containers/MainContainer";
 
 const App: React.FC = () => {
-  const onTestClick = useCallback(async () => {
-    const { data } = await test();
-    console.log(data);
-  }, []);
-
   return (
-    <div>
+    <div
+      css={css`
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+      `}
+    >
       <Header />
       <div
         css={css`
-          width: 100%;
-          height: 100%;
+          flex: 1 1 auto;
         `}
       >
         <Route exact path="/">
-          <Button onClick={onTestClick}>연결 테스트!</Button>
+          <MainContainer />
         </Route>
         <Route path="/login">
           <LoginContainer
