@@ -19,7 +19,7 @@ https://gunju-ko.github.io/spring/2018/05/01/Spring-Data-JPA-Paging.html
 내생각엔 기존의 List<object>가 아닌 Page<object> 로 해야 할거같음
 그리고 find메서드의 출력값을 객체로 해서 페이지수랑 리스트랑 둘다주는 걸로 하면 될듯...?
 
-
+14. 태그를 그냥 독립적으로 두었는데,,,, manytomany로 만들어야 할까...?
 
 
 테스트 없이 빌드 및 실행, 배포해야함

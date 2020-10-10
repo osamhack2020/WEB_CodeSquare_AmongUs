@@ -79,7 +79,7 @@ public class BoardController {
         Response response = new Response();
         Board board = new Board();
         board.setBody(requestNewBoard.getBody());
-        board.setTag(requestNewBoard.getTag());
+        //board.setTag(requestNewBoard.getTag());
         board.setTitle(requestNewBoard.getTitle());
         board.setUser_id(requestNewBoard.getUser_id());
         boardService.createBoard(board);
@@ -104,8 +104,8 @@ public class BoardController {
             Board board = boardService.findById(requestUpdateBoard.getBoard_id());
             if(requestUpdateBoard.getBody()!=null)
                 board.setBody(requestUpdateBoard.getBody());
-           if(requestUpdateBoard.getTag()!=null)
-                board.setTag(requestUpdateBoard.getTag());
+           //if(requestUpdateBoard.getTag()!=null)
+                //board.setTag(requestUpdateBoard.getTag());
             if(requestUpdateBoard.getTitle()!=null)
                 board.setTitle(requestUpdateBoard.getTitle());
             board.setUpdated_at(new Date());

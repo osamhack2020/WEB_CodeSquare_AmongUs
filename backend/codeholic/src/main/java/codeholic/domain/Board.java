@@ -31,8 +31,6 @@ public class Board {
 
     private String body;
 
-    private String tag;
-
     private int view = 0;
 
     private int recommend = 0;
