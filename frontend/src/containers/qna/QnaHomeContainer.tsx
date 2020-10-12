@@ -1,6 +1,7 @@
 /** @jsx jsx */
 import { css, jsx } from "@emotion/core";
 import { Button } from "../../components/common/Button";
+import { Sticky } from "../../components/common/Sticky";
 import { QnaSideBar } from "../../components/qna/QnaSideBar";
 import { RecentPosts } from "./RecentPosts";
 
@@ -63,11 +64,15 @@ export const QnaHomeContainer: React.FC = (props) => {
           padding-top: 120px;
         `}
       >
-        <QnaSideBar
+        <div
           css={css`
             width: 200px;
           `}
-        />
+        >
+          <Sticky top={120}>
+            <QnaSideBar />
+          </Sticky>
+        </div>
         <div
           css={css`
             padding-left: 16px;
