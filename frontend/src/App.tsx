@@ -5,9 +5,10 @@ import { Route } from "react-router-dom";
 import { Header } from "./components/base/Header";
 import { LoginContainer } from "./containers/auth/LoginContainer";
 import { RegisterContainer } from "./containers/auth/RegisterContainer";
-import { MainContainer } from "./containers/MainContainer";
+import { HomeContainer } from "./containers/HomeContainer";
 import { ProfileContainer } from "./containers/profile/ProfileContainer";
 import { QnaHomeContainer } from "./containers/qna/QnaHomeContainer";
+import { VmHomeContainer } from "./containers/vm/VmHomeContainer";
 import { RootState } from "./modules";
 
 const App: React.FC = () => {
@@ -27,7 +28,10 @@ const App: React.FC = () => {
         `}
       >
         <Route exact path="/">
-          {user ? <ProfileContainer /> : <MainContainer />}
+          {user ? <ProfileContainer /> : <HomeContainer />}
+        </Route>
+        <Route path="/vm">
+          <VmHomeContainer />
         </Route>
         <Route path="/qna">
           <QnaHomeContainer

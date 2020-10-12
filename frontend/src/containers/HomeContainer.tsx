@@ -4,7 +4,7 @@ import { useCallback } from "react";
 import { useHistory } from "react-router-dom";
 import { Button } from "../components/common/Button";
 
-export const MainContainer: React.FC = () => {
+export const HomeContainer: React.FC = () => {
   const history = useHistory();
   const onClick = useCallback(() => {
     history.push("/register");
@@ -25,7 +25,7 @@ export const MainContainer: React.FC = () => {
 
           background: url(clip-programming.png);
           background-repeat: no-repeat;
-          background-position: 441px 120px;
+          background-position: right bottom;
           background-size: 1041px 694px;
         `}
       >
