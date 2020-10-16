@@ -4,7 +4,7 @@ import { QnaPostItem } from "../../components/qna/QnaPostItem";
 import { QnaPostList } from "../../components/qna/QnaPostList";
 import useRecentPosts from "./hooks/useRecentPosts";
 
-export const RecentPosts: React.FC = (props) => {
+export const QnaRecentPosts: React.FC = (props) => {
   const { data, loading } = useRecentPosts();
 
   return (
