@@ -1,11 +1,5 @@
 /** @jsx jsx */
 import { css, jsx } from "@emotion/core";
-import styled from "@emotion/styled";
-
-const SvgBlock = styled.div`
-  width: 20px;
-  height: 20px;
-`;
 
 const UpVote = () => (
   <svg
