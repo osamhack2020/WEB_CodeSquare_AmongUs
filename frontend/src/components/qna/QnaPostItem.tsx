@@ -5,6 +5,7 @@ import { HTMLProps } from "react";
 import { QnaPost } from "../../modules/qna";
 import { AvatarIcon } from "../common/AvatarIcon";
 import { Divider } from "../common/Divider";
+import { QnaTagList } from "./QnaTagList";
 
 export interface QnaPostItemProps {
   post: QnaPost;
@@ -80,30 +81,15 @@ export const QnaPostItem: React.FC<
               height: 40px;
             `}
           >
-            {post.body}
+            {post.text}
           </div>
-          <div
+          <QnaTagList
             css={css`
-              display: flex;
               padding-top: 16px;
-
-              div {
-                background: #e6e6e6;
-                border-radius: 4px;
-                font-style: normal;
-                font-weight: normal;
-                font-size: 12px;
-                line-height: 17px;
-                letter-spacing: -0.02em;
-                padding: 2px 6px;
-              }
-              div:not(:last-child) {
-                margin-right: 6px;
-              }
             `}
           >
             <div>{post.tag}</div>
-          </div>
+          </QnaTagList>
         </QnaPostContent>
       </QnaPostWrapper>
       <Divider />
