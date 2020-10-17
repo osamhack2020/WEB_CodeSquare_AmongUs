@@ -75,9 +75,11 @@ export const Header: React.FC = ({ ...props }) => {
             `}
           >
             <div>
-              <WrapperLink to="vm">개발하기</WrapperLink>
+              <WrapperLink to="/vm">개발하기</WrapperLink>
             </div>
-            <div>Q&A</div>
+            <div>
+              <WrapperLink to="/qna">Q&A</WrapperLink>
+            </div>
             <div>매거진</div>
             <div>GitLab</div>
           </div>

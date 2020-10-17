@@ -43,7 +43,7 @@ export default function useRecentPosts() {
     });
     setPage((page) => page + 1);
     setLoading(false);
-  }, [loading, setLoading, page, setPage, setData]);
+  }, [loading, setLoading, page, setPage, setData, data]);
 
   /* eslint-disable react-hooks/exhaustive-deps */
   // 첫 페이지는 스크롤 이벤트 없이 onLoadMore 함수 호출

@@ -1,16 +1,19 @@
 /** @jsx jsx */
 import { css, jsx } from "@emotion/core";
 import { Button } from "../../components/common/Button";
+import { Sticky } from "../../components/common/Sticky";
 import { QnaSideBar } from "../../components/qna/QnaSideBar";
-import { RecentPosts } from "./RecentPosts";
+import { QnaRecentPosts } from "./QnaRecentPosts";
 
 export const QnaHomeContainer: React.FC = (props) => {
   return (
     <div
       css={css`
         max-width: 1100px;
+        margin: 0 auto;
         padding-left: 24px;
         padding-right: 24px;
+        padding-top: 83px;
       `}
       {...props}
     >
@@ -63,11 +66,15 @@ export const QnaHomeContainer: React.FC = (props) => {
           padding-top: 120px;
         `}
       >
-        <QnaSideBar
+        <div
           css={css`
             width: 200px;
           `}
-        />
+        >
+          <Sticky top={120}>
+            <QnaSideBar />
+          </Sticky>
+        </div>
         <div
           css={css`
             padding-left: 16px;
@@ -93,7 +100,7 @@ export const QnaHomeContainer: React.FC = (props) => {
             `}
             placeholder="질문 검색"
           />
-          <RecentPosts
+          <QnaRecentPosts
             css={css`
               padding-top: 38px;
             `}

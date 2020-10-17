@@ -8,6 +8,7 @@ import { RegisterContainer } from "./containers/auth/RegisterContainer";
 import { HomeContainer } from "./containers/HomeContainer";
 import { ProfileContainer } from "./containers/profile/ProfileContainer";
 import { QnaHomeContainer } from "./containers/qna/QnaHomeContainer";
+import { QnaPostContainer } from "./containers/qna/QnaPostContainer";
 import { VmHomeContainer } from "./containers/vm/VmHomeContainer";
 import { RootState } from "./modules";
 
@@ -33,13 +34,11 @@ const App: React.FC = () => {
         <Route path="/vm">
           <VmHomeContainer />
         </Route>
-        <Route path="/qna">
-          <QnaHomeContainer
-            css={css`
-              margin: 0 auto;
-              padding-top: 83px;
-            `}
-          />
+        <Route path="/qna" exact>
+          <QnaHomeContainer />
+        </Route>
+        <Route path="/qna/:id">
+          <QnaPostContainer />
         </Route>
         <Route path="/login">
           <LoginContainer
