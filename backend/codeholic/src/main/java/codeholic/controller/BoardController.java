@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 
+import javax.transaction.Transactional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -19,12 +21,15 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import codeholic.domain.Board;
+import codeholic.domain.BoardVote;
 import codeholic.domain.Response;
 import codeholic.domain.Tag;
 import codeholic.domain.request.RequestNewBoard;
 import codeholic.domain.request.RequestUpdateBoard;
+import codeholic.domain.request.RequestVote;
 import codeholic.domain.response.BoardResponse;
 import codeholic.service.BoardService;
+import codeholic.service.BoardVoteService;
 import codeholic.service.ReplyService;
 import codeholic.service.TagService;
 
@@ -44,6 +49,9 @@ public class BoardController {
 
     @Autowired
     TagService tagService;
+
+    @Autowired
+    BoardVoteService boardVoteService;
 
     @GetMapping("/tag/{board}")
     public Response tagList(@PathVariable Optional<Integer> board){
@@ -180,17 +188,29 @@ public class BoardController {
         }
         return response;
     }
-    @PutMapping("/recommend/{board}")
-    public Response updateRecommend(@PathVariable Optional<Integer> board){
+    
+    @Transactional
+    @PutMapping("/recommend")
+    public Response updateRecommend(@RequestBody RequestVote requestBoardVote){
         Response response = new Response();
         try{
-            Integer id = board.isPresent()? board.get():null;
-            Board updatedBoard = boardService.findById(id);
-            updatedBoard.addRecommend();
+            Board updatedBoard = boardService.findById(requestBoardVote.getId());
+            //username이 이미 존재한다면 역으로 값 수정해주기
+            BoardVote tmpVote = boardVoteService.findByUsername(requestBoardVote.getUsername());
+            if(tmpVote!=null){
+                updatedBoard.fixRecommend(-tmpVote.getValue());
+                boardVoteService.deleteBoardVote(tmpVote);
+            }
+            BoardVote newVote = new BoardVote();
+            newVote.setBoard(requestBoardVote.getId());
+            newVote.setUsername(requestBoardVote.getUsername());
+            newVote.setValue(requestBoardVote.getValue());
+            updatedBoard.fixRecommend(requestBoardVote.getValue());
+            boardVoteService.createBoardVote(newVote);
             boardService.updateBoard(updatedBoard);
-            response.setMessage("recommend 1회 증가");
+            response.setMessage("recommend 수정");
         }catch(EmptyResultDataAccessException | NoSuchElementException e){
-            response.setMessage("recommend 1회 증가에 실패하였습니다.");
+            response.setMessage("recommend 수정 실패하였습니다.");
             response.setResponse("fail");
         }
         return response;

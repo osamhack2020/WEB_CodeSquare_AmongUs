@@ -44,7 +44,4 @@ public class ReplyComment {
     @ManyToOne
     @JoinColumn(name="reply_id")
     private Reply reply;
-    // TODO : BOARD에 VOTE 테이블 추가 후 BOARDCONTROLLER 기능 손좀보기
-    // TODO : 메서드 다시 구현하기
-    // TODO : 동일 과정을 답글에서도 한번 더하기
 }

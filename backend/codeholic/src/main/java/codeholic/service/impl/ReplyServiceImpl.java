@@ -9,9 +9,13 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import codeholic.domain.Reply;
+import codeholic.domain.ReplyComment;
+import codeholic.domain.ReplyVote;
 import codeholic.repository.ReplyRepository;
 import codeholic.service.BoardService;
+import codeholic.service.ReplyCommentService;
 import codeholic.service.ReplyService;
+import codeholic.service.ReplyVoteService;
 
 @Service
 public class ReplyServiceImpl implements ReplyService {
@@ -22,6 +26,12 @@ public class ReplyServiceImpl implements ReplyService {
     @Autowired
     ReplyRepository replyRepository;
     
+    @Autowired
+    ReplyCommentService replyCommentService;
+
+    @Autowired
+    ReplyVoteService replyVoteService;
+
     @Override
     public Reply findById(int id) {
        return replyRepository.findById(id).get();
@@ -47,10 +57,13 @@ public class ReplyServiceImpl implements ReplyService {
 
     @Override
     public void deleteReply(Reply reply) {
-
-        // TODO : 답글의 모든 댓글 삭제
-        // TODO : 답글의 모든 vote 삭제
-
+        int id = reply.getId();
+        //  답글의 모든 댓글 삭제
+        List<ReplyComment> comments = replyCommentService.getReplyComments(id);
+        comments.forEach(action->replyCommentService.deleteReplyComment(action));
+        // 답글의 모든 vote 삭제
+        List<ReplyVote> votes = replyVoteService.findByReplyId(id);
+        votes.forEach(action->replyVoteService.deleteReplyVote(action));
         reply.setBoard(null);
         replyRepository.delete(reply);
     }

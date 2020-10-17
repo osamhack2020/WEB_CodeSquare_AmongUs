@@ -33,7 +33,7 @@ public class Reply {
     // 0이 미채택, 1이 채택
     private int adopted = 0;
 
-    private int recommned = 0;
+    private int recommend = 0;
 
     private String body;
 
@@ -50,8 +50,8 @@ public class Reply {
     @JoinColumn(name="board_id")
     private Board board;
 
-    public void addRecommend(){
-        this.recommned += 1;
+    public void fixRecommend(int value){
+        this.recommend += value;
     }
     public void adopted(){
         this.adopted = 1;

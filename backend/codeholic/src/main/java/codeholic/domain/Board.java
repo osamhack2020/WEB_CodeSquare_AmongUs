@@ -46,7 +46,7 @@ public class Board {
     public void addView(){
         this.view += 1 ;
     }
-    public void addRecommend(){
-        this.recommend += 1;
+    public void fixRecommend(int value){
+        this.recommend += value;
     }
 }

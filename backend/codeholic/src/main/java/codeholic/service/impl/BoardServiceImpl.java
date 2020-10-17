@@ -10,11 +10,13 @@ import org.springframework.stereotype.Service;
 
 import codeholic.domain.Board;
 import codeholic.domain.BoardComment;
+import codeholic.domain.BoardVote;
 import codeholic.domain.Reply;
 import codeholic.domain.response.BoardResponse;
 import codeholic.repository.BoardRepository;
 import codeholic.service.BoardCommentService;
 import codeholic.service.BoardService;
+import codeholic.service.BoardVoteService;
 import codeholic.service.ReplyService;
 import codeholic.service.TagService;
 
@@ -32,6 +34,9 @@ public class BoardServiceImpl implements BoardService {
 
     @Autowired
     BoardCommentService boardCommentService;
+
+    @Autowired
+    BoardVoteService boardVoteService;
 
     @Override
     public BoardResponse findAll(int countPerPage, int currentPage) {
@@ -85,7 +90,9 @@ public class BoardServiceImpl implements BoardService {
         //게시물의 모든 댓글 삭제
         List<BoardComment> comments = boardCommentService.getBoardComments(id);
         comments.forEach(action->boardCommentService.deleteBoardComment(action));
-        // TODO : 게시물의 모든 vote 삭제
+        // 게시물의 모든 vote 삭제
+        List<BoardVote> votes = boardVoteService.findByBoardId(id);
+        votes.forEach(action->boardVoteService.deleteBoardVote(action));
         boardRepository.deleteById(id);
     }
 
