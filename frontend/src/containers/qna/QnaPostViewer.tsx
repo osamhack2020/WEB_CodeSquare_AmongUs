@@ -5,12 +5,140 @@ import { AvatarIcon } from "../../components/common/AvatarIcon";
 import { VerticalDivider } from "../../components/common/VerticalDivider";
 import { QnaTagList } from "../../components/qna/QnaTagList";
 import { Vote } from "../../components/qna/Vote";
+import { formatDate, numberWithCommas } from "../../lib/utils";
 import { QnaComments } from "./QnaComments";
 
 export interface QnaPostViewerProps {
   answer?: boolean;
   accepted?: boolean;
 }
+
+interface PostHeaderProps {
+  username: string;
+  user_id: string;
+  title?: string;
+  answer?: boolean;
+  views?: number;
+  created_at: string;
+}
+
+const PostHeader: React.FC<PostHeaderProps> = ({
+  answer,
+  user_id,
+  username,
+  title,
+  views,
+  created_at,
+  ...props
+}) => {
+  return answer ? (
+    <div
+      css={css`
+        display: flex;
+      `}
+      {...props}
+    >
+      <AvatarIcon alt={user_id} width={32} height={32} />
+      <div
+        css={css`
+          display: flex;
+          flex-direction: column;
+          padding-left: 11px;
+        `}
+      >
+        <div
+          css={css`
+            font-size: 12px;
+            font-style: normal;
+            font-weight: 500;
+            line-height: 16px;
+            letter-spacing: -0.02em;
+            text-align: left;
+          `}
+        >
+          {username}
+        </div>
+        <div
+          css={css`
+            font-size: 12px;
+            font-style: normal;
+            font-weight: 400;
+            line-height: 16px;
+            letter-spacing: -0.02em;
+            text-align: left;
+          `}
+        >
+          {formatDate(created_at)}
+        </div>
+      </div>
+    </div>
+  ) : (
+    <React.Fragment>
+      <div
+        css={css`
+          font-size: 30px;
+          font-style: normal;
+          font-weight: 400;
+          line-height: 43px;
+          letter-spacing: -0.02em;
+          text-align: left;
+          padding-bottom: 9px;
+
+          color: #323232;
+        `}
+      >
+        {title}
+      </div>
+      <div
+        css={css`
+          display: flex;
+          font-size: 12px;
+          font-style: normal;
+          font-weight: 400;
+          line-height: 17px;
+          letter-spacing: -0.02em;
+          text-align: left;
+          align-items: center;
+          padding-bottom: 20px;
+
+          & > *:not(:last-child) {
+            margin-right: 10px;
+          }
+          & > div {
+            color: #5a5a5a;
+          }
+        `}
+      >
+        <div
+          css={css`
+            display: flex;
+            color: #3e3e3e;
+            font-weight: 600;
+          `}
+        >
+          <AvatarIcon width={16} height={16} alt={user_id} />
+          <div>{username}</div>
+        </div>
+        <VerticalDivider
+          height={8}
+          css={css`
+            align-self: center;
+            fill: #c4c4c4;
+          `}
+        />
+        <div>{formatDate(created_at)}</div>
+        <VerticalDivider
+          height={8}
+          css={css`
+            align-self: center;
+            fill: #c4c4c4;
+          `}
+        />
+        {views && <div>{`조회수: ${numberWithCommas(views)}`}</div>}
+      </div>
+    </React.Fragment>
+  );
+};
 
 export const QnaPostViewer: React.FC<QnaPostViewerProps> = ({
   answer,
@@ -61,112 +189,14 @@ export const QnaPostViewer: React.FC<QnaPostViewerProps> = ({
           margin-left: 32px;
         `}
       >
-        {answer ? (
-          <div
-            css={css`
-              display: flex;
-            `}
-          >
-            <AvatarIcon alt="@seowook12" width={32} height={32} />
-            <div
-              css={css`
-                display: flex;
-                flex-direction: column;
-                padding-left: 11px;
-              `}
-            >
-              <div
-                css={css`
-                  font-size: 12px;
-                  font-style: normal;
-                  font-weight: 500;
-                  line-height: 16px;
-                  letter-spacing: -0.02em;
-                  text-align: left;
-                `}
-              >
-                서욱
-              </div>
-              <div
-                css={css`
-                  font-size: 12px;
-                  font-style: normal;
-                  font-weight: 400;
-                  line-height: 16px;
-                  letter-spacing: -0.02em;
-                  text-align: left;
-                `}
-              >
-                9분 전
-              </div>
-            </div>
-          </div>
-        ) : (
-          <React.Fragment>
-            <div
-              css={css`
-                font-size: 30px;
-                font-style: normal;
-                font-weight: 400;
-                line-height: 43px;
-                letter-spacing: -0.02em;
-                text-align: left;
-                padding-bottom: 9px;
-
-                color: #323232;
-              `}
-            >
-              안드로이드 스튜디오 블루투스 질문
-            </div>
-            <div
-              css={css`
-                display: flex;
-                font-size: 12px;
-                font-style: normal;
-                font-weight: 400;
-                line-height: 17px;
-                letter-spacing: -0.02em;
-                text-align: left;
-                align-items: center;
-                padding-bottom: 20px;
-
-                & > *:not(:last-child) {
-                  margin-right: 10px;
-                }
-                & > div {
-                  color: #5a5a5a;
-                }
-              `}
-            >
-              <div
-                css={css`
-                  display: flex;
-                  color: #3e3e3e;
-                  font-weight: 600;
-                `}
-              >
-                <AvatarIcon width={16} height={16} alt="@seowook12" />
-                <div>서욱</div>
-              </div>
-              <VerticalDivider
-                height={8}
-                css={css`
-                  align-self: center;
-                  fill: #c4c4c4;
-                `}
-              />
-              <div>2020.10.04 21:57</div>
-              <VerticalDivider
-                height={8}
-                css={css`
-                  align-self: center;
-                  fill: #c4c4c4;
-                `}
-              />
-              <div>조회수: 11,101</div>
-            </div>
-          </React.Fragment>
-        )}
+        <PostHeader
+          user_id="@seowook12"
+          username="서욱"
+          created_at="2020-10-17 14:27"
+          title="안드로이드 스튜디오 블루투스 질문"
+          views={11379}
+          answer={answer}
+        />
         <div
           css={css`
             padding-top: 20px;
