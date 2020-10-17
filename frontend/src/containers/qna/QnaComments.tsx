@@ -14,7 +14,7 @@ const generateComments = (num: number): Comment[] =>
       },
       text:
         "보이는 이성은 노년에게서 동력은 것이다. 열락의 꽃 구할 못할 것이다.",
-      created_at: new Date().toString(),
+      created_at: "2020.10.04 21:57",
       isAuthor: (idx + 1) % 2 === 0,
     };
   });
