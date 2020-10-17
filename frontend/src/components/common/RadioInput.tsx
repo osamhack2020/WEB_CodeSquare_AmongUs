@@ -1,13 +1,13 @@
 /** @jsx jsx */
 import { css, jsx } from "@emotion/core";
 
-export interface RadioButtonProps {
+export interface RadioInputProps {
   checked: boolean;
   onClick: () => void;
 }
 
-export const RadioButton: React.FC<
-  RadioButtonProps & React.HTMLProps<HTMLDivElement>
+export const RadioInput: React.FC<
+  RadioInputProps & React.HTMLProps<HTMLDivElement>
 > = ({ onClick, checked, children, ...props }) => {
   return (
     <div
