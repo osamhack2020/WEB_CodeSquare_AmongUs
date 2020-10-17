@@ -18,11 +18,8 @@ class MainController{
     public String helloworld(final HttpServletRequest req) {   
         return "helloworld";
     }
-
-    
     @GetMapping("/authorized")
     public String helloworld2() {   
         return "Only user!!!";
     }
-
 }

@@ -1,0 +1,14 @@
+{
+    "configurations": [
+        {
+            "type": "java",
+            "name": "Spring Boot-CodeholicApplication<codeholic>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "console": "internalConsole",
+            "mainClass": "codeholic.CodeholicApplication",
+            "projectName": "codeholic",
+            "args": ""
+        }
+    ]
+}
