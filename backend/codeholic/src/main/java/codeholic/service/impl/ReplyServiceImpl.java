@@ -47,6 +47,10 @@ public class ReplyServiceImpl implements ReplyService {
 
     @Override
     public void deleteReply(Reply reply) {
+
+        // TODO : 답글의 모든 댓글 삭제
+        // TODO : 답글의 모든 vote 삭제
+
         reply.setBoard(null);
         replyRepository.delete(reply);
     }

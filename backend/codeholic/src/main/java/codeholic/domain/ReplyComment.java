@@ -20,20 +20,15 @@ import org.hibernate.annotations.CreationTimestamp;
 import lombok.Data;
 
 @Entity
-@Table(name = "reply")
+@Table(name = "reply_cmt")
 @Data
-public class Reply {
+public class ReplyComment {
     @Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)
-    @Column(name="reply_id")
+    @Column(name="comment_id")
     private int id;
 
     private String username;
-
-    // 0이 미채택, 1이 채택
-    private int adopted = 0;
-
-    private int recommned = 0;
 
     private String body;
 
@@ -47,13 +42,9 @@ public class Reply {
     
     @JsonIgnore
     @ManyToOne
-    @JoinColumn(name="board_id")
-    private Board board;
-
-    public void addRecommend(){
-        this.recommned += 1;
-    }
-    public void adopted(){
-        this.adopted = 1;
-    }
+    @JoinColumn(name="reply_id")
+    private Reply reply;
+    // TODO : BOARD에 VOTE 테이블 추가 후 BOARDCONTROLLER 기능 손좀보기
+    // TODO : 메서드 다시 구현하기
+    // TODO : 동일 과정을 답글에서도 한번 더하기
 }

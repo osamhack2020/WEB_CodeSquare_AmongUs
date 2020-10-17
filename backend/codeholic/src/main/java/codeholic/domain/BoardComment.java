@@ -20,20 +20,15 @@ import org.hibernate.annotations.CreationTimestamp;
 import lombok.Data;
 
 @Entity
-@Table(name = "reply")
+@Table(name = "board_cmt")
 @Data
-public class Reply {
+public class BoardComment {
     @Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)
-    @Column(name="reply_id")
+    @Column(name="comment_id")
     private int id;
 
     private String username;
-
-    // 0이 미채택, 1이 채택
-    private int adopted = 0;
-
-    private int recommned = 0;
 
     private String body;
 
@@ -49,11 +44,5 @@ public class Reply {
     @ManyToOne
     @JoinColumn(name="board_id")
     private Board board;
-
-    public void addRecommend(){
-        this.recommned += 1;
-    }
-    public void adopted(){
-        this.adopted = 1;
-    }
+    
 }

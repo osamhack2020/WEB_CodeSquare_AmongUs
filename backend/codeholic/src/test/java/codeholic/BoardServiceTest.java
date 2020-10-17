@@ -1,8 +1,6 @@
 package codeholic;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.IntStream;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -13,9 +11,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.Commit;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-import codeholic.domain.Board;
-import codeholic.domain.Reply;
-import codeholic.domain.Tag;
 import codeholic.service.BoardService;
 import codeholic.service.ReplyService;
 import codeholic.service.TagService;
@@ -38,9 +33,10 @@ class BoardServiceTest {
     
     @Test
     public void testA(){
-        //create tag
+        assertEquals("", "");
+        logger.info("hello world");
     }
-    
+    /*
     @Test
     public void testB(){
         
@@ -59,7 +55,7 @@ class BoardServiceTest {
         });
         logger.info("createBoard test complete");
     }
-    /*
+    
     @Test
     public void testC(){
         // getBoardByTitle
@@ -96,7 +92,7 @@ class BoardServiceTest {
         boardService.deleteBoard(8);
         logger.info("Delete finished");
     }
-    */
+
     @Test
     public void testD(){
         //create reply
@@ -112,7 +108,6 @@ class BoardServiceTest {
             logger.info("createReply test complete");
         }
     }
-    /*
     @Test
     public void testH(){
         //getting board Replies

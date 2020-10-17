@@ -25,7 +25,7 @@ public class Board {
 	@Column(name="board_id")
     private int id;
     
-    private String user_id;
+    private String username;
 
     private String title;
 
