@@ -149,6 +149,7 @@ export const QnaPostViewer: React.FC<QnaPostViewerProps> = ({
     <div
       css={css`
         display: flex;
+        padding: 36px 0;
       `}
       {...props}
     >
@@ -173,8 +174,8 @@ export const QnaPostViewer: React.FC<QnaPostViewerProps> = ({
             xmlns="http://www.w3.org/2000/svg"
           >
             <path
-              fill-rule="evenodd"
-              clip-rule="evenodd"
+              fillRule="evenodd"
+              clipRule="evenodd"
               d="M13.94.94a1.5 1.5 0 012.142 2.1l-7.984 9.98a1.5 1.5 0 01-2.16.04L.648 7.768a1.5 1.5 0 112.12-2.12l4.188 4.186 6.946-8.85a.465.465 0 01.04-.044h-.002z"
               fill="#627BFF"
             />
