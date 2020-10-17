@@ -38,6 +38,7 @@ export const MarkdownEditor: React.FC<MarkdownEditorProps> = ({
           color: #2c2b2b;
           font-family: source-code-pro, Consolas, Menlo, Monaco, Consolas,
             "Courier New";
+          cursor: text;
         }
         pre {
           word-wrap: break-word;

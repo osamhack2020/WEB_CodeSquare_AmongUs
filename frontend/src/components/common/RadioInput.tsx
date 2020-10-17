@@ -25,6 +25,7 @@ export const RadioInput: React.FC<
           position: relative;
           display: flex;
           padding-left: 26px;
+          align-self: center;
           cursor: pointer;
           &::before {
             width: 18px;

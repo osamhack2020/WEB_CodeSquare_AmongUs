@@ -2,9 +2,12 @@
 import { css, jsx } from "@emotion/core";
 import { useCallback, useState } from "react";
 import { useHistory } from "react-router-dom";
+import { Button } from "../../components/common/Button";
 import { OutlineButton } from "../../components/common/OutlineButton";
 import { RadioButtons } from "../../components/common/RadioButtons";
+import { RadioInput } from "../../components/common/RadioInput";
 import { QnaListWidget } from "../../components/qna/QnaListWidget";
+import { MarkdownEditor } from "../../components/write/MarkdownEditor";
 import { QnaPostViewer } from "./QnaPostViewer";
 
 export const QnaPostContainer: React.FC = () => {
@@ -22,6 +25,10 @@ export const QnaPostContainer: React.FC = () => {
     },
     [setSortOrder],
   );
+  const [preview, setPreview] = useState(false);
+  const onClickPreview = useCallback(() => setPreview((preview) => !preview), [
+    setPreview,
+  ]);
   return (
     <div
       css={css`
@@ -76,6 +83,115 @@ export const QnaPostContainer: React.FC = () => {
         </div>
         <QnaPostViewer answer accepted />
         <QnaPostViewer answer />
+        <div
+          css={css`
+            margin-left: 52px;
+            padding-bottom: 32px;
+          `}
+        >
+          <div
+            css={css`
+              font-size: 18px;
+              font-style: normal;
+              font-weight: 400;
+              line-height: 26px;
+              letter-spacing: -0.02em;
+              text-align: left;
+              padding-bottom: 12px;
+            `}
+          >
+            답변 등록하기
+          </div>
+          <MarkdownEditor
+            height={153}
+            css={css`
+              margin-bottom: 12px;
+            `}
+          />
+          <div
+            css={css`
+              display: flex;
+              justify-content: space-between;
+            `}
+          >
+            <RadioInput
+              checked={preview}
+              onClick={onClickPreview}
+              css={css`
+                font-size: 13px;
+                font-style: normal;
+                font-weight: 400;
+                line-height: 19px;
+                letter-spacing: -0.02em;
+                text-align: left;
+              `}
+            >
+              미리보기
+            </RadioInput>
+            <Button
+              css={css`
+                padding: 7px 45px;
+                border-radius: 6px;
+                font-size: 14px;
+                font-style: normal;
+                font-weight: 700;
+                line-height: 20px;
+                letter-spacing: -0.02em;
+                text-align: center;
+              `}
+            >
+              등록
+            </Button>
+          </div>
+        </div>
+        <div
+          css={css`
+            display: flex;
+            justify-content: space-between;
+            margin-left: 52px;
+            padding: 32px 0px;
+            padding-bottom: 78px;
+          `}
+        >
+          <div
+            css={css`
+              display: flex;
+              flex-direction: column;
+            `}
+          >
+            <div
+              css={css`
+                font-size: 18px;
+                font-style: normal;
+                font-weight: 700;
+                line-height: 26px;
+                letter-spacing: -0.02em;
+                text-align: left;
+              `}
+            >
+              찾고 있는 질문이 없나요?
+            </div>
+            <div
+              css={css`
+                font-size: 14px;
+                font-style: normal;
+                font-weight: 400;
+                line-height: 20px;
+                letter-spacing: -0.02em;
+                text-align: left;
+              `}
+            >
+              코드 스퀘어의 전우들에게 물어보세요.
+            </div>
+          </div>
+          <OutlineButton
+            css={css`
+              padding: 12px 24px;
+            `}
+          >
+            질문 등록하기
+          </OutlineButton>
+        </div>
       </div>
       <div
         css={css`
