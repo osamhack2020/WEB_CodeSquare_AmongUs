@@ -1,12 +1,22 @@
 /** @jsx jsx */
 import { css, jsx } from "@emotion/core";
+import React from "react";
 import { AvatarIcon } from "../../components/common/AvatarIcon";
 import { VerticalDivider } from "../../components/common/VerticalDivider";
 import { QnaTagList } from "../../components/qna/QnaTagList";
 import { Vote } from "../../components/qna/Vote";
 import { QnaComments } from "./QnaComments";
 
-export const QnaPostViewer: React.FC = (props) => {
+export interface QnaPostViewerProps {
+  answer?: boolean;
+  accepted?: boolean;
+}
+
+export const QnaPostViewer: React.FC<QnaPostViewerProps> = ({
+  answer,
+  accepted,
+  ...props
+}) => {
   return (
     <div
       css={css`
@@ -20,7 +30,28 @@ export const QnaPostViewer: React.FC = (props) => {
           margin-top: 16px;
         `}
       >
-        <Vote votes={32} />
+        <Vote
+          votes={32}
+          css={css`
+            margin-bottom: 20px;
+          `}
+        />
+        {accepted && (
+          <svg
+            width="20"
+            height="20"
+            viewBox="0 0 17 14"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              fill-rule="evenodd"
+              clip-rule="evenodd"
+              d="M13.94.94a1.5 1.5 0 012.142 2.1l-7.984 9.98a1.5 1.5 0 01-2.16.04L.648 7.768a1.5 1.5 0 112.12-2.12l4.188 4.186 6.946-8.85a.465.465 0 01.04-.044h-.002z"
+              fill="#627BFF"
+            />
+          </svg>
+        )}
       </div>
       <div
         css={css`
@@ -30,70 +61,115 @@ export const QnaPostViewer: React.FC = (props) => {
           margin-left: 32px;
         `}
       >
-        <div
-          css={css`
-            font-size: 30px;
-            font-style: normal;
-            font-weight: 400;
-            line-height: 43px;
-            letter-spacing: -0.02em;
-            text-align: left;
-            padding-bottom: 9px;
-
-            color: #323232;
-          `}
-        >
-          안드로이드 스튜디오 블루투스 질문
-        </div>
-        <div
-          css={css`
-            display: flex;
-            font-size: 12px;
-            font-style: normal;
-            font-weight: 400;
-            line-height: 17px;
-            letter-spacing: -0.02em;
-            text-align: left;
-            align-items: center;
-
-            & > *:not(:last-child) {
-              margin-right: 10px;
-            }
-            & > div {
-              color: #5a5a5a;
-            }
-          `}
-        >
+        {answer ? (
           <div
             css={css`
               display: flex;
-              color: #3e3e3e;
-              font-weight: 600;
             `}
           >
-            <AvatarIcon width={16} height={16} alt="@seowook12" />
-            <div>서욱</div>
+            <AvatarIcon alt="@seowook12" width={32} height={32} />
+            <div
+              css={css`
+                display: flex;
+                flex-direction: column;
+                padding-left: 11px;
+              `}
+            >
+              <div
+                css={css`
+                  font-size: 12px;
+                  font-style: normal;
+                  font-weight: 500;
+                  line-height: 16px;
+                  letter-spacing: -0.02em;
+                  text-align: left;
+                `}
+              >
+                서욱
+              </div>
+              <div
+                css={css`
+                  font-size: 12px;
+                  font-style: normal;
+                  font-weight: 400;
+                  line-height: 16px;
+                  letter-spacing: -0.02em;
+                  text-align: left;
+                `}
+              >
+                9분 전
+              </div>
+            </div>
           </div>
-          <VerticalDivider
-            height={8}
-            css={css`
-              align-self: center;
-              fill: #c4c4c4;
-            `}
-          />
-          <div>2020.10.04 21:57</div>
-          <VerticalDivider
-            height={8}
-            css={css`
-              align-self: center;
-              fill: #c4c4c4;
-            `}
-          />
-          <div>조회수: 11,101</div>
-        </div>
+        ) : (
+          <React.Fragment>
+            <div
+              css={css`
+                font-size: 30px;
+                font-style: normal;
+                font-weight: 400;
+                line-height: 43px;
+                letter-spacing: -0.02em;
+                text-align: left;
+                padding-bottom: 9px;
+
+                color: #323232;
+              `}
+            >
+              안드로이드 스튜디오 블루투스 질문
+            </div>
+            <div
+              css={css`
+                display: flex;
+                font-size: 12px;
+                font-style: normal;
+                font-weight: 400;
+                line-height: 17px;
+                letter-spacing: -0.02em;
+                text-align: left;
+                align-items: center;
+                padding-bottom: 20px;
+
+                & > *:not(:last-child) {
+                  margin-right: 10px;
+                }
+                & > div {
+                  color: #5a5a5a;
+                }
+              `}
+            >
+              <div
+                css={css`
+                  display: flex;
+                  color: #3e3e3e;
+                  font-weight: 600;
+                `}
+              >
+                <AvatarIcon width={16} height={16} alt="@seowook12" />
+                <div>서욱</div>
+              </div>
+              <VerticalDivider
+                height={8}
+                css={css`
+                  align-self: center;
+                  fill: #c4c4c4;
+                `}
+              />
+              <div>2020.10.04 21:57</div>
+              <VerticalDivider
+                height={8}
+                css={css`
+                  align-self: center;
+                  fill: #c4c4c4;
+                `}
+              />
+              <div>조회수: 11,101</div>
+            </div>
+          </React.Fragment>
+        )}
         <div
           css={css`
-            padding-top: 40px;
+            padding-top: 20px;
             padding-bottom: 40px;
             font-size: 14px;
             font-style: normal;
