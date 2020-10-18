@@ -120,10 +120,10 @@ public class BoardController {
             board.setBody(requestNewBoard.getBody());
             board.setTitle(requestNewBoard.getTitle());
             board.setUsername(requestNewBoard.getUsername());
+            String[] tagName = requestNewBoard.getTag().split("\\s");
+            List<Tag> tags = tagService.createTags(tagName, board.getId());
+            board.setTags(tags);
             boardService.createBoard(board);
-    
-            String[] tags = requestNewBoard.getTag().split("\\s");
-            tagService.createTags(tags, board.getId());
             response.setData(board);
             response.setMessage("게시물 생성 성공");
         }catch(EmptyResultDataAccessException | NoSuchElementException e){
@@ -143,8 +143,9 @@ public class BoardController {
             if(requestUpdateBoard.getBody()!=null)
                 board.setBody(requestUpdateBoard.getBody());
            if(requestUpdateBoard.getTag()!=null){
-               String[] tags =requestUpdateBoard.getTag().split("\\s");
-               tagService.updateTags(tags, board.getId());
+               String[] tagName =requestUpdateBoard.getTag().split("\\s");
+               List<Tag> tags = tagService.updateTags(tagName, board.getId());
+               board.setTags(tags);
            } 
             if(requestUpdateBoard.getTitle()!=null)
                 board.setTitle(requestUpdateBoard.getTitle());

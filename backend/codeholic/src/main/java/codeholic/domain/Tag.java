@@ -23,6 +23,7 @@ public class Tag {
     
     @Column(name="board_id")
     private int board;
+    
     /*
     public Tag(String body, int board){
         this.body = body;
