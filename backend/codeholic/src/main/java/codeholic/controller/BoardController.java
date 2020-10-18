@@ -53,20 +53,6 @@ public class BoardController {
     @Autowired
     BoardVoteService boardVoteService;
 
-    @GetMapping("/tag/{board}")
-    public Response tagList(@PathVariable Optional<Integer> board){
-        Response response = new Response();
-        try{
-            List<Tag> tags = tagService.findByBoard_id(board.isPresent()?board.get():null);
-            response.setData(tags);
-            response.setMessage("태그 조회 성공");
-        }catch(EmptyResultDataAccessException | NoSuchElementException e){
-            response.setMessage("태그 조회 실패");
-            response.setResponse("fail");
-        }
-        return response;
-    }
-
     @GetMapping("/{pageNum}")
     public Response boardList(@PathVariable Optional<Integer> pageNum){
         Response response = new Response();
@@ -121,7 +107,7 @@ public class BoardController {
             board.setTitle(requestNewBoard.getTitle());
             board.setUsername(requestNewBoard.getUsername());
             String[] tagName = requestNewBoard.getTag().split("\\s");
-            List<Tag> tags = tagService.createTags(tagName, board.getId());
+            List<Tag> tags = tagService.createTags(tagName);
             board.setTags(tags);
             boardService.createBoard(board);
             response.setData(board);
@@ -144,8 +130,7 @@ public class BoardController {
                 board.setBody(requestUpdateBoard.getBody());
            if(requestUpdateBoard.getTag()!=null){
                String[] tagName =requestUpdateBoard.getTag().split("\\s");
-               List<Tag> tags = tagService.updateTags(tagName, board.getId());
-               board.setTags(tags);
+               tagService.updateTags(tagName, board);
            } 
             if(requestUpdateBoard.getTitle()!=null)
                 board.setTitle(requestUpdateBoard.getTitle());

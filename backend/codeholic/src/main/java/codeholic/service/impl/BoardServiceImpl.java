@@ -76,7 +76,6 @@ public class BoardServiceImpl implements BoardService {
 
     @Override
     public void updateBoard(Board board) {
-        
         boardRepository.save(board);
     }
 
@@ -85,8 +84,6 @@ public class BoardServiceImpl implements BoardService {
         //게시물의 모든 답글 삭제
         List<Reply> reply = replyService.findReplyByBoard_id(id);
         reply.forEach(action->replyService.deleteReply(action));
-        //게시물의 모든 태그 삭제
-        tagService.deleteTags(id);
         //게시물의 모든 댓글 삭제
         List<BoardComment> comments = boardCommentService.getBoardComments(id);
         comments.forEach(action->boardCommentService.deleteBoardComment(action));
