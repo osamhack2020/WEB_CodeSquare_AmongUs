@@ -60,6 +60,7 @@ public class BoardCommentController {
             boardComment.setBoard(gBoard);
             boardComment.setBody(newBoardComment.getBody());
             boardComment.setUsername(newBoardComment.getUsername());
+            boardComment.setMember_name(newBoardComment.getMember_name());
             boardCommentService.addBoardComment(boardComment);
     
             response.setMessage("게시물 댓글 생성 성공");

@@ -8,4 +8,5 @@ public class RequestNewBoard {
     String tag;
     String title;
     String username;
+    String member_name;
 }

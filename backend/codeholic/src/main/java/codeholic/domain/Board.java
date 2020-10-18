@@ -32,6 +32,8 @@ public class Board {
     
     private String username;
 
+    private String member_name;
+
     private String title;
 
     private String body;

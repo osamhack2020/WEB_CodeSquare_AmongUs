@@ -32,6 +32,8 @@ public class ReplyComment {
 
     private String body;
 
+    private String member_name;
+
     @Temporal(TemporalType.TIMESTAMP)
     @CreationTimestamp
     private Date created_at;

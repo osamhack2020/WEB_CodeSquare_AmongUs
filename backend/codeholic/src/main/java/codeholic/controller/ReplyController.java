@@ -71,6 +71,7 @@ public class ReplyController {
             Reply reply = new Reply();
             reply.setBody(requestNewReply.getBody());
             reply.setUsername(requestNewReply.getUsername());
+            reply.setMember_name(requestNewReply.getMember_name());
             reply.setBoard(getBoard);
             replyService.addReply(reply);
             response.setData(reply);

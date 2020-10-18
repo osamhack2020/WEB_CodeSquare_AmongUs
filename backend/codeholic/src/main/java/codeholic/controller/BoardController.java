@@ -106,6 +106,7 @@ public class BoardController {
             board.setBody(requestNewBoard.getBody());
             board.setTitle(requestNewBoard.getTitle());
             board.setUsername(requestNewBoard.getUsername());
+            board.setMember_name(requestNewBoard.getMember_name());
             String[] tagName = requestNewBoard.getTag().split("\\s");
             List<Tag> tags = tagService.createTags(tagName);
             board.setTags(tags);

@@ -60,6 +60,7 @@ public class ReplyCommentController {
             replyComment.setReply(gReply);
             replyComment.setBody(newComment.getBody());
             replyComment.setUsername(newComment.getUsername());
+            replyComment.setMember_name(newComment.getMember_name());
             replyCommentService.addReplyComment(replyComment);
     
             response.setMessage("답글 댓글 생성 성공");

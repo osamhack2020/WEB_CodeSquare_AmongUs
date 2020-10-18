@@ -6,4 +6,5 @@ import lombok.Data;
 public class RequestNewReply {
     private String username;
     private String body;
+    private String member_name;
 }
