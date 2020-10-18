@@ -4,7 +4,7 @@
 ### Server(back-end)
 - Java Spring Boot
 - MariaDB
-- 
+- Redis
 
 ### Front-end
 - Typescript
