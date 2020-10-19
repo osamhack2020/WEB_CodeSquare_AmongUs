@@ -8,6 +8,7 @@ require("codemirror/mode/markdown/markdown");
 require("codemirror/mode/jsx/jsx");
 require("codemirror/mode/javascript/javascript");
 require("codemirror/mode/rust/rust");
+require("codemirror/mode/python/python");
 
 export interface MarkdownEditorProps {
   height?: number;
