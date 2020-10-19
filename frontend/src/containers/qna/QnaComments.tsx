@@ -7,22 +7,8 @@ import { Divider } from "../../components/common/Divider";
 import { TextButton } from "../../components/common/TextButton";
 import { QnaCommentList } from "../../components/qna/QnaCommentList";
 import useInput from "../../lib/hooks/useInput";
-import { Comment } from "../../modules/qna";
-
-const generateComments = (num: number): Comment[] =>
-  new Array(num).fill(null).map((_, idx) => {
-    return {
-      id: idx + 1,
-      user: {
-        id: idx + 1,
-        username: "홍길동",
-      },
-      text:
-        "보이는 이성은 노년에게서 동력은 것이다. 열락의 꽃 구할 못할 것이다.",
-      created_at: "2020.10.04 21:57",
-      isAuthor: (idx + 1) % 2 === 0,
-    };
-  });
+// TODO: 지우자
+import { generateComments } from "../../stories/qna/generator";
 
 export const QnaComments: React.FC = () => {
   const comments = generateComments(5);

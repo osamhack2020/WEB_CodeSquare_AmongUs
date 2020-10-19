@@ -1,14 +1,24 @@
 /** @jsx jsx */
 import { css, jsx } from "@emotion/core";
 import { useCallback, useState } from "react";
-import { useHistory } from "react-router-dom";
+import { useHistory, useParams } from "react-router-dom";
 import { Button } from "../../components/common/Button";
 import { OutlineButton } from "../../components/common/OutlineButton";
 import { RadioButtons } from "../../components/common/RadioButtons";
 import { RadioInput } from "../../components/common/RadioInput";
 import { QnaListWidget } from "../../components/qna/QnaListWidget";
 import { MarkdownEditor } from "../../components/write/MarkdownEditor";
+import { QnaPost } from "../../lib/api/qna";
+import usePost from "./hooks/usePost";
 import { QnaPostViewer } from "./QnaPostViewer";
+
+const recentCompare = (a: QnaPost, b: QnaPost) => {
+  return new Date(b.created_at).getTime() - new Date(a.created_at).getTime();
+};
+
+const recommendCompare = (a: QnaPost, b: QnaPost) => {
+  return b.recommend - a.recommend;
+};
 
 export const QnaPostContainer: React.FC = () => {
   const history = useHistory();
@@ -29,6 +39,8 @@ export const QnaPostContainer: React.FC = () => {
   const onClickPreview = useCallback(() => setPreview((preview) => !preview), [
     setPreview,
   ]);
+  const { postId }: { postId: string } = useParams();
+  const { data, loading } = usePost(postId);
   return (
     <div
       css={css`
@@ -47,11 +59,13 @@ export const QnaPostContainer: React.FC = () => {
           flex: 1 1 auto;
         `}
       >
-        <QnaPostViewer />
+        {loading && <div>Loading...</div>}
+        {!loading && data && <QnaPostViewer post={data.post} />}
         <div
           css={css`
             display: flex;
             justify-content: space-between;
+            padding-bottom: 36px;
           `}
         >
           <div
@@ -70,7 +84,7 @@ export const QnaPostContainer: React.FC = () => {
                 color: #627bff;
               `}
             >
-              2개
+              {data?.replies.length || 0}개
             </span>
             의 답변이 있습니다.
           </div>
@@ -81,8 +95,11 @@ export const QnaPostContainer: React.FC = () => {
             onChange={onChangeSortOrder}
           />
         </div>
-        <QnaPostViewer answer accepted />
-        <QnaPostViewer answer />
+        {!loading &&
+          data &&
+          data.replies
+            .sort((sortOrder === "recent" && recentCompare) || recommendCompare)
+            .map((repl) => <QnaPostViewer key={repl.id} post={repl} />)}
         <div
           css={css`
             margin-left: 52px;

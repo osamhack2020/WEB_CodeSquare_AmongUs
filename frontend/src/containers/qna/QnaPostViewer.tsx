@@ -5,17 +5,17 @@ import { AvatarIcon } from "../../components/common/AvatarIcon";
 import { VerticalDivider } from "../../components/common/VerticalDivider";
 import { QnaTagList } from "../../components/qna/QnaTagList";
 import { Vote } from "../../components/qna/Vote";
+import { QnaPost } from "../../lib/api/qna";
 import { formatDate, numberWithCommas } from "../../lib/utils";
 import { QnaComments } from "./QnaComments";
 
 export interface QnaPostViewerProps {
-  answer?: boolean;
-  accepted?: boolean;
+  post: QnaPost;
 }
 
 interface PostHeaderProps {
+  member_name: string;
   username: string;
-  user_id: string;
   title?: string;
   answer?: boolean;
   views?: number;
@@ -24,8 +24,8 @@ interface PostHeaderProps {
 
 const PostHeader: React.FC<PostHeaderProps> = ({
   answer,
-  user_id,
   username,
+  member_name,
   title,
   views,
   created_at,
@@ -38,7 +38,7 @@ const PostHeader: React.FC<PostHeaderProps> = ({
       `}
       {...props}
     >
-      <AvatarIcon alt={user_id} width={32} height={32} />
+      <AvatarIcon alt={username} width={32} height={32} />
       <div
         css={css`
           display: flex;
@@ -56,7 +56,7 @@ const PostHeader: React.FC<PostHeaderProps> = ({
             text-align: left;
           `}
         >
-          {username}
+          {member_name}
         </div>
         <div
           css={css`
@@ -116,8 +116,8 @@ const PostHeader: React.FC<PostHeaderProps> = ({
             font-weight: 600;
           `}
         >
-          <AvatarIcon width={16} height={16} alt={user_id} />
-          <div>{username}</div>
+          <AvatarIcon width={16} height={16} alt={username} />
+          <div>{member_name}</div>
         </div>
         <VerticalDivider
           height={8}
@@ -141,8 +141,7 @@ const PostHeader: React.FC<PostHeaderProps> = ({
 };
 
 export const QnaPostViewer: React.FC<QnaPostViewerProps> = ({
-  answer,
-  accepted,
+  post,
   ...props
 }) => {
   return (
@@ -165,7 +164,7 @@ export const QnaPostViewer: React.FC<QnaPostViewerProps> = ({
             margin-bottom: 20px;
           `}
         />
-        {accepted && (
+        {post.accepted && (
           <svg
             width="20"
             height="20"
@@ -191,12 +190,12 @@ export const QnaPostViewer: React.FC<QnaPostViewerProps> = ({
         `}
       >
         <PostHeader
-          user_id="@seowook12"
-          username="서욱"
+          username="@seowook12"
+          member_name="서욱"
           created_at="2020-10-17 14:27"
           title="안드로이드 스튜디오 블루투스 질문"
           views={11379}
-          answer={answer}
+          answer={post.answer}
         />
         <div
           css={css`

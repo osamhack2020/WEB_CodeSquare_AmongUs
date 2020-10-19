@@ -7,6 +7,7 @@ import {
   QnaCommentItem,
   QnaCommentItemProps,
 } from "../../components/qna/QnaCommentItem";
+import { generateComments } from "./generator";
 
 export default {
   title: "qna/QnaCommentItem",
@@ -19,14 +20,5 @@ const Template: Story<QnaCommentItemProps> = (args) => (
 
 export const Default = Template.bind({});
 Default.args = {
-  comment: {
-    id: 1,
-    user: {
-      id: 1,
-      username: "홍길동",
-    },
-    text: "보이는 이성은 노년에게서 동력은 것이다. 열락의 꽃 구할 못할 것이다.",
-    created_at: new Date().toString(),
-    isAuthor: true,
-  },
+  comment: generateComments(1)[0],
 };

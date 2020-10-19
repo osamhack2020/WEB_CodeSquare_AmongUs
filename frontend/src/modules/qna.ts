@@ -1,22 +1,21 @@
-export interface QnaPost {
-  id: number;
-  user_id: string;
-  title: string;
-  text: string;
-  tag: string;
-  view: number;
-  recommend: number;
-  created_at: string;
-  updated_at: string;
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+
+export interface QnaState {
+  postId: number | null;
 }
 
-export interface Comment {
-  id: number;
-  user: {
-    id: number;
-    username: string;
-  };
-  text: string;
-  created_at: string;
-  isAuthor: boolean;
-}
+const initialState: QnaState = {
+  postId: null,
+};
+
+const qna = createSlice({
+  name: "qna",
+  initialState,
+  reducers: {
+    setPostId(state, action: PayloadAction<number>) {
+      state.postId = action.payload;
+    },
+  },
+});
+
+export default qna;

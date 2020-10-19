@@ -3,7 +3,7 @@ import { css, jsx } from "@emotion/core";
 import styled from "@emotion/styled";
 import { HTMLProps } from "react";
 import { Link } from "react-router-dom";
-import { QnaPost } from "../../modules/qna";
+import { QnaPost } from "../../lib/api/qna";
 import { AvatarIcon } from "../common/AvatarIcon";
 import { Divider } from "../common/Divider";
 import { QnaTagList } from "./QnaTagList";
@@ -42,7 +42,7 @@ export const QnaPostItem: React.FC<
     <QnaPostBlock {...props}>
       <QnaPostWrapper>
         <AvatarIcon
-          alt={`@${post.user_id}`}
+          alt={`@${post.username}`}
           css={css`
             margin-top: 4px;
           `}
@@ -97,7 +97,9 @@ export const QnaPostItem: React.FC<
               padding-top: 16px;
             `}
           >
-            <div>{post.tag}</div>
+            {post.tags?.map((tag) => (
+              <div key={tag}>{tag}</div>
+            ))}
           </QnaTagList>
         </QnaPostContent>
       </QnaPostWrapper>
