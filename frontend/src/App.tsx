@@ -37,7 +37,7 @@ const App: React.FC = () => {
         <Route path="/qna" exact>
           <QnaHomeContainer />
         </Route>
-        <Route path="/qna/:id">
+        <Route path="/qna/:postId">
           <QnaPostContainer />
         </Route>
         <Route path="/login">
