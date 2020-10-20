@@ -170,3 +170,15 @@ export const getComments = async (
 
   return comments.map((comment) => buildQnaCommentFromApiComment(comment));
 };
+
+export const writeComment = async (
+  type: "board" | "replies",
+  postId: number,
+  text: string,
+): Promise<void> => {
+  const url = `/${type}comment/${postId}`;
+
+  await apiClient.post(url, {
+    body: text,
+  });
+};

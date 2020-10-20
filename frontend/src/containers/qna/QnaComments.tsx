@@ -13,9 +13,11 @@ import { RootState } from "../../modules";
 
 export interface QnaCommentsProps {
   comments: QnaComment[];
+  onSubmit: (text: string) => Promise<void>;
 }
 
 export const QnaComments: React.FC<QnaCommentsProps> = ({
+  onSubmit: submit,
   comments: _comments,
   ...props
 }) => {
@@ -34,13 +36,17 @@ export const QnaComments: React.FC<QnaCommentsProps> = ({
   const onNewCommentClick = useCallback(() => setInputMode(true), [
     setInputMode,
   ]);
-  const [value, onChange] = useInput("");
+  const [value, onChange, reset] = useInput("");
   const onSubmit = useCallback(
-    (e) => {
+    async (e) => {
       e.preventDefault();
-      console.log(value);
+      if (!value) {
+        return;
+      }
+      await submit(value);
+      reset();
     },
-    [value],
+    [value, reset, submit],
   );
   return (
     <div {...props}>

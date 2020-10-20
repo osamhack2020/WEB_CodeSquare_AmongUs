@@ -98,7 +98,7 @@ router
     ctx.body = {
       response: "success",
       message: "반환된 게시물",
-      data: generatePost(ctx.id),
+      data: generatePost(ctx.params.id),
     };
   })
   .get("/boardcomment/:id", (ctx) => {
@@ -115,13 +115,20 @@ router
       data: null,
     };
   })
+  .post("/repliescomment/:id", (ctx) => {
+    ctx.body = {
+      response: "success",
+      message: "게시물 댓글 생성 성공",
+      data: null,
+    };
+  })
   .get("/board/tag/:id", (ctx) => {
     ctx.body = {
       response: "success",
       message: "태그 조회 성공",
       data: [
-        { id: TAG_ID++, body: "안드로이드", board: ctx.id },
-        { id: TAG_ID++, body: "Kotlin", board: ctx.id },
+        { id: TAG_ID++, body: "안드로이드", board: ctx.params.id },
+        { id: TAG_ID++, body: "Kotlin", board: ctx.params.id },
       ],
     };
   })

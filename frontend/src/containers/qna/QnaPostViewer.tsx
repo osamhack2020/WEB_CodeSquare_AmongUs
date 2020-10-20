@@ -1,11 +1,11 @@
 /** @jsx jsx */
 import { css, jsx } from "@emotion/core";
-import React from "react";
+import React, { useCallback } from "react";
 import { AvatarIcon } from "../../components/common/AvatarIcon";
 import { VerticalDivider } from "../../components/common/VerticalDivider";
 import { QnaTagList } from "../../components/qna/QnaTagList";
 import { Vote } from "../../components/qna/Vote";
-import { QnaPost } from "../../lib/api/qna";
+import { QnaPost, writeComment } from "../../lib/api/qna";
 import { formatDate, numberWithCommas } from "../../lib/utils";
 import useComments from "./hooks/useComments";
 import { QnaComments } from "./QnaComments";
@@ -145,9 +145,13 @@ export const QnaPostViewer: React.FC<QnaPostViewerProps> = ({
   post,
   ...props
 }) => {
-  const { loading, data: comments } = useComments(
-    post.answer ? "replies" : "board",
-    post.id,
+  const postType = post.answer ? "replies" : "board";
+  const { loading, data: comments } = useComments(postType, post.id);
+  const onSubmit = useCallback(
+    async (text: string) => {
+      await writeComment(postType, post.id, text);
+    },
+    [post.id, postType],
   );
   return (
     <div
@@ -230,7 +234,9 @@ export const QnaPostViewer: React.FC<QnaPostViewerProps> = ({
           <div>Kotlin</div>
         </QnaTagList>
         {loading && <div>loading</div>}
-        {!loading && comments && <QnaComments comments={comments} />}
+        {!loading && comments && (
+          <QnaComments onSubmit={onSubmit} comments={comments} />
+        )}
       </div>
     </div>
   );
