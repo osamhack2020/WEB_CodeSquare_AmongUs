@@ -1,17 +1,35 @@
 /** @jsx jsx */
 import { css, jsx } from "@emotion/core";
-import React from "react";
+import React, { useEffect } from "react";
 import { useCallback, useState } from "react";
+import { useSelector } from "react-redux";
 import { Button } from "../../components/common/Button";
 import { Divider } from "../../components/common/Divider";
 import { TextButton } from "../../components/common/TextButton";
 import { QnaCommentList } from "../../components/qna/QnaCommentList";
+import { QnaComment } from "../../lib/api/qna";
 import useInput from "../../lib/hooks/useInput";
-// TODO: 지우자
-import { generateComments } from "../../stories/qna/generator";
+import { RootState } from "../../modules";
 
-export const QnaComments: React.FC = () => {
-  const comments = generateComments(5);
+export interface QnaCommentsProps {
+  comments: QnaComment[];
+}
+
+export const QnaComments: React.FC<QnaCommentsProps> = ({
+  comments: _comments,
+  ...props
+}) => {
+  const author = useSelector<RootState>((state) => state.qna.author);
+  const [comments, setComments] = useState<QnaComment[]>(_comments);
+  // 댓글 id가 질문자 id와 일치할 경우 is_author를 true로 함
+  useEffect(() => {
+    setComments((comments) =>
+      comments.map((comment) => ({
+        ...comment,
+        is_author: comment.username === author,
+      })),
+    );
+  }, [author, setComments]);
   const [inputMode, setInputMode] = useState(false);
   const onNewCommentClick = useCallback(() => setInputMode(true), [
     setInputMode,
@@ -25,7 +43,7 @@ export const QnaComments: React.FC = () => {
     [value],
   );
   return (
-    <div>
+    <div {...props}>
       <QnaCommentList
         comments={comments}
         css={css`

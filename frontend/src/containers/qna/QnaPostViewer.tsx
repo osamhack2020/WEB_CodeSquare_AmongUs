@@ -7,6 +7,7 @@ import { QnaTagList } from "../../components/qna/QnaTagList";
 import { Vote } from "../../components/qna/Vote";
 import { QnaPost } from "../../lib/api/qna";
 import { formatDate, numberWithCommas } from "../../lib/utils";
+import useComments from "./hooks/useComments";
 import { QnaComments } from "./QnaComments";
 
 export interface QnaPostViewerProps {
@@ -144,6 +145,10 @@ export const QnaPostViewer: React.FC<QnaPostViewerProps> = ({
   post,
   ...props
 }) => {
+  const { loading, data: comments } = useComments(
+    post.answer ? "replies" : "board",
+    post.id,
+  );
   return (
     <div
       css={css`
@@ -224,7 +229,8 @@ export const QnaPostViewer: React.FC<QnaPostViewerProps> = ({
           <div>안드로이드</div>
           <div>Kotlin</div>
         </QnaTagList>
-        <QnaComments />
+        {loading && <div>loading</div>}
+        {!loading && comments && <QnaComments comments={comments} />}
       </div>
     </div>
   );
