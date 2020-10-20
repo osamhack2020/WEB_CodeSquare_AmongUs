@@ -129,7 +129,7 @@ router
     ctx.body = {
       response: "success",
       message: "답글 조회 성공",
-      data: generatePosts(10, true),
+      data: generatePosts(3, true),
     };
   })
   .get("/boardcomment/:postId", (ctx) => {
