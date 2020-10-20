@@ -1,6 +1,7 @@
 /** @jsx jsx */
 import { css, jsx } from "@emotion/core";
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
+import { useDispatch } from "react-redux";
 import { useHistory, useParams } from "react-router-dom";
 import { Button } from "../../components/common/Button";
 import { OutlineButton } from "../../components/common/OutlineButton";
@@ -9,6 +10,7 @@ import { RadioInput } from "../../components/common/RadioInput";
 import { QnaListWidget } from "../../components/qna/QnaListWidget";
 import { MarkdownEditor } from "../../components/write/MarkdownEditor";
 import { QnaPost } from "../../lib/api/qna";
+import qna from "../../modules/qna";
 import usePost from "./hooks/usePost";
 import { QnaPostViewer } from "./QnaPostViewer";
 
@@ -40,7 +42,16 @@ export const QnaPostContainer: React.FC = () => {
     setPreview,
   ]);
   const { postId }: { postId: string } = useParams();
+  const dispatch = useDispatch();
+  useEffect(() => {
+    dispatch(qna.actions.setPostId(Number(postId)));
+  }, [postId, dispatch]);
   const { data, loading } = usePost(postId);
+  useEffect(() => {
+    if (data) {
+      dispatch(qna.actions.setAuthor(data?.post.username));
+    }
+  }, [data, dispatch]);
   return (
     <div
       css={css`
