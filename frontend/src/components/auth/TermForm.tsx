@@ -3,7 +3,7 @@ import { css, jsx } from "@emotion/core";
 import styled from "@emotion/styled";
 import { useCallback, useState } from "react";
 import { Button } from "../common/Button";
-import { RadioButton } from "../common/RadioButton";
+import { RadioInput } from "../common/RadioInput";
 
 interface Terms {
   service: boolean;
@@ -51,7 +51,7 @@ export const TermForm: React.FC<TermFormProps> = ({
 
   return (
     <TermFormBlock {...props}>
-      <RadioButton
+      <RadioInput
         checked={terms.privacy && terms.service}
         onClick={handleAgreeAll}
         css={css`
@@ -64,13 +64,13 @@ export const TermForm: React.FC<TermFormProps> = ({
         `}
       >
         코드스퀘어 이용약관, 개인정보의 수집 및 이용에 모두 동의합니다.
-      </RadioButton>
+      </RadioInput>
       <div
         css={css`
           padding-top: 32px;
         `}
       >
-        <RadioButton
+        <RadioInput
           checked={terms.service}
           onClick={handleAgreeService}
           css={css`
@@ -89,7 +89,7 @@ export const TermForm: React.FC<TermFormProps> = ({
           >
             (필수)
           </div>
-        </RadioButton>
+        </RadioInput>
         <TextBox
           css={css`
             margin-top: 10px;
@@ -116,7 +116,7 @@ export const TermForm: React.FC<TermFormProps> = ({
           padding-top: 32px;
         `}
       >
-        <RadioButton
+        <RadioInput
           checked={terms.privacy}
           onClick={handleAgreePrivacy}
           css={css`
@@ -135,7 +135,7 @@ export const TermForm: React.FC<TermFormProps> = ({
           >
             (필수)
           </div>
-        </RadioButton>
+        </RadioInput>
         <TextBox
           css={css`
             margin-top: 10px;

@@ -1,9 +1,10 @@
 /** @jsx jsx */
 import { css, jsx } from "@emotion/core";
-import { Comment } from "../../modules/qna";
+import { QnaComment } from "../../lib/api/qna";
+import { formatDate } from "../../lib/utils";
 
 export interface QnaCommentItemProps {
-  comment: Comment;
+  comment: QnaComment;
 }
 
 export const QnaCommentItem: React.FC<QnaCommentItemProps> = ({
@@ -41,9 +42,9 @@ export const QnaCommentItem: React.FC<QnaCommentItemProps> = ({
             padding-right: 6px;
           `}
         >
-          {comment.user.username}
+          {comment.member_name}
         </div>
-        {comment.isAuthor && (
+        {comment.is_author && (
           <div
             css={css`
               align-self: center;
@@ -75,7 +76,7 @@ export const QnaCommentItem: React.FC<QnaCommentItemProps> = ({
           text-align: left;
         `}
       >
-        {comment.created_at}
+        {formatDate(comment.created_at)}
       </div>
     </div>
     <div

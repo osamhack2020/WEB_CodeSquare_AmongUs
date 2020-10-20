@@ -1,16 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
-import apiClient from "../../../lib/api/apiClient";
+import { getRecentPosts, QnaPost } from "../../../lib/api/qna";
 import useScrollPagination from "../../../lib/hooks/useScrollPagination";
-import { QnaPost } from "../../../modules/qna";
-
-const fetch = async (page: number) => {
-  const {
-    data: { data },
-  } = await apiClient.get(`/board/${page}`);
-  const { totalPage, boards }: { totalPage: number; boards: QnaPost[] } = data;
-
-  return { totalPage, boards };
-};
 
 export default function useRecentPosts() {
   const [loading, setLoading] = useState(false);
@@ -28,7 +18,7 @@ export default function useRecentPosts() {
       return;
     }
     setLoading(true);
-    const { totalPage, boards: posts } = await fetch(page + 1);
+    const { totalPage, posts } = await getRecentPosts(page + 1);
     setData((data) => {
       if (!data) {
         return {

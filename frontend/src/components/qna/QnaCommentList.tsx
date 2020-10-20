@@ -1,12 +1,12 @@
 /** @jsx jsx */
 import { css, jsx } from "@emotion/core";
 import React from "react";
-import { Comment } from "../../modules/qna";
+import { QnaComment } from "../../lib/api/qna";
 import { Divider } from "../common/Divider";
 import { QnaCommentItem } from "./QnaCommentItem";
 
 export interface QnaCommentListProps {
-  comments: Comment[];
+  comments: QnaComment[];
 }
 
 export const QnaCommentList: React.FC<QnaCommentListProps> = ({

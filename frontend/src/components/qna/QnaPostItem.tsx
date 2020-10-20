@@ -2,7 +2,8 @@
 import { css, jsx } from "@emotion/core";
 import styled from "@emotion/styled";
 import { HTMLProps } from "react";
-import { QnaPost } from "../../modules/qna";
+import { Link } from "react-router-dom";
+import { QnaPost } from "../../lib/api/qna";
 import { AvatarIcon } from "../common/AvatarIcon";
 import { Divider } from "../common/Divider";
 import { QnaTagList } from "./QnaTagList";
@@ -10,6 +11,12 @@ import { QnaTagList } from "./QnaTagList";
 export interface QnaPostItemProps {
   post: QnaPost;
 }
+
+const WrapperLink = styled(Link)`
+  display: block;
+  color: inherit;
+  text-decoration: none;
+`;
 
 const QnaPostBlock = styled.div`
   padding-bottom: 21px;
@@ -35,7 +42,7 @@ export const QnaPostItem: React.FC<
     <QnaPostBlock {...props}>
       <QnaPostWrapper>
         <AvatarIcon
-          alt={`@${post.user_id}`}
+          alt={`@${post.username}`}
           css={css`
             margin-top: 4px;
           `}
@@ -43,25 +50,27 @@ export const QnaPostItem: React.FC<
           height="49px"
         />
         <QnaPostContent>
-          <div
-            css={css`
-              font-size: 21px;
-              font-style: normal;
-              font-weight: 400;
-              line-height: 30px;
-              letter-spacing: -0.02em;
-              text-align: left;
-              text-overflow: ellipsis;
-              overflow: hidden;
-              white-space: nowrap;
+          <WrapperLink to={`/qna/${post.id}`}>
+            <div
+              css={css`
+                font-size: 21px;
+                font-style: normal;
+                font-weight: 400;
+                line-height: 30px;
+                letter-spacing: -0.02em;
+                text-align: left;
+                text-overflow: ellipsis;
+                overflow: hidden;
+                white-space: nowrap;
 
-              padding-bottom: 5px;
-              color: #627bff;
-              height: 30px;
-            `}
-          >
-            {post.title}
-          </div>
+                padding-bottom: 5px;
+                color: #627bff;
+                height: 30px;
+              `}
+            >
+              {post.title}
+            </div>
+          </WrapperLink>
           <div
             css={css`
               font-size: 14px;
@@ -88,7 +97,9 @@ export const QnaPostItem: React.FC<
               padding-top: 16px;
             `}
           >
-            <div>{post.tag}</div>
+            {post.tags?.map((tag) => (
+              <div key={tag}>{tag}</div>
+            ))}
           </QnaTagList>
         </QnaPostContent>
       </QnaPostWrapper>

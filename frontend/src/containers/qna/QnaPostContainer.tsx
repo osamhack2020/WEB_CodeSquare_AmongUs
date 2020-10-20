@@ -1,10 +1,26 @@
 /** @jsx jsx */
 import { css, jsx } from "@emotion/core";
-import { useCallback } from "react";
-import { useHistory } from "react-router-dom";
+import { useCallback, useEffect, useState } from "react";
+import { useDispatch } from "react-redux";
+import { useHistory, useParams } from "react-router-dom";
+import { Button } from "../../components/common/Button";
 import { OutlineButton } from "../../components/common/OutlineButton";
+import { RadioButtons } from "../../components/common/RadioButtons";
+import { RadioInput } from "../../components/common/RadioInput";
 import { QnaListWidget } from "../../components/qna/QnaListWidget";
+import { MarkdownEditor } from "../../components/write/MarkdownEditor";
+import { QnaPost } from "../../lib/api/qna";
+import qna from "../../modules/qna";
+import usePost from "./hooks/usePost";
 import { QnaPostViewer } from "./QnaPostViewer";
+
+const recentCompare = (a: QnaPost, b: QnaPost) => {
+  return new Date(b.created_at).getTime() - new Date(a.created_at).getTime();
+};
+
+const recommendCompare = (a: QnaPost, b: QnaPost) => {
+  return b.recommend - a.recommend;
+};
 
 export const QnaPostContainer: React.FC = () => {
   const history = useHistory();
@@ -14,6 +30,28 @@ export const QnaPostContainer: React.FC = () => {
     },
     [history],
   );
+  const [sortOrder, setSortOrder] = useState("recommend");
+  const onChangeSortOrder = useCallback(
+    (order: string) => {
+      setSortOrder(order);
+    },
+    [setSortOrder],
+  );
+  const [preview, setPreview] = useState(false);
+  const onClickPreview = useCallback(() => setPreview((preview) => !preview), [
+    setPreview,
+  ]);
+  const { postId }: { postId: string } = useParams();
+  const dispatch = useDispatch();
+  useEffect(() => {
+    dispatch(qna.actions.setPostId(Number(postId)));
+  }, [postId, dispatch]);
+  const { data, loading } = usePost(postId);
+  useEffect(() => {
+    if (data) {
+      dispatch(qna.actions.setAuthor(data?.post.username));
+    }
+  }, [data, dispatch]);
   return (
     <div
       css={css`
@@ -21,19 +59,172 @@ export const QnaPostContainer: React.FC = () => {
         margin: 0 auto;
         padding-left: 24px;
         padding-right: 24px;
-        padding-top: 83px;
+        padding-top: 48px;
         display: flex;
       `}
     >
-      <QnaPostViewer
+      <div
         css={css`
+          display: flex;
+          flex-direction: column;
           flex: 1 1 auto;
         `}
-      />
+      >
+        {loading && <div>Loading...</div>}
+        {!loading && data && <QnaPostViewer post={data.post} />}
+        <div
+          css={css`
+            display: flex;
+            justify-content: space-between;
+            padding-bottom: 36px;
+          `}
+        >
+          <div
+            css={css`
+              font-size: 24px;
+              font-style: normal;
+              font-weight: 700;
+              line-height: 35px;
+              letter-spacing: -0.02em;
+              text-align: left;
+              margin-left: 52px;
+            `}
+          >
+            <span
+              css={css`
+                color: #627bff;
+              `}
+            >
+              {data?.replies.length || 0}개
+            </span>
+            의 답변이 있습니다.
+          </div>
+          <RadioButtons
+            value={sortOrder}
+            values={["recommend", "recent"]}
+            labels={["추천순", "최신순"]}
+            onChange={onChangeSortOrder}
+          />
+        </div>
+        {!loading &&
+          data &&
+          data.replies
+            .sort((sortOrder === "recent" && recentCompare) || recommendCompare)
+            .map((repl) => <QnaPostViewer key={repl.id} post={repl} />)}
+        <div
+          css={css`
+            margin-left: 52px;
+            padding-bottom: 32px;
+          `}
+        >
+          <div
+            css={css`
+              font-size: 18px;
+              font-style: normal;
+              font-weight: 400;
+              line-height: 26px;
+              letter-spacing: -0.02em;
+              text-align: left;
+              padding-bottom: 12px;
+            `}
+          >
+            답변 등록하기
+          </div>
+          <MarkdownEditor
+            height={153}
+            css={css`
+              margin-bottom: 12px;
+            `}
+          />
+          <div
+            css={css`
+              display: flex;
+              justify-content: space-between;
+            `}
+          >
+            <RadioInput
+              checked={preview}
+              onClick={onClickPreview}
+              css={css`
+                font-size: 13px;
+                font-style: normal;
+                font-weight: 400;
+                line-height: 19px;
+                letter-spacing: -0.02em;
+                text-align: left;
+              `}
+            >
+              미리보기
+            </RadioInput>
+            <Button
+              css={css`
+                padding: 7px 45px;
+                border-radius: 6px;
+                font-size: 14px;
+                font-style: normal;
+                font-weight: 700;
+                line-height: 20px;
+                letter-spacing: -0.02em;
+                text-align: center;
+              `}
+            >
+              등록
+            </Button>
+          </div>
+        </div>
+        <div
+          css={css`
+            display: flex;
+            justify-content: space-between;
+            margin-left: 52px;
+            padding: 32px 0px;
+            padding-bottom: 78px;
+          `}
+        >
+          <div
+            css={css`
+              display: flex;
+              flex-direction: column;
+            `}
+          >
+            <div
+              css={css`
+                font-size: 18px;
+                font-style: normal;
+                font-weight: 700;
+                line-height: 26px;
+                letter-spacing: -0.02em;
+                text-align: left;
+              `}
+            >
+              찾고 있는 질문이 없나요?
+            </div>
+            <div
+              css={css`
+                font-size: 14px;
+                font-style: normal;
+                font-weight: 400;
+                line-height: 20px;
+                letter-spacing: -0.02em;
+                text-align: left;
+              `}
+            >
+              코드 스퀘어의 전우들에게 물어보세요.
+            </div>
+          </div>
+          <OutlineButton
+            css={css`
+              padding: 12px 24px;
+            `}
+          >
+            질문 등록하기
+          </OutlineButton>
+        </div>
+      </div>
       <div
         css={css`
           flex: 1 0 190px;
-          margin-top: 16px;
+          margin-top: 52px;
           margin-left: 40px;
           & > div:not(:last-child) {
             padding-bottom: 28px;

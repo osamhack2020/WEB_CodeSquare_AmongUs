@@ -1,16 +1,159 @@
 /** @jsx jsx */
 import { css, jsx } from "@emotion/core";
+import React from "react";
 import { AvatarIcon } from "../../components/common/AvatarIcon";
 import { VerticalDivider } from "../../components/common/VerticalDivider";
 import { QnaTagList } from "../../components/qna/QnaTagList";
 import { Vote } from "../../components/qna/Vote";
+import { QnaPost } from "../../lib/api/qna";
+import { formatDate, numberWithCommas } from "../../lib/utils";
+import useComments from "./hooks/useComments";
 import { QnaComments } from "./QnaComments";
 
-export const QnaPostViewer: React.FC = (props) => {
+export interface QnaPostViewerProps {
+  post: QnaPost;
+}
+
+interface PostHeaderProps {
+  member_name: string;
+  username: string;
+  title?: string;
+  answer?: boolean;
+  views?: number;
+  created_at: string;
+}
+
+const PostHeader: React.FC<PostHeaderProps> = ({
+  answer,
+  username,
+  member_name,
+  title,
+  views,
+  created_at,
+  ...props
+}) => {
+  return answer ? (
+    <div
+      css={css`
+        display: flex;
+      `}
+      {...props}
+    >
+      <AvatarIcon alt={username} width={32} height={32} />
+      <div
+        css={css`
+          display: flex;
+          flex-direction: column;
+          padding-left: 11px;
+        `}
+      >
+        <div
+          css={css`
+            font-size: 12px;
+            font-style: normal;
+            font-weight: 500;
+            line-height: 16px;
+            letter-spacing: -0.02em;
+            text-align: left;
+          `}
+        >
+          {member_name}
+        </div>
+        <div
+          css={css`
+            font-size: 12px;
+            font-style: normal;
+            font-weight: 400;
+            line-height: 16px;
+            letter-spacing: -0.02em;
+            text-align: left;
+          `}
+        >
+          {formatDate(created_at)}
+        </div>
+      </div>
+    </div>
+  ) : (
+    <React.Fragment>
+      <div
+        css={css`
+          font-size: 30px;
+          font-style: normal;
+          font-weight: 400;
+          line-height: 43px;
+          letter-spacing: -0.02em;
+          text-align: left;
+          padding-bottom: 9px;
+
+          color: #323232;
+        `}
+      >
+        {title}
+      </div>
+      <div
+        css={css`
+          display: flex;
+          font-size: 12px;
+          font-style: normal;
+          font-weight: 400;
+          line-height: 17px;
+          letter-spacing: -0.02em;
+          text-align: left;
+          align-items: center;
+          padding-bottom: 20px;
+
+          & > *:not(:last-child) {
+            margin-right: 10px;
+          }
+          & > div {
+            color: #5a5a5a;
+          }
+        `}
+      >
+        <div
+          css={css`
+            display: flex;
+            color: #3e3e3e;
+            font-weight: 600;
+          `}
+        >
+          <AvatarIcon width={16} height={16} alt={username} />
+          <div>{member_name}</div>
+        </div>
+        <VerticalDivider
+          height={8}
+          css={css`
+            align-self: center;
+            fill: #c4c4c4;
+          `}
+        />
+        <div>{formatDate(created_at)}</div>
+        <VerticalDivider
+          height={8}
+          css={css`
+            align-self: center;
+            fill: #c4c4c4;
+          `}
+        />
+        {views && <div>{`조회수: ${numberWithCommas(views)}`}</div>}
+      </div>
+    </React.Fragment>
+  );
+};
+
+export const QnaPostViewer: React.FC<QnaPostViewerProps> = ({
+  post,
+  ...props
+}) => {
+  const { loading, data: comments } = useComments(
+    post.answer ? "replies" : "board",
+    post.id,
+  );
   return (
     <div
       css={css`
         display: flex;
+        padding: 36px 0;
       `}
       {...props}
     >
@@ -20,7 +163,28 @@ export const QnaPostViewer: React.FC = (props) => {
           margin-top: 16px;
         `}
       >
-        <Vote votes={32} />
+        <Vote
+          votes={32}
+          css={css`
+            margin-bottom: 20px;
+          `}
+        />
+        {post.accepted && (
+          <svg
+            width="20"
+            height="20"
+            viewBox="0 0 17 14"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              fillRule="evenodd"
+              clipRule="evenodd"
+              d="M13.94.94a1.5 1.5 0 012.142 2.1l-7.984 9.98a1.5 1.5 0 01-2.16.04L.648 7.768a1.5 1.5 0 112.12-2.12l4.188 4.186 6.946-8.85a.465.465 0 01.04-.044h-.002z"
+              fill="#627BFF"
+            />
+          </svg>
+        )}
       </div>
       <div
         css={css`
@@ -30,70 +194,17 @@ export const QnaPostViewer: React.FC = (props) => {
           margin-left: 32px;
         `}
       >
+        <PostHeader
+          username="@seowook12"
+          member_name="서욱"
+          created_at="2020-10-17 14:27"
+          title="안드로이드 스튜디오 블루투스 질문"
+          views={11379}
+          answer={post.answer}
+        />
         <div
           css={css`
-            font-size: 30px;
-            font-style: normal;
-            font-weight: 400;
-            line-height: 43px;
-            letter-spacing: -0.02em;
-            text-align: left;
-            padding-bottom: 9px;
-
-            color: #323232;
-          `}
-        >
-          안드로이드 스튜디오 블루투스 질문
-        </div>
-        <div
-          css={css`
-            display: flex;
-            font-size: 12px;
-            font-style: normal;
-            font-weight: 400;
-            line-height: 17px;
-            letter-spacing: -0.02em;
-            text-align: left;
-            align-items: center;
-
-            & > *:not(:last-child) {
-              margin-right: 10px;
-            }
-            & > div {
-              color: #5a5a5a;
-            }
-          `}
-        >
-          <div
-            css={css`
-              display: flex;
-              color: #3e3e3e;
-              font-weight: 600;
-            `}
-          >
-            <AvatarIcon width={16} height={16} alt="@seowook12" />
-            <div>서욱</div>
-          </div>
-          <VerticalDivider
-            height={8}
-            css={css`
-              align-self: center;
-              fill: #c4c4c4;
-            `}
-          />
-          <div>2020.10.04 21:57</div>
-          <VerticalDivider
-            height={8}
-            css={css`
-              align-self: center;
-              fill: #c4c4c4;
-            `}
-          />
-          <div>조회수: 11,101</div>
-        </div>
-        <div
-          css={css`
-            padding-top: 40px;
+            padding-top: 20px;
             padding-bottom: 40px;
             font-size: 14px;
             font-style: normal;
@@ -118,7 +229,8 @@ export const QnaPostViewer: React.FC = (props) => {
           <div>안드로이드</div>
           <div>Kotlin</div>
         </QnaTagList>
-        <QnaComments />
+        {loading && <div>loading</div>}
+        {!loading && comments && <QnaComments comments={comments} />}
       </div>
     </div>
   );
