@@ -34,8 +34,8 @@ const generatePosts = (num, answer = false) => {
 
 const generateComment = (id) => ({
   id: id,
-  username: "seowook12",
-  member_name: "서욱",
+  username: id % 2 === 0 ? "seowook12" : "1q2w3e4r",
+  member_name: id % 2 === 0 ? "서욱" : "홍길동",
   body: "보이는 이성은 노년에게서 동력은 것이다. 열락의 꽃 구할 못할 것이다.",
   created_at: now,
   updated_at: now,
@@ -125,11 +125,25 @@ router
       ],
     };
   })
-  .get("/replies/:postNum", (ctx) => {
+  .get("/replies/:postId", (ctx) => {
     ctx.body = {
       response: "success",
       message: "답글 조회 성공",
       data: generatePosts(10, true),
+    };
+  })
+  .get("/boardcomment/:postId", (ctx) => {
+    ctx.body = {
+      response: "success",
+      message: "댓글 조회 성공",
+      data: generateComments(3),
+    };
+  })
+  .get("/repliescomment/:postId", (ctx) => {
+    ctx.body = {
+      response: "success",
+      message: "댓글 조회 성공",
+      data: generateComments(3),
     };
   })
   .get("/board/:pageNum", (ctx) => {
