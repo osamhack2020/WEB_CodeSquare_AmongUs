@@ -2,21 +2,15 @@
 import { css, jsx } from "@emotion/core";
 import styled from "@emotion/styled";
 import { HTMLProps } from "react";
-import { Link } from "react-router-dom";
 import { QnaPost } from "../../lib/api/qna";
 import { AvatarIcon } from "../common/AvatarIcon";
 import { Divider } from "../common/Divider";
+import { WrapperLink } from "../common/WrapperLink";
 import { QnaTagList } from "./QnaTagList";
 
 export interface QnaPostItemProps {
   post: QnaPost;
 }
-
-const WrapperLink = styled(Link)`
-  display: block;
-  color: inherit;
-  text-decoration: none;
-`;
 
 const QnaPostBlock = styled.div`
   padding-bottom: 21px;

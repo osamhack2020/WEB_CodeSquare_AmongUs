@@ -2,16 +2,10 @@
 import { css, jsx } from "@emotion/core";
 import styled from "@emotion/styled";
 import { useCallback, useState } from "react";
-import { Link } from "react-router-dom";
 import useInput from "../../lib/hooks/useInput";
 import { Button } from "../common/Button";
+import { WrapperLink } from "../common/WrapperLink";
 import { LoginInput } from "./LoginInput";
-
-const WrapperLink = styled(Link)`
-  display: block;
-  color: inherit;
-  text-decoration: none;
-`;
 
 const LoginFormBlock = styled.div`
   display: flex;
