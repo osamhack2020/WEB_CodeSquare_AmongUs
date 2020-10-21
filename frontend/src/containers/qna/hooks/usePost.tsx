@@ -19,10 +19,9 @@ export default function usePost(postId: string) {
   }, [loading, setLoading, setData, postId]);
 
   /* eslint-disable react-hooks/exhaustive-deps */
-  // 첫 페이지는 스크롤 이벤트 없이 onLoadMore 함수 호출
   useEffect(() => {
     load();
-  }, []);
+  }, [postId]);
   /* eslint-enable react-hooks/exhaustive-deps */
 
   return { data, loading };
