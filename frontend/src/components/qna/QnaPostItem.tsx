@@ -3,6 +3,7 @@ import { css, jsx } from "@emotion/core";
 import styled from "@emotion/styled";
 import { HTMLProps } from "react";
 import { QnaPost } from "../../lib/api/qna";
+import { formatDate } from "../../lib/utils";
 import { AvatarIcon } from "../common/AvatarIcon";
 import { Divider } from "../common/Divider";
 import { WrapperLink } from "../common/WrapperLink";
@@ -86,15 +87,37 @@ export const QnaPostItem: React.FC<
           >
             {post.text}
           </div>
-          <QnaTagList
+          <div
             css={css`
-              padding-top: 16px;
+              display: flex;
+              justify-content: space-between;
             `}
           >
-            {post.tags?.map((tag) => (
-              <div key={tag}>{tag}</div>
-            ))}
-          </QnaTagList>
+            <QnaTagList
+              css={css`
+                padding-top: 16px;
+              `}
+            >
+              {post.tags?.map((tag) => (
+                <div key={tag}>{tag}</div>
+              ))}
+            </QnaTagList>
+            <div
+              css={css`
+                align-self: flex-end;
+                font-style: normal;
+                font-weight: normal;
+                font-size: 12px;
+                line-height: 17px;
+                text-align: right;
+                letter-spacing: -0.02em;
+
+                color: #7c7c7c;
+              `}
+            >
+              {formatDate(post.created_at)}
+            </div>
+          </div>
         </QnaPostContent>
       </QnaPostWrapper>
       <Divider />
