@@ -19,7 +19,7 @@ export default function useInput(
     },
     [],
   );
-  const onReset = useCallback(() => setInput(""), []);
+  const onReset = useCallback((value = "") => setInput(value), []);
   return [input, onChange, onReset, validate] as [
     string,
     typeof onChange,
