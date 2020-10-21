@@ -52,6 +52,13 @@ export const QnaPostContainer: React.FC = () => {
       dispatch(qna.actions.setAuthor(data?.post.username));
     }
   }, [data, dispatch]);
+  const [text, setText] = useState("");
+  const onTextChange = useCallback(
+    (text: string) => {
+      setText(text);
+    },
+    [setText],
+  );
   return (
     <div
       css={css`
@@ -131,6 +138,8 @@ export const QnaPostContainer: React.FC = () => {
             답변 등록하기
           </div>
           <MarkdownEditor
+            text={text}
+            onChange={onTextChange}
             height={153}
             css={css`
               margin-bottom: 12px;

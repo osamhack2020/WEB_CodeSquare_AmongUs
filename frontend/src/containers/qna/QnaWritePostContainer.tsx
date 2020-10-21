@@ -1,13 +1,15 @@
 /** @jsx jsx */
 import { css, jsx } from "@emotion/core";
 import { useCallback, useState } from "react";
+import { useHistory } from "react-router-dom";
 import { Button } from "../../components/common/Button";
 import { TagInput } from "../../components/common/TagInput";
 import { MarkdownEditor } from "../../components/write/MarkdownEditor";
+import { writePost } from "../../lib/api/qna";
 import useInput from "../../lib/hooks/useInput";
 
 export const QnaWritePostContainer: React.FC = ({ ...props }) => {
-  const [value, onChange] = useInput("");
+  const [title, onChange] = useInput("");
   const [tags, setTags] = useState<string[]>([]);
   const onTagChange = useCallback(
     (tags: string[]) => {
@@ -15,6 +17,18 @@ export const QnaWritePostContainer: React.FC = ({ ...props }) => {
     },
     [setTags],
   );
+  const history = useHistory();
+  const [text, setText] = useState("");
+  const onTextChange = useCallback(
+    (text: string) => {
+      setText(text);
+    },
+    [setText],
+  );
+  const onSubmit = useCallback(async () => {
+    const post = await writePost(text, title, tags);
+    history.push(`/qna/post/${post.id}`);
+  }, [history, text, title, tags]);
   return (
     <div
       css={css`
@@ -71,11 +85,13 @@ export const QnaWritePostContainer: React.FC = ({ ...props }) => {
               background-color: #f3f4f6;
             }
           `}
-          value={value}
+          value={title}
           onChange={onChange}
         />
       </div>
       <MarkdownEditor
+        text={text}
+        onChange={onTextChange}
         height={240}
         css={css`
           margin-bottom: 28px;
@@ -109,6 +125,7 @@ export const QnaWritePostContainer: React.FC = ({ ...props }) => {
         `}
       >
         <Button
+          onClick={onSubmit}
           css={css`
             font-size: 14px;
             font-style: normal;

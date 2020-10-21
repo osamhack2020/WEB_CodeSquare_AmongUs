@@ -182,3 +182,19 @@ export const writeComment = async (
     body: text,
   });
 };
+
+export const writePost = async (
+  text: string,
+  title: string,
+  tags: string[],
+): Promise<QnaPost> => {
+  const {
+    data: { data: board },
+  } = await apiClient.post<ApiBoardSpecificResponse>("/board", {
+    body: text,
+    title,
+    tag: tags.join(" "),
+  });
+
+  return buildQnaPostFromApiBoard(board);
+};
