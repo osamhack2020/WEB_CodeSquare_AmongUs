@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
-import { getPost, QnaPost } from "../../../lib/api/qna";
+import { getPost, getReplies, QnaPost } from "../../../lib/api/qna";
 
 export default function usePost(postId: string) {
   const [loading, setLoading] = useState(false);
@@ -13,7 +13,10 @@ export default function usePost(postId: string) {
       return;
     }
     setLoading(true);
-    const { replies, post } = await getPost(postId);
+    const [post, replies] = await Promise.all([
+      getPost(postId),
+      getReplies(postId),
+    ]);
     setData({ replies, post });
     setLoading(false);
   }, [loading, setLoading, setData, postId]);

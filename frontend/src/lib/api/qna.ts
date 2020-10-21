@@ -120,27 +120,24 @@ const buildQnaCommentFromApiComment = (replies: ApiComment): QnaComment => ({
   updated_at: replies.updated_at,
 });
 
-export const getPost = async (
-  postId: string | number,
-): Promise<{ post: QnaPost; replies: QnaPost[] }> => {
-  const apiBoard = apiClient.get<ApiBoardSpecificResponse>(
+export const getPost = async (postId: string | number): Promise<QnaPost> => {
+  const {
+    data: { data: board },
+  } = await apiClient.get<ApiBoardSpecificResponse>(
     `/board/specific/${postId}`,
   );
-  const apiReplies = apiClient.get<ApiRepliesResponse>(`/replies/${postId}`);
 
-  const [
-    {
-      data: { data: board },
-    },
-    {
-      data: { data: replies },
-    },
-  ] = await Promise.all([apiBoard, apiReplies]);
+  return buildQnaPostFromApiBoard(board);
+};
 
-  return {
-    post: buildQnaPostFromApiBoard(board),
-    replies: replies.map((repl) => buildQnaPostFromApiReplies(repl)),
-  };
+export const getReplies = async (
+  postId: string | number,
+): Promise<QnaPost[]> => {
+  const {
+    data: { data: replies },
+  } = await apiClient.get<ApiRepliesResponse>(`/replies/${postId}`);
+
+  return replies.map((repl) => buildQnaPostFromApiReplies(repl));
 };
 
 export const getRecentPosts = async (
@@ -191,6 +188,22 @@ export const writePost = async (
   const {
     data: { data: board },
   } = await apiClient.post<ApiBoardSpecificResponse>("/board", {
+    body: text,
+    title,
+    tag: tags.join(" "),
+  });
+
+  return buildQnaPostFromApiBoard(board);
+};
+
+export const editPost = async (
+  text: string,
+  title: string,
+  tags: string[],
+): Promise<QnaPost> => {
+  const {
+    data: { data: board },
+  } = await apiClient.put<ApiBoardSpecificResponse>("/board", {
     body: text,
     title,
     tag: tags.join(" "),

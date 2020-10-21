@@ -1,15 +1,17 @@
 /** @jsx jsx */
 import { css, jsx } from "@emotion/core";
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
 import { Button } from "../../components/common/Button";
 import { TagInput } from "../../components/common/TagInput";
 import { MarkdownEditor } from "../../components/write/MarkdownEditor";
-import { writePost } from "../../lib/api/qna";
+import { editPost, getPost, writePost } from "../../lib/api/qna";
 import useInput from "../../lib/hooks/useInput";
+import { useQuery } from "../../lib/hooks/useQuery";
 
 export const QnaWritePostContainer: React.FC = ({ ...props }) => {
-  const [title, onChange] = useInput("");
+  const edit = useQuery().get("id");
+  const [title, onTitleChange, resetTitle] = useInput("");
   const [tags, setTags] = useState<string[]>([]);
   const onTagChange = useCallback(
     (tags: string[]) => {
@@ -25,10 +27,27 @@ export const QnaWritePostContainer: React.FC = ({ ...props }) => {
     },
     [setText],
   );
+  const loadPost = useCallback(async () => {
+    if (!edit) {
+      return;
+    }
+    const post = await getPost(edit);
+    resetTitle(post.title);
+    setTags(post.tags || []);
+    setText(post.text);
+  }, [edit, resetTitle, setTags, setText]);
+  useEffect(() => {
+    loadPost();
+  }, [edit, loadPost]);
   const onSubmit = useCallback(async () => {
+    if (edit) {
+      const post = await editPost(text, title, tags);
+      history.push(`/qna/post/${post.id}`);
+      return;
+    }
     const post = await writePost(text, title, tags);
     history.push(`/qna/post/${post.id}`);
-  }, [history, text, title, tags]);
+  }, [history, text, title, tags, edit]);
   return (
     <div
       css={css`
@@ -51,7 +70,8 @@ export const QnaWritePostContainer: React.FC = ({ ...props }) => {
           padding-bottom: 28px;
         `}
       >
-        질문 등록하기
+        {!edit && "질문 등록하기"}
+        {edit && "질문 수정하기"}
       </div>
       <div
         css={css`
@@ -86,7 +106,7 @@ export const QnaWritePostContainer: React.FC = ({ ...props }) => {
             }
           `}
           value={title}
-          onChange={onChange}
+          onChange={onTitleChange}
         />
       </div>
       <MarkdownEditor
@@ -137,7 +157,8 @@ export const QnaWritePostContainer: React.FC = ({ ...props }) => {
             padding: 7px 45px;
           `}
         >
-          등록
+          {!edit && "등록"}
+          {edit && "수정"}
         </Button>
       </div>
     </div>
