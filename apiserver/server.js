@@ -15,11 +15,28 @@ server.use(middlewares);
 // You can use the one used by JSON Server
 server.use(jsonServer.bodyParser);
 
+let urlinfo = db.get('urlinfo').value();
+
+server.get('/urlinfo', (req, res) => {
+	return res.json(urlinfo);
+});
+
+server.delete('/urlinfo/:id', (req, res) => {
+	const infoId = parseInt(req.params.id, 10);
+	console.log(req.params.id);
+	
+	if(!infoId) {
+		return res.status(400).json({err: 'Incorrect id'});
+	}
+
+	db.get('urlinfo').remove({id: infoId}).write();
+	return res.status(204).send();
+
+});
+
 server.post('/urlinfo', (req, res) => {
 	const name = req.body['name'] || '';
 	const addr = req.body['addr'] || '';
-
-	let urlinfo = db.get('urlinfo').value();
 
 	if(!name.length){
 		return res.status(400).json({err: 'Incorrect name'});
