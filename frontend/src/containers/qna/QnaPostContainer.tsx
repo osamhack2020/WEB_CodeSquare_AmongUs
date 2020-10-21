@@ -7,6 +7,7 @@ import { Button } from "../../components/common/Button";
 import { OutlineButton } from "../../components/common/OutlineButton";
 import { RadioButtons } from "../../components/common/RadioButtons";
 import { RadioInput } from "../../components/common/RadioInput";
+import { WrapperLink } from "../../components/common/WrapperLink";
 import { QnaListWidget } from "../../components/qna/QnaListWidget";
 import { MarkdownEditor } from "../../components/write/MarkdownEditor";
 import { QnaPost } from "../../lib/api/qna";
@@ -30,6 +31,9 @@ export const QnaPostContainer: React.FC = () => {
     },
     [history],
   );
+  const onWriteClick = useCallback(() => {
+    history.push("/qna/write");
+  }, [history]);
   const [sortOrder, setSortOrder] = useState("recommend");
   const onChangeSortOrder = useCallback(
     (order: string) => {
@@ -225,6 +229,7 @@ export const QnaPostContainer: React.FC = () => {
             css={css`
               padding: 12px 24px;
             `}
+            onClick={onWriteClick}
           >
             질문 등록하기
           </OutlineButton>
@@ -248,18 +253,20 @@ export const QnaPostContainer: React.FC = () => {
             border-radius: 6px;
           `}
         >
-          <div
-            css={css`
-              font-size: 12px;
-              font-style: normal;
-              font-weight: 400;
-              line-height: 17px;
-              letter-spacing: -0.02em;
-              text-align: center;
-            `}
-          >
-            새로운 질문하기
-          </div>
+          <WrapperLink to="/qna/write">
+            <div
+              css={css`
+                font-size: 12px;
+                font-style: normal;
+                font-weight: 400;
+                line-height: 17px;
+                letter-spacing: -0.02em;
+                text-align: center;
+              `}
+            >
+              새로운 질문하기
+            </div>
+          </WrapperLink>
         </OutlineButton>
         <QnaListWidget
           onClick={onClick}
