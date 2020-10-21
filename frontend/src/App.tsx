@@ -1,7 +1,7 @@
 /** @jsx jsx */
 import { css, jsx } from "@emotion/core";
 import { useSelector } from "react-redux";
-import { Route } from "react-router-dom";
+import { Route, Switch } from "react-router-dom";
 import { Header } from "./components/base/Header";
 import { LoginContainer } from "./containers/auth/LoginContainer";
 import { RegisterContainer } from "./containers/auth/RegisterContainer";
@@ -9,6 +9,7 @@ import { HomeContainer } from "./containers/HomeContainer";
 import { ProfileContainer } from "./containers/profile/ProfileContainer";
 import { QnaHomeContainer } from "./containers/qna/QnaHomeContainer";
 import { QnaPostContainer } from "./containers/qna/QnaPostContainer";
+import { QnaWritePostContainer } from "./containers/qna/QnaWritePostContainer";
 import { VmHomeContainer } from "./containers/vm/VmHomeContainer";
 import { RootState } from "./modules";
 
@@ -28,32 +29,29 @@ const App: React.FC = () => {
           flex: 1 1 auto;
         `}
       >
-        <Route exact path="/">
-          {user ? <ProfileContainer /> : <HomeContainer />}
-        </Route>
-        <Route path="/vm">
-          <VmHomeContainer />
-        </Route>
-        <Route path="/qna" exact>
-          <QnaHomeContainer />
-        </Route>
-        <Route path="/qna/:postId">
-          <QnaPostContainer />
-        </Route>
-        <Route path="/login">
-          <LoginContainer
-            css={css`
-              margin: 0 auto;
-            `}
-          />
-        </Route>
-        <Route path="/register">
-          <RegisterContainer
-            css={css`
-              margin: 0 auto;
-            `}
-          />
-        </Route>
+        <Switch>
+          <Route exact path="/">
+            {user ? <ProfileContainer /> : <HomeContainer />}
+          </Route>
+          <Route path="/vm">
+            <VmHomeContainer />
+          </Route>
+          <Route path="/qna/write" exact>
+            <QnaWritePostContainer />
+          </Route>
+          <Route path="/qna" exact>
+            <QnaHomeContainer />
+          </Route>
+          <Route path="/qna/:postId">
+            <QnaPostContainer />
+          </Route>
+          <Route path="/login">
+            <LoginContainer />
+          </Route>
+          <Route path="/register">
+            <RegisterContainer />
+          </Route>
+        </Switch>
       </div>
     </div>
   );

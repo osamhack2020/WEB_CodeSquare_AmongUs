@@ -1,5 +1,5 @@
 /** @jsx jsx */
-import { jsx } from "@emotion/core";
+import { css, jsx } from "@emotion/core";
 import { useCallback } from "react";
 import { useDispatch } from "react-redux";
 import { useHistory } from "react-router-dom";
@@ -25,6 +25,13 @@ export const LoginContainer: React.FC = (props) => {
     history.push("/");
   }, [history]);
   return (
-    <LoginForm onSubmit={onSubmit} onCancel={onCancel} {...props}></LoginForm>
+    <LoginForm
+      onSubmit={onSubmit}
+      onCancel={onCancel}
+      css={css`
+        margin: 0 auto;
+      `}
+      {...props}
+    ></LoginForm>
   );
 };

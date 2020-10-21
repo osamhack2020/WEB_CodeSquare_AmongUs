@@ -23,6 +23,7 @@ export const RegisterContainer: React.FC = (props) => {
     <div
       css={css`
         width: 450px;
+        margin: 0 auto;
       `}
       {...props}
     >
