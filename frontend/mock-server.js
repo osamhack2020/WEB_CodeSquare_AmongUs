@@ -1,6 +1,7 @@
 const Koa = require("koa");
 const Router = require("@koa/router");
 const logger = require("koa-logger");
+const bodyParser = require("koa-bodyparser");
 
 const app = new Koa();
 const router = new Router();
@@ -105,7 +106,7 @@ router
     ctx.body = {
       response: "success",
       message: "게시물 댓글 조회 성공",
-      data: generateComments(5),
+      data: generateComments(2),
     };
   })
   .post("/boardcomment/:id", (ctx) => {
@@ -159,10 +160,26 @@ router
       message: "조회성공",
       data: { totalPage: 3, boards: generatePosts(10) },
     };
+  })
+  .post("/board", (ctx) => {
+    const { body, tag: tags, title } = ctx.request.body;
+    ctx.body = {
+      response: "success",
+      message: "게시물 생성 성공",
+      data: {
+        ...generatePosts(1)[0],
+        body,
+        tags: tags.split(" ").map((tag) => ({
+          data: tag,
+        })),
+        title,
+      },
+    };
   });
 
 app
   .use(logger())
+  .use(bodyParser())
   .use(async (ctx, next) => {
     if (ctx.request.header["authorization"]) {
       ctx.loggedIn = true;

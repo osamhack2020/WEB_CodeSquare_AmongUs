@@ -22,6 +22,7 @@
     "codemirror": "^5.58.1",
     "date-fns": "^2.16.1",
     "emotion-theming": "^10.0.27",
+    "koa-bodyparser": "^4.3.0",
     "react": "^16.13.1",
     "react-codemirror2": "^7.2.1",
     "react-dom": "^16.13.1",
