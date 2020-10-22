@@ -14,7 +14,7 @@ export const LoginContainer: React.FC = (props) => {
     async (id, password) => {
       const loggedIn = await login(id, password);
       if (loggedIn) {
-        dispatch(core.actions.setUser({ name: "CodeSquare" }));
+        dispatch(core.actions.setUser({ username: "seowook12" }));
         history.goBack();
       }
       return loggedIn;
