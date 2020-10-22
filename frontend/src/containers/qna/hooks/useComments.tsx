@@ -15,7 +15,6 @@ export default function useComments(type: "board" | "replies", postId: number) {
     setLoading(false);
   }, [loading, setLoading, setData, postId, type]);
 
-  // 첫 페이지는 스크롤 이벤트 없이 onLoadMore 함수 호출
   /* eslint-disable react-hooks/exhaustive-deps */
   useEffect(() => {
     load();

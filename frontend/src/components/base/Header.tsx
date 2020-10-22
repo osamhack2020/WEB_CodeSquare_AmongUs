@@ -3,14 +3,8 @@ import { css, jsx } from "@emotion/core";
 import styled from "@emotion/styled";
 import { Button } from "../common/Button";
 import { TextButton } from "../common/TextButton";
+import { WrapperLink } from "../common/WrapperLink";
 import useHeader from "./hooks/useHeader";
-import { Link } from "react-router-dom";
-
-const WrapperLink = styled(Link)`
-  display: block;
-  color: inherit;
-  text-decoration: none;
-`;
 
 const HeaderBlock = styled.div`
   display: flex;

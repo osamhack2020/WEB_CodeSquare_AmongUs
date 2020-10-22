@@ -1,11 +1,17 @@
 /** @jsx jsx */
 import { css, jsx } from "@emotion/core";
+import { useCallback } from "react";
+import { useHistory } from "react-router-dom";
 import { Button } from "../../components/common/Button";
 import { Sticky } from "../../components/common/Sticky";
 import { QnaSideBar } from "../../components/qna/QnaSideBar";
 import { QnaRecentPosts } from "./QnaRecentPosts";
 
 export const QnaHomeContainer: React.FC = (props) => {
+  const history = useHistory();
+  const onClick = useCallback(() => {
+    history.push("/qna/write");
+  }, [history]);
   return (
     <div
       css={css`
@@ -56,6 +62,7 @@ export const QnaHomeContainer: React.FC = (props) => {
             width: 116px;
             border-radius: 6px;
           `}
+          onClick={onClick}
         >
           질문하기
         </Button>

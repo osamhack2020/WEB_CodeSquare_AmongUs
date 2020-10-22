@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
-import { getPost, QnaPost } from "../../../lib/api/qna";
+import { getPost, getReplies, QnaPost } from "../../../lib/api/qna";
 
 export default function usePost(postId: string) {
   const [loading, setLoading] = useState(false);
@@ -13,16 +13,18 @@ export default function usePost(postId: string) {
       return;
     }
     setLoading(true);
-    const { replies, post } = await getPost(postId);
+    const [post, replies] = await Promise.all([
+      getPost(postId),
+      getReplies(postId),
+    ]);
     setData({ replies, post });
     setLoading(false);
   }, [loading, setLoading, setData, postId]);
 
   /* eslint-disable react-hooks/exhaustive-deps */
-  // 첫 페이지는 스크롤 이벤트 없이 onLoadMore 함수 호출
   useEffect(() => {
     load();
-  }, []);
+  }, [postId]);
   /* eslint-enable react-hooks/exhaustive-deps */
 
   return { data, loading };

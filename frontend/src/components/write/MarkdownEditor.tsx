@@ -3,7 +3,7 @@ import { css, jsx } from "@emotion/core";
 import { Controlled as CodeMirror } from "react-codemirror2";
 import "codemirror/lib/codemirror.css";
 import "../common/atom-one-light.css";
-import { useCallback, useState } from "react";
+import { useCallback } from "react";
 require("codemirror/mode/markdown/markdown");
 require("codemirror/mode/jsx/jsx");
 require("codemirror/mode/javascript/javascript");
@@ -12,18 +12,21 @@ require("codemirror/mode/python/python");
 
 export interface MarkdownEditorProps {
   height?: number;
+  text: string;
+  onChange: (text: string) => void;
 }
 
 export const MarkdownEditor: React.FC<MarkdownEditorProps> = ({
   height,
+  text,
+  onChange,
   ...props
 }) => {
-  const [value, setValue] = useState("");
   const handleChange = useCallback(
     (_editor, _data, value) => {
-      setValue(value);
+      onChange(value);
     },
-    [setValue],
+    [onChange],
   );
   return (
     <div
@@ -50,7 +53,7 @@ export const MarkdownEditor: React.FC<MarkdownEditorProps> = ({
       {...props}
     >
       <CodeMirror
-        value={value}
+        value={text}
         options={{
           mode: "markdown",
           theme: "one-light",

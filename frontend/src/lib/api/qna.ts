@@ -120,27 +120,24 @@ const buildQnaCommentFromApiComment = (replies: ApiComment): QnaComment => ({
   updated_at: replies.updated_at,
 });
 
-export const getPost = async (
-  postId: string | number,
-): Promise<{ post: QnaPost; replies: QnaPost[] }> => {
-  const apiBoard = apiClient.get<ApiBoardSpecificResponse>(
+export const getPost = async (postId: string | number): Promise<QnaPost> => {
+  const {
+    data: { data: board },
+  } = await apiClient.get<ApiBoardSpecificResponse>(
     `/board/specific/${postId}`,
   );
-  const apiReplies = apiClient.get<ApiRepliesResponse>(`/replies/${postId}`);
 
-  const [
-    {
-      data: { data: board },
-    },
-    {
-      data: { data: replies },
-    },
-  ] = await Promise.all([apiBoard, apiReplies]);
+  return buildQnaPostFromApiBoard(board);
+};
 
-  return {
-    post: buildQnaPostFromApiBoard(board),
-    replies: replies.map((repl) => buildQnaPostFromApiReplies(repl)),
-  };
+export const getReplies = async (
+  postId: string | number,
+): Promise<QnaPost[]> => {
+  const {
+    data: { data: replies },
+  } = await apiClient.get<ApiRepliesResponse>(`/replies/${postId}`);
+
+  return replies.map((repl) => buildQnaPostFromApiReplies(repl));
 };
 
 export const getRecentPosts = async (
@@ -169,4 +166,48 @@ export const getComments = async (
   } = await apiClient.get<ApiCommentResponse>(url);
 
   return comments.map((comment) => buildQnaCommentFromApiComment(comment));
+};
+
+export const writeComment = async (
+  type: "board" | "replies",
+  postId: number,
+  text: string,
+): Promise<void> => {
+  const url = `/${type}comment/${postId}`;
+
+  await apiClient.post(url, {
+    body: text,
+  });
+};
+
+export const writePost = async (
+  text: string,
+  title: string,
+  tags: string[],
+): Promise<QnaPost> => {
+  const {
+    data: { data: board },
+  } = await apiClient.post<ApiBoardSpecificResponse>("/board", {
+    body: text,
+    title,
+    tag: tags.join(" "),
+  });
+
+  return buildQnaPostFromApiBoard(board);
+};
+
+export const editPost = async (
+  text: string,
+  title: string,
+  tags: string[],
+): Promise<QnaPost> => {
+  const {
+    data: { data: board },
+  } = await apiClient.put<ApiBoardSpecificResponse>("/board", {
+    body: text,
+    title,
+    tag: tags.join(" "),
+  });
+
+  return buildQnaPostFromApiBoard(board);
 };
