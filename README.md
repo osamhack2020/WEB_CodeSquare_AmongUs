@@ -1,6 +1,14 @@
 <p align="center">
     <img src="https://user-images.githubusercontent.com/19200664/96371041-e0dabf00-119a-11eb-972e-ecda3c0a5b6a.png" alt="CodeSquare Logo">
 </p>
+<p align="center">
+    <a href="#">
+        <img src="https://img.shields.io/github/license/osamhack2020/WEB_CodeSquare_AmongUs">
+        <img src="https://img.shields.io/github/issues/osamhack2020/WEB_CodeSquare_AmongUs">
+        <img src="https://img.shields.io/badge/OSAM_Hackathon_2020-In_progress-blue">
+    </a>
+</p>
+
 코드스퀘어(CodeSquare)는 군 복무 중인 개발자를 위한 국방망용 오픈소스 통합 개발 플랫폼입니다.
 
 ## 기술 스택 (Technique Used)
