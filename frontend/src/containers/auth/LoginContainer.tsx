@@ -15,14 +15,14 @@ export const LoginContainer: React.FC = (props) => {
       const loggedIn = await login(id, password);
       if (loggedIn) {
         dispatch(core.actions.setUser({ name: "CodeSquare" }));
-        history.push("/");
+        history.goBack();
       }
       return loggedIn;
     },
     [dispatch, history],
   );
   const onCancel = useCallback(() => {
-    history.push("/");
+    history.goBack();
   }, [history]);
   return (
     <LoginForm

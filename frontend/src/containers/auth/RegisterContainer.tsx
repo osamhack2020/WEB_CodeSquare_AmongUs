@@ -10,7 +10,7 @@ export const RegisterContainer: React.FC = (props) => {
   const history = useHistory();
   const [phase, setPhase] = useState(1);
   const onCancel = useCallback(() => {
-    history.push("/");
+    history.goBack();
   }, [history]);
   const onNext = useCallback(() => {
     setPhase((phase) => phase + 1);
