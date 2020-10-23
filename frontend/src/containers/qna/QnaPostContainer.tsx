@@ -26,12 +26,6 @@ const recommendCompare = (a: QnaPost, b: QnaPost) => {
 
 export const QnaPostContainer: React.FC = () => {
   const history = useHistory();
-  const onClick = useCallback(
-    (postId: number) => {
-      history.push(`/qna/post/${postId}`);
-    },
-    [history],
-  );
   const onWriteClick = useCallback(() => {
     history.push("/qna/write");
   }, [history]);
@@ -271,7 +265,6 @@ export const QnaPostContainer: React.FC = () => {
           </WrapperLink>
         </OutlineButton>
         <QnaListWidget
-          onClick={onClick}
           title="답변을 기다리는 질문"
           posts={[
             { title: "빅 오(Big O) 계산은 어떻게 하나요?", id: 1 },
@@ -287,7 +280,6 @@ export const QnaPostContainer: React.FC = () => {
           ]}
         />
         <QnaListWidget
-          onClick={onClick}
           title="최근 인기 질문"
           posts={[
             { title: "빅 오(Big O) 계산은 어떻게 하나요?", id: 1 },
