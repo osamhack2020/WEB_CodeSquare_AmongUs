@@ -28,7 +28,7 @@ const generatePosts = (num, answer = false) => {
     .fill(null)
     .map(() => generatePost(POST_ID++, answer));
   if (answer === true) {
-    posts[0].adopted = 1;
+    // posts[0].adopted = 1;
   }
   return posts;
 };
@@ -174,6 +174,13 @@ router
         })),
         title,
       },
+    };
+  })
+  .put("/replies/adopted/:postId", (ctx) => {
+    ctx.body = {
+      response: "success",
+      message: "답글 채택 성공",
+      data: null,
     };
   });
 

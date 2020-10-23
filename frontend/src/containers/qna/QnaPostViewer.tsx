@@ -1,16 +1,18 @@
 /** @jsx jsx */
 import { css, jsx } from "@emotion/core";
 import React, { useCallback } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { useHistory } from "react-router-dom";
 import { AvatarIcon } from "../../components/common/AvatarIcon";
 import { ButtonWrapper } from "../../components/common/ButtonWrapper";
 import { VerticalDivider } from "../../components/common/VerticalDivider";
 import { QnaTagList } from "../../components/qna/QnaTagList";
 import { Vote } from "../../components/qna/Vote";
-import { QnaPost, writeComment } from "../../lib/api/qna";
+import { accept, PostType, QnaPost, writeComment } from "../../lib/api/qna";
 import { formatDate, numberWithCommas } from "../../lib/utils";
 import { RootState } from "../../modules";
 import { User } from "../../modules/core";
+import qna from "../../modules/qna";
 import useComments from "./hooks/useComments";
 import { QnaComments } from "./QnaComments";
 
@@ -220,7 +222,7 @@ export const QnaPostViewer: React.FC<QnaPostViewerProps> = ({
   ...props
 }) => {
   const user = useSelector<RootState, User | null>((state) => state.core.user);
-  const postType = post.answer ? "replies" : "board";
+  const postType: PostType = post.answer ? "replies" : "board";
   const { loading, data: comments } = useComments(postType, post.id);
   const onSubmit = useCallback(
     async (text: string) => {
@@ -228,9 +230,16 @@ export const QnaPostViewer: React.FC<QnaPostViewerProps> = ({
     },
     [post.id, postType],
   );
-  const onAcceptClick = useCallback(() => {}, []);
-  const onEditClick = useCallback(() => {}, []);
-  const onDeleteClick = useCallback(() => {}, []);
+  const history = useHistory();
+  const dispatch = useDispatch();
+  const onAcceptClick = useCallback(async () => {
+    await accept(post.id);
+    dispatch(qna.actions.acceptReply(post.id));
+  }, [post.id, dispatch]);
+  const onEditClick = useCallback(() => {
+    history.push(`/qna/write?id=${post.id}`);
+  }, [history, post.id]);
+  const onDeleteClick = useCallback(async () => {}, []);
   return (
     <div
       css={css`

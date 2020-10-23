@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
-import { getComments, QnaComment } from "../../../lib/api/qna";
+import { getComments, PostType, QnaComment } from "../../../lib/api/qna";
 
-export default function useComments(type: "board" | "replies", postId: number) {
+export default function useComments(type: PostType, postId: number) {
   const [loading, setLoading] = useState(false);
   const [data, setData] = useState<QnaComment[] | null>(null);
 
