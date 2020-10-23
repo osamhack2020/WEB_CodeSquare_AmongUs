@@ -222,6 +222,10 @@ export const QnaPostViewer: React.FC<QnaPostViewerProps> = ({
   ...props
 }) => {
   const user = useSelector<RootState, User | null>((state) => state.core.user);
+  const isAuthor =
+    useSelector<RootState, string | undefined>(
+      (state) => state.qna.post?.username,
+    ) === user?.username;
   const postType: PostType = post.answer ? "replies" : "board";
   const { loading, data: comments } = useComments(postType, post.id);
   const onSubmit = useCallback(
@@ -273,13 +277,15 @@ export const QnaPostViewer: React.FC<QnaPostViewerProps> = ({
             <AcceptIcon />
           </div>
         )}
-        {user && user.username === post.username && (
+        <React.Fragment>
+          {postType === "replies" && isAuthor && !accepted && !post.accepted && (
+            <ButtonWrapper onClick={onAcceptClick}>
+              <AcceptIcon disabled />
+            </ButtonWrapper>
+          )}
+        </React.Fragment>
+        {user?.username === post.username && (
           <React.Fragment>
-            {postType === "replies" && !accepted && !post.accepted && (
-              <ButtonWrapper onClick={onAcceptClick}>
-                <AcceptIcon disabled />
-              </ButtonWrapper>
-            )}
             <ButtonWrapper onClick={onEditClick}>
               <PencilIcon disabled />
             </ButtonWrapper>
