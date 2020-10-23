@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from "react";
+import React, { useState } from "react";
 // also exported from '@storybook/react' if you can deal with breaking changes in 6.1
 import { Story, Meta } from "@storybook/react/types-6-0";
 
@@ -11,13 +11,7 @@ export default {
 
 const Template: Story = (args) => {
   const [text, setText] = useState("");
-  const onTextChange = useCallback(
-    (text: string) => {
-      setText(text);
-    },
-    [setText],
-  );
-  return <MarkdownEditor text={text} onChange={onTextChange} {...args} />;
+  return <MarkdownEditor text={text} onChange={setText} {...args} />;
 };
 
 export const Default = Template.bind({});

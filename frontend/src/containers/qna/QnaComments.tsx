@@ -21,7 +21,7 @@ export const QnaComments: React.FC<QnaCommentsProps> = ({
   comments: _comments,
   ...props
 }) => {
-  const author = useSelector<RootState>((state) => state.qna.author);
+  const author = useSelector<RootState>((state) => state.qna.post?.username);
   const [comments, setComments] = useState<QnaComment[]>(_comments);
   // 댓글 id가 질문자 id와 일치할 경우 is_author를 true로 함
   useEffect(() => {

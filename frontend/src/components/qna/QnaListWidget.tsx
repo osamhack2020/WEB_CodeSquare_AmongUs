@@ -1,26 +1,17 @@
 /** @jsx jsx */
 import { css, jsx } from "@emotion/core";
-import { useCallback } from "react";
 import { Link } from "react-router-dom";
 
 export interface QnaListWidgetProps {
   title: string;
   posts: { title: string; id: number }[];
-  onClick: (postId: number) => void;
 }
 
 export const QnaListWidget: React.FC<QnaListWidgetProps> = ({
   title,
   posts,
-  onClick,
   ...props
 }) => {
-  const handleClick = useCallback(
-    (id: number) => {
-      onClick(id);
-    },
-    [onClick],
-  );
   return (
     <div {...props}>
       <div
@@ -64,11 +55,7 @@ export const QnaListWidget: React.FC<QnaListWidgetProps> = ({
         `}
       >
         {posts.map((post) => (
-          <Link
-            to={`/qna/${post.id}`}
-            key={post.id}
-            onClick={() => handleClick(post.id)}
-          >
+          <Link to={`/qna/${post.id}`} key={post.id}>
             {post.title}
           </Link>
         ))}

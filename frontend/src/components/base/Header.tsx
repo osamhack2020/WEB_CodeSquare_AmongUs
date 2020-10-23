@@ -9,6 +9,7 @@ import useHeader from "./hooks/useHeader";
 const HeaderBlock = styled.div`
   display: flex;
   width: 100%;
+  flex-basis: 60px;
   height: 60px;
   justify-content: space-between;
   background-color: #2c2b2b;
