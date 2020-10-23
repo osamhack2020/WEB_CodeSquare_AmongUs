@@ -16,11 +16,16 @@ class MainController{
 
     @Value("${spring.profiles.active}")
     String str;
-    
     @GetMapping("/")
-    public String helloworld(final HttpServletRequest req) {   
+    public String helloworld1(final HttpServletRequest req) {   
+        return "helloworld";
+    }
+    
+    @GetMapping("/prod")
+    public String helloworld2(final HttpServletRequest req) {   
         return "helloworld from "+str;
     }
+
     @GetMapping("/authorized")
     public String helloworld2() {   
         return "Only user!!!";
