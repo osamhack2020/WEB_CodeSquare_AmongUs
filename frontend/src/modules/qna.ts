@@ -28,11 +28,14 @@ const qna = createSlice({
       }
     },
     deleteReply(state, action: PayloadAction<number>) {
-      const postId = state.replies?.findIndex(
+      if (!state.replies) {
+        return;
+      }
+      const idx = state.replies?.findIndex(
         (reply) => reply.id === action.payload,
       );
-      if (postId) {
-        state.replies?.splice(postId, 1);
+      if (idx !== -1) {
+        state.replies?.splice(idx, 1);
       }
     },
   },
