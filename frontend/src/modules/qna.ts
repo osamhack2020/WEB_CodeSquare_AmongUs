@@ -15,7 +15,7 @@ const qna = createSlice({
   name: "qna",
   initialState,
   reducers: {
-    setPost(state, action: PayloadAction<QnaPost>) {
+    setPost(state, action: PayloadAction<QnaPost | null>) {
       state.post = action.payload;
     },
     setReplies(state, action: PayloadAction<QnaPost[]>) {
@@ -25,6 +25,14 @@ const qna = createSlice({
       const reply = state.replies?.find((reply) => reply.id === action.payload);
       if (reply) {
         reply.accepted = true;
+      }
+    },
+    deleteReply(state, action: PayloadAction<number>) {
+      const postId = state.replies?.findIndex(
+        (reply) => reply.id === action.payload,
+      );
+      if (postId) {
+        state.replies?.splice(postId, 1);
       }
     },
   },

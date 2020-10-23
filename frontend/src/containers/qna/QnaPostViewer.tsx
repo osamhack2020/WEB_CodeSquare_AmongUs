@@ -8,7 +8,13 @@ import { ButtonWrapper } from "../../components/common/ButtonWrapper";
 import { VerticalDivider } from "../../components/common/VerticalDivider";
 import { QnaTagList } from "../../components/qna/QnaTagList";
 import { Vote } from "../../components/qna/Vote";
-import { accept, PostType, QnaPost, writeComment } from "../../lib/api/qna";
+import {
+  accept,
+  deletePost,
+  PostType,
+  QnaPost,
+  writeComment,
+} from "../../lib/api/qna";
 import { formatDate, numberWithCommas } from "../../lib/utils";
 import { RootState } from "../../modules";
 import { User } from "../../modules/core";
@@ -247,7 +253,15 @@ export const QnaPostViewer: React.FC<QnaPostViewerProps> = ({
       history.push(`/qna/edit?id=${post.id}`);
     }
   }, [history, post.id, post.answer]);
-  const onDeleteClick = useCallback(async () => {}, []);
+  const onDeleteClick = useCallback(async () => {
+    await deletePost(postType, post.id);
+    if (postType === "board") {
+      dispatch(qna.actions.setPost(null));
+      history.goBack();
+    } else if (postType === "replies") {
+      dispatch(qna.actions.deleteReply(post.id));
+    }
+  }, [dispatch, history, post.id, postType]);
   return (
     <div
       css={css`

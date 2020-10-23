@@ -213,10 +213,9 @@ export const editPost = async (
   });
 };
 
-export const editReply = async (id: number, text: string) => {
-  await apiClient.put(`/replies/${id}`, {
-    body: text,
-  });
+export const deletePost = async (type: PostType, postId: number) => {
+  const url = `/${type}/${postId}`;
+  await apiClient.delete<ApiBoardSpecificResponse>(url);
 };
 
 export const accept = async (postId: number) => {
