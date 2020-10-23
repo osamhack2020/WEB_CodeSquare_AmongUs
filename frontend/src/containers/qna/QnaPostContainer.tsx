@@ -62,12 +62,6 @@ export const QnaPostContainer: React.FC = () => {
     }
   }, [data, dispatch]);
   const [text, setText] = useState("");
-  const onTextChange = useCallback(
-    (text: string) => {
-      setText(text);
-    },
-    [setText],
-  );
   const accepted = replies?.some((repl) => repl.accepted);
   return (
     <div
@@ -151,7 +145,7 @@ export const QnaPostContainer: React.FC = () => {
           </div>
           <MarkdownEditor
             text={text}
-            onChange={onTextChange}
+            onChange={setText}
             height={153}
             css={css`
               margin-bottom: 12px;

@@ -294,11 +294,11 @@ export const QnaPostViewer: React.FC<QnaPostViewerProps> = ({
         `}
       >
         <PostHeader
-          username="@seowook12"
-          member_name="서욱"
-          created_at="2020-10-17 14:27"
-          title="안드로이드 스튜디오 블루투스 질문"
-          views={11379}
+          username={post.username}
+          member_name={post.member_name}
+          created_at={post.created_at}
+          title={post.title}
+          views={post.view}
           answer={post.answer}
         />
         <div

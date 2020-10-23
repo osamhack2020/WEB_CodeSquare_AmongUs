@@ -10,23 +10,11 @@ import useInput from "../../lib/hooks/useInput";
 import { useQuery } from "../../lib/hooks/useQuery";
 
 export const QnaWritePostContainer: React.FC = ({ ...props }) => {
+  const history = useHistory();
   const edit = useQuery().get("id");
   const [title, onTitleChange, resetTitle] = useInput("");
   const [tags, setTags] = useState<string[]>([]);
-  const onTagChange = useCallback(
-    (tags: string[]) => {
-      setTags(tags);
-    },
-    [setTags],
-  );
-  const history = useHistory();
   const [text, setText] = useState("");
-  const onTextChange = useCallback(
-    (text: string) => {
-      setText(text);
-    },
-    [setText],
-  );
   const loadPost = useCallback(async () => {
     if (!edit) {
       return;
@@ -111,7 +99,7 @@ export const QnaWritePostContainer: React.FC = ({ ...props }) => {
       </div>
       <MarkdownEditor
         text={text}
-        onChange={onTextChange}
+        onChange={setText}
         height={240}
         css={css`
           margin-bottom: 28px;
@@ -136,7 +124,7 @@ export const QnaWritePostContainer: React.FC = ({ ...props }) => {
         >
           태그
         </div>
-        <TagInput tags={tags} onChange={onTagChange} />
+        <TagInput tags={tags} onChange={setTags} />
       </div>
       <div
         css={css`
