@@ -15,10 +15,8 @@ export const RegisterContainer: React.FC = (props) => {
   const onNext = useCallback(() => {
     setPhase((phase) => phase + 1);
   }, [setPhase]);
-  const onSubmit = useCallback(async (username: string, password: string) => {
-    console.log(username);
-    console.log(password);
-  }, []);
+  const onSubmit = useCallback(async (username: string, password: string) => {},
+  []);
   return (
     <div
       css={css`

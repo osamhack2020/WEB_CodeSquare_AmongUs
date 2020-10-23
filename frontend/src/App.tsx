@@ -7,9 +7,10 @@ import { LoginContainer } from "./containers/auth/LoginContainer";
 import { RegisterContainer } from "./containers/auth/RegisterContainer";
 import { HomeContainer } from "./containers/HomeContainer";
 import { ProfileContainer } from "./containers/profile/ProfileContainer";
+import { QnaEditContainer } from "./containers/qna/QnaEditContainer";
 import { QnaHomeContainer } from "./containers/qna/QnaHomeContainer";
 import { QnaPostContainer } from "./containers/qna/QnaPostContainer";
-import { QnaWritePostContainer } from "./containers/qna/QnaWritePostContainer";
+import { QnaWriteContainer } from "./containers/qna/QnaWriteContainer";
 import { VmHomeContainer } from "./containers/vm/VmHomeContainer";
 import { RootState } from "./modules";
 
@@ -37,7 +38,10 @@ const App: React.FC = () => {
             <VmHomeContainer />
           </Route>
           <Route path="/qna/write" exact>
-            <QnaWritePostContainer />
+            <QnaWriteContainer />
+          </Route>
+          <Route path="/qna/edit" exact>
+            <QnaEditContainer />
           </Route>
           <Route path="/qna" exact>
             <QnaHomeContainer />

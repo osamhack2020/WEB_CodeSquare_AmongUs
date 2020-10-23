@@ -12,8 +12,8 @@ let POST_ID = 1;
 let TAG_ID = 1;
 const generatePost = (id, answer = false) => ({
   id: id,
-  username: "seowook12",
-  member_name: "서욱",
+  username: id % 2 === 0 ? "seowook12" : "1q2w3e4r",
+  member_name: id % 2 === 0 ? "서욱" : "홍길동",
   title: !answer && "안드로이드 블루투스 연결 질문",
   body:
     "앞이 날카로우나 방황하였으며, 남는 황금시대의 커다란 그리하였는가?\n피에 불어 용감하고 말이다. 청춘에서만 듣기만 앞이 많이 부패뿐이다. 노년에게서 커다란 것이다.보라, 군영과 영락과 하여도...앞이 날카로우나 방황하였으며, 남는 황금시대의 커다란 그리하였는가? 피에 불어 용감하고 말이다. 청춘에서만 듣기만 앞이 많이 부패뿐이다. 노년에게서 커다란 것이다.보라, 군영과 영락과 하여도...",
@@ -99,7 +99,7 @@ router
     ctx.body = {
       response: "success",
       message: "반환된 게시물",
-      data: generatePost(ctx.params.id),
+      data: generatePost(Number(ctx.params.id)),
     };
   })
   .get("/boardcomment/:id", (ctx) => {
@@ -181,6 +181,29 @@ router
       response: "success",
       message: "답글 채택 성공",
       data: null,
+    };
+  })
+  .put("/board/:postId", (ctx) => {
+    const postId = ctx.params.postId;
+    const { body, tag: tags, title } = ctx.request.body;
+    ctx.body = {
+      response: "success",
+      message: "질문글 수정 성공",
+      data: {
+        ...generatePost(postId),
+        body,
+        tags: tags.split(" ").map((tag) => ({ data: tag })),
+        title,
+      },
+    };
+  })
+  .put("/replies/:postId", (ctx) => {
+    const postId = ctx.params.postId;
+    const { body } = ctx.request.body;
+    ctx.body = {
+      response: "success",
+      message: "답글 수정 성공",
+      data: { ...generatePost(postId, true), body },
     };
   });
 

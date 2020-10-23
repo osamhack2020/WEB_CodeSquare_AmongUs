@@ -237,8 +237,12 @@ export const QnaPostViewer: React.FC<QnaPostViewerProps> = ({
     dispatch(qna.actions.acceptReply(post.id));
   }, [post.id, dispatch]);
   const onEditClick = useCallback(() => {
-    history.push(`/qna/write?id=${post.id}`);
-  }, [history, post.id]);
+    if (post.answer) {
+      history.push(`/qna/edit?id=${post.id}&type=replies`);
+    } else {
+      history.push(`/qna/edit?id=${post.id}`);
+    }
+  }, [history, post.id, post.answer]);
   const onDeleteClick = useCallback(async () => {}, []);
   return (
     <div
@@ -327,7 +331,7 @@ export const QnaPostViewer: React.FC<QnaPostViewerProps> = ({
             `}
           >
             {post.tags.map((tag) => (
-              <div>{tag}</div>
+              <div key={tag}>{tag}</div>
             ))}
           </QnaTagList>
         )}

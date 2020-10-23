@@ -199,19 +199,26 @@ export const writePost = async (
 };
 
 export const editPost = async (
+  id: number,
   text: string,
   title: string,
   tags: string[],
 ): Promise<QnaPost> => {
   const {
     data: { data: board },
-  } = await apiClient.put<ApiBoardSpecificResponse>("/board", {
+  } = await apiClient.put<ApiBoardSpecificResponse>(`/board/${id}`, {
     body: text,
     title,
     tag: tags.join(" "),
   });
 
   return buildQnaPostFromApiBoard(board);
+};
+
+export const editReply = async (id: number, text: string) => {
+  await apiClient.put(`/replies/${id}`, {
+    body: text,
+  });
 };
 
 export const accept = async (postId: number) => {
