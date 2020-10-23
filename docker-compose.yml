@@ -7,22 +7,25 @@ services:
     restart: always
     volumes:
      - ./docker-config/redis_volumes:/var/lib/redis
-    volumes:
      - ./docker-config/redis.conf:/var/lib/redis.conf
   mariadb:
-    build:
-      context: .
-      dockerfile: ./docker-config/mariadb/mariadb.Dockerfile
+    image: mariadb:10.4.6
     restart: always
     environment:
      - MYSQL_ROOT_PASSWORD=codespace
      - TZ=Asia/Seoul
     volumes:
      - ./docker-config/mariadb/db_volumes:/var/lib/mysql
+     - ./docker-config/mariadb/initcnf:/etc/mysql/conf.d
+     - ./docker-config/mariadb/initsql/:/docker-entrypoint-initdb.d/
     ports:
      - '3306:3306'
   backend:
-    image: lak9348/codespace:latest
+    image: lak9348/codespace:1.0.2
     ports:
       - '9191:9191'
+    environment:
+      MARIADB_ADDRESS: "mariadb"
+      REDIS_ADDRESS: "redis-server"
+      #OPENSTACK_ADDRESS: "OPENSTACK이름"
     restart: always
