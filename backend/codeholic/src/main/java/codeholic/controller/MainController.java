@@ -21,7 +21,7 @@ class MainController{
         return "helloworld";
     }
     
-    @GetMapping("/prod")
+    @GetMapping("/system")
     public String helloworld2(final HttpServletRequest req) {   
         return "helloworld from "+str;
     }
