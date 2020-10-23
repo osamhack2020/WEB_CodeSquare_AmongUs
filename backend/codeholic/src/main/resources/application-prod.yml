@@ -4,7 +4,7 @@ spring:
   profiles:
     active: prod
   datasource:
-    url: jdbc:mariadb://${mariadb_address}:3306/codespace
+    url: jdbc:mariadb://mariadb:3306/codespace
     driver-class-name: org.mariadb.jdbc.Driver
     username: root
     password: codespace
@@ -19,7 +19,7 @@ spring:
   cache:
     type: redis
   redis:
-    host: ${redis_address}
+    host: redis
     port: 6379
-openstackDomain: ${openstack_address}
+openstackDomain: openstack
 countPerPage: 5

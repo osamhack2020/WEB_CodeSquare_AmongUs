@@ -1,6 +1,6 @@
 version: '3.3'
 services:
-  redis-server:
+  redis:
     image: 'redis'
     ports:
      - '6379:6379'
@@ -20,18 +20,22 @@ services:
      - ./docker-config/mariadb/initsql:/docker-entrypoint-initdb.d
     ports:
      - '3306:3306'
+    depends_on:
+      - redis
   backend:
-    image: lak9348/codespace:1.0.4
+    image: lak9348/codespace:1.0.7
+    #build: ./backend/codeholic/
     ports:
       - 9191:9191
     environment:
       MARIADB_ADDRESS: mariadb
-      REDIS_ADDRESS: redis-server
+      REDIS_ADDRESS: redis
       #OPENSTACK_ADDRESS: OPENSTACK이름
     restart: always
-    links:
-      - mariadb
-    #  - redis-server
     depends_on:
       - mariadb
-    #  - redis-server
+
+networks:
+  default:
+    external:
+      name: our_net
