@@ -1,0 +1,143 @@
+heat_template_version: 2013-05-23
+
+description: >
+  HOT template to deploy two servers into an existing neutron tenant network and
+  assign floating IP addresses to each server so they are routable from the
+  public network.
+parameters:
+  key_name:
+    type: string
+    description: Name of keypair to assign to servers
+  image:
+    type: string
+    description: Name of image to use for servers
+  flavor_master:
+    type: string
+    description: Flavor to use for kubernetes master
+  flavor_node:
+    type: string
+    description: Flavor to use for kubernetes node component.
+  public_net_id:
+    type: string
+    description: >
+      ID of public network for which floating IP addresses will be allocated
+  private_net_id:
+    type: string
+    description: ID of private network into which servers get deployed
+  private_subnet_id:
+    type: string
+    description: ID of private sub network into which servers get deployed
+
+resources:
+  k8s_master:
+    type: OS::Nova::Server
+    properties:
+      name: k8s_master
+      image: { get_param: image }
+      flavor: { get_param: flavor_master }
+      key_name: { get_param: key_name }
+      networks:
+        - port: { get_resource: k8s_master_port }
+
+  k8s_master_port:
+    type: OS::Neutron::Port
+    properties:
+      network_id: { get_param: private_net_id }
+      fixed_ips:
+        - subnet_id: { get_param: private_subnet_id }
+      security_groups: [{ get_resource: server_security_group }]
+
+  k8s_master_floating_ip:
+    type: OS::Neutron::FloatingIP
+    properties:
+      floating_network_id: { get_param: public_net_id }
+      port_id: { get_resource: k8s_master_port }
+
+  k8s_node1:
+    type: OS::Nova::Server
+    properties:
+      name: k8s_node1
+      image: { get_param: image }
+      flavor: { get_param: flavor_node }
+      key_name: { get_param: key_name }
+      networks:
+        - port: { get_resource: k8s_node1_port }
+
+  k8s_node1_port:
+    type: OS::Neutron::Port
+    properties:
+      network_id: { get_param: private_net_id }
+      fixed_ips:
+        - subnet_id: { get_param: private_subnet_id }
+      security_groups: [{ get_resource: server_security_group }]
+
+  k8s_node1_floating_ip:
+    type: OS::Neutron::FloatingIP
+    properties:
+      floating_network_id: { get_param: public_net_id }
+      port_id: { get_resource: k8s_node1_port }
+
+  k8s_node2:
+    type: OS::Nova::Server
+    properties:
+      name: k8s_node2
+      image: { get_param: image }
+      flavor: { get_param: flavor_node }
+      key_name: { get_param: key_name }
+      networks:
+        - port: { get_resource: k8s_node2_port }
+
+  k8s_node2_port:
+    type: OS::Neutron::Port
+    properties:
+      network_id: { get_param: private_net_id }
+      fixed_ips:
+        - subnet_id: { get_param: private_subnet_id }
+      security_groups: [{ get_resource: server_security_group }]
+
+  k8s_node2_floating_ip:
+    type: OS::Neutron::FloatingIP
+    properties:
+      floating_network_id: { get_param: public_net_id }
+      port_id: { get_resource: k8s_node2_port }
+
+  server_security_group:
+    type: OS::Neutron::SecurityGroup
+    properties:
+      description: Add security group rules for server
+      name: security-group
+      rules:
+        - remote_ip_prefix: 0.0.0.0/0
+          protocol: tcp
+          port_range_min: 22
+          port_range_max: 22
+        - remote_ip_prefix: 0.0.0.0/0
+          protocol: icmp
+        - remote_ip_prefix: 0.0.0.0/0
+          protocol: tcp
+          port_range_min: 80 
+          port_range_max: 80
+        - remote_ip_prefix: 0.0.0.0/0
+          protocol: tcp
+          port_range_min: 443
+          port_range_max: 443
+
+outputs:
+  k8s_master_private_ip:
+    description: IP address of k8s_master in private network
+    value: { get_attr: [ k8s_master, first_address ] }
+  k8s_master_public_ip:
+    description: Floating IP address of k8s_master in public network
+    value: { get_attr: [ k8s_master_floating_ip, floating_ip_address ] }
+  k8s_node1_private_ip:
+    description: IP address of k8s_node1 in private network
+    value: { get_attr: [ k8s_node1, first_address ] }
+  k8s_node1_public_ip:
+    description: Floating IP address of k8s_node1 in public network
+    value: { get_attr: [ k8s_node1_floating_ip, floating_ip_address ] }
+  k8s_node2_private_ip:
+    description: IP address of k8s_node2 in private network
+    value: { get_attr: [ k8s_node2, first_address ] }
+  k8s_node2_public_ip:
+    description: Floating IP address of k8s_node2 in public network
+    value: { get_attr: [ k8s_node2_floating_ip, floating_ip_address ] }
