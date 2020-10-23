@@ -4,7 +4,7 @@ import { useCallback, useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { useHistory } from "react-router-dom";
 import { QnaWriteForm } from "../../components/qna/QnaWriteForm";
-import { editPost, editReply, writePost } from "../../lib/api/qna";
+import { editPost, editReply } from "../../lib/api/qna";
 import useInput from "../../lib/hooks/useInput";
 import { useQuery } from "../../lib/hooks/useQuery";
 import { RootState } from "../../modules";
@@ -49,7 +49,7 @@ export const QnaEditContainer: React.FC = ({ ...props }) => {
       await editPost(postId, text, title, tags);
       history.push(`/qna/post/${qna.post?.id}`);
     }
-  }, [history, text, title, tags]);
+  }, [history, text, title, tags, postId, qna.post, reply]);
   return (
     <QnaWriteForm
       formTitle={`${reply ? "답변" : "질문"} 수정하기`}
