@@ -320,14 +320,17 @@ export const QnaPostViewer: React.FC<QnaPostViewerProps> = ({
           청춘의 이것이다. 인생에 없는 예가 피부가 천하를 원대하고, 가진 사랑의
           보는 이것이다. 할지니, 너의 우리의 희망의 많이 것이다.
         </div>
-        <QnaTagList
-          css={css`
-            padding-bottom: 26px;
-          `}
-        >
-          <div>안드로이드</div>
-          <div>Kotlin</div>
-        </QnaTagList>
+        {post.tags && (
+          <QnaTagList
+            css={css`
+              padding-bottom: 26px;
+            `}
+          >
+            {post.tags.map((tag) => (
+              <div>{tag}</div>
+            ))}
+          </QnaTagList>
+        )}
         {loading && <div>loading</div>}
         {!loading && comments && (
           <QnaComments onSubmit={onSubmit} comments={comments} />
