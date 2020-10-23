@@ -205,6 +205,20 @@ router
       message: "답글 수정 성공",
       data: { ...generatePost(postId, true), body },
     };
+  })
+  .delete("/board/:postId", (ctx) => {
+    ctx.body = {
+      response: "success",
+      message: "질문글 삭제 성공",
+      data: null,
+    };
+  })
+  .delete("/replies/:postId", (ctx) => {
+    ctx.body = {
+      response: "success",
+      message: "답변글 삭제 성공",
+      data: null,
+    };
   });
 
 app
