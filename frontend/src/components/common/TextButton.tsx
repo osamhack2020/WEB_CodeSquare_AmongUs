@@ -1,10 +1,10 @@
 /** @jsx jsx */
 import { css, jsx } from "@emotion/core";
-import { Button, ButtonProps } from "./Button";
+import { Button } from "./Button";
 
-export type TextButtonProps = ButtonProps;
-
-export const TextButton: React.FC<TextButtonProps> = (props) => (
+export const TextButton: React.FC<React.HTMLAttributes<HTMLButtonElement>> = (
+  props,
+) => (
   <Button
     css={css`
       background: none;

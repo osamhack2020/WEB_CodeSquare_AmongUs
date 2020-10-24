@@ -2,12 +2,7 @@
 import { jsx } from "@emotion/core";
 import styled from "@emotion/styled";
 
-export interface ButtonProps {
-  onClick?: () => void;
-  disabled?: boolean;
-}
-
-const ButtonBlock = styled.button`
+export const Button = styled.button`
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -30,7 +25,3 @@ const ButtonBlock = styled.button`
     }
   }
 `;
-
-export const Button: React.FC<ButtonProps> = ({ onClick, ...props }) => {
-  return <ButtonBlock onClick={onClick} {...props} />;
-};
