@@ -57,24 +57,24 @@ sudo su - stack
 
 ```bash
 mkdir ~/.ssh; chmod 700 ~/.ssh
-echo "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCyYjfgyPazTvGpd8OaAvtU2utL8W6gWC4JdRS1J95GhNNfQd657yO6s1AH5KYQWktcE6FO/xNUC2reEXSGC7ezy+sGO1kj9Limv5vrvNHvF1+wts0Cmyx61D2nQw35/Qz8BvpdJANL7VwP/cFI/p3yhvx2lsnjFE3hN8xRB2LtLUopUSVdBwACOVUmH2G+2BWMJDjVINd2DPqRIA4Zhy09KJ3O1Joabr0XpQL0yt/I9x8BVHdAx6l9U0tMg9dj5+tAjZvMAFfye3PJcYwwsfJoFxC8w/SLtqlFX7Ehw++8RtvomvuipLdmWCy+T9hIkl+gHYE4cS3OIqXH7f49jdJf stack@codesquare" > ~/.ssh/authorized_keys
+echo "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCyYjfgyPazTvGpd8OaAvtU2utL8W6gWC4JdRS1J95GhNNfQd657yO6s1AH5KYQWktcE6FO/xNUC2reEXSGC7ezy+sGO1kj9Limv5vrvNHvF1+wts0Cmyx61D2nQw35/Qz8BvpdJANL7VwP/cFI/p3yhvx2lsnjFE3hN8xRB2LtLUopUSVdBwACOVUmH2G+2BWMJDjVINd2DPqRIA4Zhy09KJ3O1Joabr0XpQL0yt/I9x8BVHdAx6l9U0tMg9dj5+tAjZvMAFfye3PJcYwwsfJoFxC8w/SLtqlFX7Ehw++8RtvomvuipLdmWCy+T9hIkl+gHYE4cS3OIqXH7f49jdJf jesse@spacey.local" > ~/.ssh/authorized_keys
 ```
 
-각각의 node에서 devstack의 latest repository를 clone 합니다.
+각각의 node에서 devstack의 stable branch 중 가장 up-to-date한 victoria를 clone 해줍니다.
 
 ```bash
-git clone https://opendev.org/openstack/devstack
+git clone https://opendev.org/openstack/devstack -b stable/victoria
 cd devstack
 cp samples/local.conf ./local.conf
 ```
 
-이후에는 Controller Node와 Compute Node 각각 다르게 local.conf 파일을 편집한 후, devstack 폴더에 있는 [stack.sh](http://stack.sh) 스크립트를 실행하여 openstack 설치를 진행합니다.
+이후에는 Controller Node와 Compute Node 각각 다르게 local.conf 파일을 설정하는데, Compute Node1은 CodeSquare의 주요 서비스들을 docker 형태로 서비스 하기 위해 zun 관련 설정들을, Compute Node2는 CodeSquare의 유저들에게 제공해줄 VM들을 관리하기 위해 default로 설정해줍니다.
 
 ## Openstack 설치 이전 local.conf 편집
 
 ### Controller Node
 
-원하는 편집기로 samples폴더에서 복사한 local.conf로 들어가서, 패스워드 설정을 한 후 그 아래에 다음과 같은 설정값을 입력합니다.
+원하는 편집기로 samples폴더에서 복사한 local.conf로 들어가서, 패스워드 설정을 한 후 그 아래에 다음과 같은 설정값을 입력합니다. 그리고 heat plugin과 zun plugin 관련 설정 또한 추가해줍니다.
 
 ```bash
 HOST_IP=192.168.1.10
@@ -82,23 +82,68 @@ FIXED_RANGE=10.4.128.0/20
 FLOATING_RANGE=192.168.1.128/25
 ```
 
- heat plugin 추가를 위해 아래의 내용도 추가합니다.
+**heat plugin**
 
 ```bash
 enable_service h-eng h-api h-api-cfn h-api-cw
-enable_plugin heat https://opendev.org/openstack/heat
-enable_plugin heat-dashboard https://opendev.org/openstack/heat-dashboard
+enable_plugin heat https://opendev.org/openstack/heat stable/victoria
+enable_plugin heat-dashboard https://opendev.org/openstack/heat-dashboard stable/victoria
+```
+
+**zun plugin**
+
+```bash
+enable_plugin zun https://opendev.org/openstack/zun stable/victoria
+enable_plugin zun-tempest-plugin https://opendev.org/openstack/zun-tempest-plugin
+# This below plugin enables installation of container engine on Devstack.
+# The default container engine is Docker
+enable_plugin devstack-plugin-container https://opendev.org/openstack/devstack-plugin-container
+# This enables CRI plugin for containerd
+ENABLE_CONTAINERD_CRI=True
+# Optional:  uncomment to enable Kata Container
+# ENABLE_KATA_CONTAINERS=True
+# In Kuryr, KURYR_CAPABILITY_SCOPE is `local` by default,
+# but we must change it to `global` in the multinode scenario.
+KURYR_CAPABILITY_SCOPE=global
+KURYR_PROCESS_EXTERNAL_CONNECTIVITY=False
+enable_plugin kuryr-libnetwork https://opendev.org/openstack/kuryr-libnetwork stable/victoria
+# install python-zunclient from git
+LIBS_FROM_GIT="python-zunclient"
+# Optional:  uncomment to enable the Zun UI plugin in Horizon
+enable_plugin zun-ui https://opendev.org/openstack/zun-ui stable/victoria
 ```
 
 ### Compute Node
 
-Compute Node 1과 Compute Node 2는 HOST_IP를 제외하고는 서로 local.conf에 입력해야 하는 내용이 같습니다.
+***Compute Node #1***
 
 ```bash
 HOST_IP=192.168.1.20
+ENABLE_CONTAINERD_CRI=True
+enable_plugin devstack-plugin-container https://opendev.org/openstack/devstack-plugin-container
+enable_plugin zun https://opendev.org/openstack/zun stable/victoria
+# Optional:  uncomment to enable Kata Container
+# ENABLE_KATA_CONTAINERS=True
+KURYR_CAPABILITY_SCOPE=global
+KURYR_PROCESS_EXTERNAL_CONNECTIVITY=False
+enable_plugin kuryr-libnetwork https://opendev.org/openstack/kuryr-libnetwork stable/victoria
+# Following is for multi host settings
+MULTI_HOST=True
+SERVICE_HOST=192.168.1.10
+DATABASE_TYPE=mysql
+MYSQL_HOST=$SERVICE_HOST
+RABBIT_HOST=$SERVICE_HOST
+ENABLED_SERVICES=zun-compute,kuryr-libnetwork,q-agt
+```
+
+***Compute Node #2***
+
+```bash
+HOST_IP=192.168.1.25
 FIXED_RANGE=10.4.128.0/20
 FLOATING_RANGE=192.168.1.128/25
 DATABASE_TYPE=mysql
+MULTI_HOST=True
 SERVICE_HOST=192.168.1.10
 MYSQL_HOST=$SERVICE_HOST
 RABBIT_HOST=$SERVICE_HOST
@@ -112,12 +157,19 @@ VNCSERVER_PROXYCLIENT_ADDRESS=$VNCSERVER_LISTEN
 
 ## After Openstack install
 
-Control Node와 Compute Node의 Openstack Setup이 모두 끝났다면, Controller Node에서 **devstack/tools/discover_hosts.sh** 스크립트를 실행하여 compute node host들을 controller node에 mapping 시켜줍니다.
+Control Node와 Compute Node의 Openstack Setup이 모두 끝났다면, Controller Node에서 **devstack/tools/discover_hosts.sh** 스크립트를 실행하여 compute node host를 controller node에 mapping 시켜줍니다.
 
 이후, Controller Node에서 다음 명령어로 compute node가 제대로 mapping 되었는지 확인합니다.
 
 ```bash
-openstack host list
+source openrc admin admin #openstack env setting
+zun service list #compute node1 나타나는지 확인
+openstack host list #compute node2 나타나는지 확인
 ```
 
-출력되는 리스트에서 compute1과 compute2가 나타난다면 성공입니다.
+# Delete unnecessary projects
+
+```bash
+openstack project purge --project alt_demo
+openstack project purge --project invisible_to_admin
+```
