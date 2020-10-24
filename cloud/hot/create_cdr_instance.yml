@@ -48,6 +48,21 @@ resources:
       key_name: { get_param: key_name }
       networks:
         - port: { get_resource: cdr_instance_port }
+      user_data: |
+        #!/bin/bash
+        sudo apt update -y
+        cd ~
+        wget https://github.com/cdr/code-server/releases/download/2.1665-vsc1.39.2/code-server2.1665-vsc1.39.2-linux-x86_64.tar.gz
+        tar -xvf code-server2.1665-vsc1.39.2-linux-x86_64.tar.gz
+        mv code-server2.1665-vsc1.39.2-linux-x86_64 cdr
+        rm code-server2.1665-vsc1.39.2-linux-x86_64.tar.gz
+        cd cdr
+        chmod +x ./code-server
+        sudo ufw allow 80/tcp
+        tmpfile=$(mktemp /tmp/crontab-content.XXXXXX)
+        echo "@reboot nohup /home/ubuntu/cdr/code-server --auth none&" >> $tmpfile
+        crontab < $tmpfile
+        sudo reboot
 
   cdr_instance_port:
     type: OS::Neutron::Port
