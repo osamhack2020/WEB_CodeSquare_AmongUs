@@ -1,0 +1,72 @@
+heat_template_version: 2013-05-23
+
+description: >
+  HOT template to deploy codeserver instance into an existing neutron tenant netowrk and
+  assign floating IP addresses to each server so they are routable from the
+  public network.
+
+parameters:
+  hostname:
+    type: string
+    description: The hostname of the codeserver instance(In our case, this will be a cdr-username)
+    default: cdr-admin
+  key_name:
+    type: string
+    description: Name of keypair to assign to servers
+  image:
+    type: string
+    description: Name of image to use for servers
+  flavor:
+    type: string
+    description: Flavor to use for codeserver instance
+    default: m1.small
+  public_net_id:
+    type: string
+    description: >
+      ID of public network for which floating IP addresses will be allocated
+  private_net_id:
+    type: string
+    description: ID of private network into which servers get deployed
+  private_subnet_id:
+    type: string
+    description: ID of private sub network into which servers get deployed
+  zone_host_name:
+    type: string
+    description: Availability zone where instances will be located. (format = ZONE:HOST)
+    default: nova:codesquare-devstack-compute2
+  security_group:
+    type: string
+    description: The security group of the codeserver instances
+
+resources:
+  cdr_instance:
+    type: OS::Nova::Server
+    properties:
+      name: { get_param: hostname }
+      image: { get_param: image }
+      flavor: { get_param: flavor }
+      key_name: { get_param: key_name }
+      networks:
+        - port: { get_resource: cdr_instance_port }
+
+  cdr_instance_port:
+    type: OS::Neutron::Port
+    properties:
+      network_id: { get_param: private_net_id }
+      fixed_ips:
+        - subnet_id: { get_param: private_subnet_id }
+      security_groups: [{ get_param: security_group }]
+
+  cdr_instance_floating_ip:
+    type: OS::Neutron::FloatingIP
+    properties:
+      floating_network_id: { get_param: public_net_id }
+      port_id: { get_resource: cdr_instance_port }
+
+outputs:
+  cdr_instance_private_ip:
+    description: IP address of cdr_instance in private network
+    value: { get_attr: [ cdr_instance, first_address ] }
+  cdr_instance_public_ip:
+    description: Floating IP address of cdr_instance in public network
+    value: { get_attr: [ cdr_instance_floating_ip, floating_ip_address ] }
