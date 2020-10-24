@@ -59,7 +59,6 @@ public class MemberController {
         //실행
         try{
             authService.signUpUser(member);
-            response.setResponse("success");
             response.setMessage("회원가입을 성공적으로 완료했습니다.");
         }
         catch(IllegalStateException ie){

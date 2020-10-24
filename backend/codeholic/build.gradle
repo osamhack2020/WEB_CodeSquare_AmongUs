@@ -5,8 +5,8 @@ plugins {
 }
 
 group = 'codeholic'
-version = '1.0.0'
-sourceCompatibility = '11'
+version = '1.0.4'
+sourceCompatibility = '8'
 
 configurations {
 	compileOnly {

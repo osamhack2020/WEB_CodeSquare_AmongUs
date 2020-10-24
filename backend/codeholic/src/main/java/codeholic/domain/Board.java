@@ -1,12 +1,17 @@
 package codeholic.domain;
 
 import java.util.Date;
+import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -25,7 +30,9 @@ public class Board {
 	@Column(name="board_id")
     private int id;
     
-    private String user_id;
+    private String username;
+
+    private String member_name;
 
     private String title;
 
@@ -42,11 +49,15 @@ public class Board {
     @Temporal(TemporalType.TIMESTAMP)
     @CreationTimestamp
     private Date updated_at;
+
+    @OneToMany(fetch=FetchType.EAGER, cascade = CascadeType.ALL)
+    @JoinColumn(name="board_id")
+    private List<Tag> tags;
     
     public void addView(){
         this.view += 1 ;
     }
-    public void addRecommend(){
-        this.recommend += 1;
+    public void fixRecommend(int value){
+        this.recommend += value;
     }
 }

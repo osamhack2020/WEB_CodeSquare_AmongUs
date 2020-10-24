@@ -42,11 +42,12 @@ public class OpenStackApiService {
         return "{\"user\": {\"default_project_id\": \"63ade6fefda14c3ea93cca65c435e35c\", \"name\": \"" + id + "\", \""
                 + password + "\": \"changeme\"}}";
     }
-
+    /*
     private String getSetUserRoleUrl(String projectId, String userId, String roleId) {
         return "http://" + this.openstackDomain + "/identity/v3/projects/" + projectId + "/users/" + userId + "/roles/"
                 + roleId;
     }
+    */
 
     @Transactional
     public void signupProcess(String id, String password) throws IOException {
@@ -59,7 +60,7 @@ public class OpenStackApiService {
         // 관리자 토큰으로 user 역할 id 알아내기
         String userRole_id = this.getUserRoleId(authenticationToken);
         // 관리자 토큰 + 유저 id + user 역할 id + project id로 유저의 권한 설정
-        String result = this.setUserProperties(authenticationToken, user_id, project_id, userRole_id);
+        this.setUserProperties(authenticationToken, user_id, project_id, userRole_id);
     }
 
     public String signinProcess(String id, String password) {

@@ -1,0 +1,41 @@
+version: '3.3'
+services:
+  redis:
+    image: 'redis'
+    ports:
+     - '6379:6379'
+    restart: always
+    volumes:
+     - ./docker-config/redis_volumes:/var/lib/redis
+     - ./docker-config/redis.conf:/var/lib/redis.conf
+  mariadb:
+    image: mariadb:10.4.6
+    restart: always
+    environment:
+     - MYSQL_ROOT_PASSWORD=codespace
+     - TZ=Asia/Seoul
+    volumes:
+     - ./docker-config/mariadb/db_volumes:/var/lib/mysql
+     - ./docker-config/mariadb/initcnf:/etc/mysql/conf.d
+     - ./docker-config/mariadb/initsql:/docker-entrypoint-initdb.d
+    ports:
+     - '3306:3306'
+    depends_on:
+      - redis
+  backend:
+    image: lak9348/codespace:1.0.7
+    #build: ./backend/codeholic/
+    ports:
+      - 9191:9191
+    environment:
+      MARIADB_ADDRESS: mariadb
+      REDIS_ADDRESS: redis
+      #OPENSTACK_ADDRESS: OPENSTACK이름
+    restart: always
+    depends_on:
+      - mariadb
+
+networks:
+  default:
+    external:
+      name: our_net

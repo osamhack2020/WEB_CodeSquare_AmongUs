@@ -13,6 +13,8 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import org.hibernate.annotations.CreationTimestamp;
 
 import lombok.Data;
@@ -26,16 +28,17 @@ public class Reply {
     @Column(name="reply_id")
     private int id;
 
-    private String user_id;
+    private String username;
 
     // 0이 미채택, 1이 채택
     private int adopted = 0;
 
-    private int recommned = 0;
+    private int recommend = 0;
 
     private String body;
 
-    
+    private String member_name;
+
     @Temporal(TemporalType.TIMESTAMP)
     @CreationTimestamp
     private Date created_at;
@@ -44,13 +47,13 @@ public class Reply {
     @CreationTimestamp
     private Date updated_at;
     
-    //@JsonIgnore
+    @JsonIgnore
     @ManyToOne
     @JoinColumn(name="board_id")
     private Board board;
 
-    public void addRecommend(){
-        this.recommned += 1;
+    public void fixRecommend(int value){
+        this.recommend += value;
     }
     public void adopted(){
         this.adopted = 1;

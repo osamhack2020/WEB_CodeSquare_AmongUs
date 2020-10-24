@@ -1,5 +1,7 @@
 import apiClient from "./apiClient";
 
+export type PostType = "board" | "replies";
+
 export interface QnaComment {
   id: number;
   username: string;
@@ -51,7 +53,7 @@ export interface ApiBoard {
   updated_at: string;
 }
 
-export interface ApiReplies {
+export interface ApiReply {
   id: number;
   username: string;
   adopted: number;
@@ -78,7 +80,7 @@ export interface ApiBoardSpecificResponse {
 }
 
 export interface ApiRepliesResponse {
-  data: ApiReplies[];
+  data: ApiReply[];
 }
 
 export interface ApiCommentResponse {
@@ -99,25 +101,25 @@ const buildQnaPostFromApiBoard = (board: ApiBoard): QnaPost => ({
   answer: false,
 });
 
-const buildQnaPostFromApiReplies = (replies: ApiReplies): QnaPost => ({
-  id: replies.id,
-  username: replies.username,
-  member_name: replies.member_name,
-  text: replies.body,
-  recommend: replies.recommend,
-  created_at: replies.created_at,
-  updated_at: replies.updated_at,
+const buildQnaPostFromApiReplies = (reply: ApiReply): QnaPost => ({
+  id: reply.id,
+  username: reply.username,
+  member_name: reply.member_name,
+  text: reply.body,
+  recommend: reply.recommend,
+  created_at: reply.created_at,
+  updated_at: reply.updated_at,
   answer: true,
-  accepted: !!replies.adopted,
+  accepted: !!reply.adopted,
 });
 
-const buildQnaCommentFromApiComment = (replies: ApiComment): QnaComment => ({
-  id: replies.id,
-  username: replies.username,
-  member_name: replies.member_name,
-  text: replies.body,
-  created_at: replies.created_at,
-  updated_at: replies.updated_at,
+const buildQnaCommentFromApiComment = (reply: ApiComment): QnaComment => ({
+  id: reply.id,
+  username: reply.username,
+  member_name: reply.member_name,
+  text: reply.body,
+  created_at: reply.created_at,
+  updated_at: reply.updated_at,
 });
 
 export const getPost = async (postId: string | number): Promise<QnaPost> => {
@@ -156,7 +158,7 @@ export const getRecentPosts = async (
 };
 
 export const getComments = async (
-  type: "board" | "replies",
+  type: PostType,
   postId: number,
 ): Promise<QnaComment[]> => {
   const url = `/${type}comment/${postId}`;
@@ -169,7 +171,7 @@ export const getComments = async (
 };
 
 export const writeComment = async (
-  type: "board" | "replies",
+  type: PostType,
   postId: number,
   text: string,
 ): Promise<void> => {
@@ -197,17 +199,25 @@ export const writePost = async (
 };
 
 export const editPost = async (
+  type: PostType,
+  postId: number,
   text: string,
-  title: string,
-  tags: string[],
-): Promise<QnaPost> => {
-  const {
-    data: { data: board },
-  } = await apiClient.put<ApiBoardSpecificResponse>("/board", {
+  title?: string,
+  tags?: string[],
+) => {
+  const url = `/${type}/${postId}`;
+  await apiClient.put<ApiBoardSpecificResponse>(url, {
     body: text,
     title,
-    tag: tags.join(" "),
+    tag: tags?.join(" "),
   });
+};
 
-  return buildQnaPostFromApiBoard(board);
+export const deletePost = async (type: PostType, postId: number) => {
+  const url = `/${type}/${postId}`;
+  await apiClient.delete<ApiBoardSpecificResponse>(url);
+};
+
+export const accept = async (postId: number) => {
+  await apiClient.put(`/replies/adopted/${postId}`);
 };

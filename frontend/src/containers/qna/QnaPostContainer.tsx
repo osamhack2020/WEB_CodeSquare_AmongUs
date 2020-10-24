@@ -1,7 +1,7 @@
 /** @jsx jsx */
 import { css, jsx } from "@emotion/core";
 import { useCallback, useEffect, useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useHistory, useParams } from "react-router-dom";
 import { Button } from "../../components/common/Button";
 import { OutlineButton } from "../../components/common/OutlineButton";
@@ -11,6 +11,7 @@ import { WrapperLink } from "../../components/common/WrapperLink";
 import { QnaListWidget } from "../../components/qna/QnaListWidget";
 import { MarkdownEditor } from "../../components/write/MarkdownEditor";
 import { QnaPost } from "../../lib/api/qna";
+import { RootState } from "../../modules";
 import qna from "../../modules/qna";
 import usePost from "./hooks/usePost";
 import { QnaPostViewer } from "./QnaPostViewer";
@@ -25,12 +26,6 @@ const recommendCompare = (a: QnaPost, b: QnaPost) => {
 
 export const QnaPostContainer: React.FC = () => {
   const history = useHistory();
-  const onClick = useCallback(
-    (postId: number) => {
-      history.push(`/qna/post/${postId}`);
-    },
-    [history],
-  );
   const onWriteClick = useCallback(() => {
     history.push("/qna/write");
   }, [history]);
@@ -47,22 +42,21 @@ export const QnaPostContainer: React.FC = () => {
   ]);
   const { postId }: { postId: string } = useParams();
   const dispatch = useDispatch();
-  useEffect(() => {
-    dispatch(qna.actions.setPostId(Number(postId)));
-  }, [postId, dispatch]);
+  const post = useSelector<RootState, QnaPost | null>(
+    (state) => state.qna.post,
+  );
+  const replies = useSelector<RootState, QnaPost[] | null>(
+    (state) => state.qna.replies,
+  );
   const { data, loading } = usePost(postId);
   useEffect(() => {
     if (data) {
-      dispatch(qna.actions.setAuthor(data?.post.username));
+      dispatch(qna.actions.setPost(data.post));
+      dispatch(qna.actions.setReplies(data.replies));
     }
   }, [data, dispatch]);
   const [text, setText] = useState("");
-  const onTextChange = useCallback(
-    (text: string) => {
-      setText(text);
-    },
-    [setText],
-  );
+  const accepted = replies?.some((repl) => repl.accepted);
   return (
     <div
       css={css`
@@ -82,7 +76,7 @@ export const QnaPostContainer: React.FC = () => {
         `}
       >
         {loading && <div>Loading...</div>}
-        {!loading && data && <QnaPostViewer post={data.post} />}
+        {!loading && post && <QnaPostViewer post={post} />}
         <div
           css={css`
             display: flex;
@@ -106,7 +100,7 @@ export const QnaPostContainer: React.FC = () => {
                 color: #627bff;
               `}
             >
-              {data?.replies.length || 0}개
+              {replies?.length || 0}개
             </span>
             의 답변이 있습니다.
           </div>
@@ -118,10 +112,12 @@ export const QnaPostContainer: React.FC = () => {
           />
         </div>
         {!loading &&
-          data &&
-          data.replies
+          replies
+            ?.slice()
             .sort((sortOrder === "recent" && recentCompare) || recommendCompare)
-            .map((repl) => <QnaPostViewer key={repl.id} post={repl} />)}
+            .map((repl) => (
+              <QnaPostViewer key={repl.id} accepted={accepted} post={repl} />
+            ))}
         <div
           css={css`
             margin-left: 52px;
@@ -143,7 +139,7 @@ export const QnaPostContainer: React.FC = () => {
           </div>
           <MarkdownEditor
             text={text}
-            onChange={onTextChange}
+            onChange={setText}
             height={153}
             css={css`
               margin-bottom: 12px;
@@ -269,7 +265,6 @@ export const QnaPostContainer: React.FC = () => {
           </WrapperLink>
         </OutlineButton>
         <QnaListWidget
-          onClick={onClick}
           title="답변을 기다리는 질문"
           posts={[
             { title: "빅 오(Big O) 계산은 어떻게 하나요?", id: 1 },
@@ -285,7 +280,6 @@ export const QnaPostContainer: React.FC = () => {
           ]}
         />
         <QnaListWidget
-          onClick={onClick}
           title="최근 인기 질문"
           posts={[
             { title: "빅 오(Big O) 계산은 어떻게 하나요?", id: 1 },

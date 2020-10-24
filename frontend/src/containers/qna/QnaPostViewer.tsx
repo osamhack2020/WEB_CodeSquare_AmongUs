@@ -1,18 +1,94 @@
 /** @jsx jsx */
 import { css, jsx } from "@emotion/core";
 import React, { useCallback } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { useHistory } from "react-router-dom";
 import { AvatarIcon } from "../../components/common/AvatarIcon";
+import { ButtonWrapper } from "../../components/common/ButtonWrapper";
 import { VerticalDivider } from "../../components/common/VerticalDivider";
 import { QnaTagList } from "../../components/qna/QnaTagList";
 import { Vote } from "../../components/qna/Vote";
-import { QnaPost, writeComment } from "../../lib/api/qna";
+import {
+  accept,
+  deletePost,
+  PostType,
+  QnaPost,
+  writeComment,
+} from "../../lib/api/qna";
 import { formatDate, numberWithCommas } from "../../lib/utils";
+import { RootState } from "../../modules";
+import { User } from "../../modules/core";
+import qna from "../../modules/qna";
 import useComments from "./hooks/useComments";
 import { QnaComments } from "./QnaComments";
 
-export interface QnaPostViewerProps {
-  post: QnaPost;
+interface CommonIconProps {
+  disabled?: boolean;
 }
+
+const AcceptIcon: React.FC<CommonIconProps> = ({ disabled }) => (
+  <svg
+    width="20"
+    height="20"
+    viewBox="0 0 17 14"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+  >
+    <path
+      fillRule="evenodd"
+      clipRule="evenodd"
+      d="M13.94.94a1.5 1.5 0 012.142 2.1l-7.984 9.98a1.5 1.5 0 01-2.16.04L.648 7.768a1.5 1.5 0 112.12-2.12l4.188 4.186 6.946-8.85a.465.465 0 01.04-.044h-.002z"
+      fill={disabled ? "#c4c4c4" : "#627BFF"}
+    />
+  </svg>
+);
+
+const PencilIcon: React.FC<CommonIconProps> = ({ disabled }) => (
+  <svg
+    width="21"
+    height="21"
+    viewBox="0 0 21 21"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+  >
+    <path
+      d="M12.896 6.976l-7.908 7.908-.518 1.764 1.729-.5 7.934-7.934-1.237-1.238zm1.349-1.35l1.237 1.238 1.154-1.154a.437.437 0 000-.618l-.62-.619a.437.437 0 00-.619 0l-1.151 1.153h-.001zm3.01-2.39l.618.618a2.188 2.188 0 010 3.094L7.117 17.704l-3.692 1.067a.875.875 0 01-1.083-1.085l1.092-3.723L14.162 3.235a2.187 2.187 0 013.093 0z"
+      fill={disabled ? "#b4b4b4" : "#627bff"}
+    />
+  </svg>
+);
+
+const TrashIcon: React.FC<CommonIconProps> = ({ disabled }) => (
+  <svg
+    width="21"
+    height="21"
+    viewBox="0 0 21 21"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+  >
+    <path
+      d="M4.594 4.594l.82 13.125c.039.758.59 1.312 1.313 1.312h7.546c.725 0 1.267-.554 1.313-1.312l.82-13.125"
+      stroke={disabled ? "#b4b4b4" : "#627bff"}
+      strokeWidth="1.5"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+    <path
+      d="M3.281 4.594H17.72"
+      stroke={disabled ? "#b4b4b4" : "#627bff"}
+      strokeWidth="1.5"
+      strokeMiterlimit="10"
+      strokeLinecap="round"
+    />
+    <path
+      d="M7.875 4.594v-1.64a.982.982 0 01.984-.985h3.282a.982.982 0 01.984.984v1.64M10.5 7.219v9.187M7.547 7.219l.328 9.187M13.453 7.219l-.328 9.187"
+      stroke={disabled ? "#b4b4b4" : "#627bff"}
+      strokeWidth="1.5"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+  </svg>
+);
 
 interface PostHeaderProps {
   member_name: string;
@@ -141,11 +217,22 @@ const PostHeader: React.FC<PostHeaderProps> = ({
   );
 };
 
+export interface QnaPostViewerProps {
+  post: QnaPost;
+  accepted?: boolean;
+}
+
 export const QnaPostViewer: React.FC<QnaPostViewerProps> = ({
   post,
+  accepted,
   ...props
 }) => {
-  const postType = post.answer ? "replies" : "board";
+  const user = useSelector<RootState, User | null>((state) => state.core.user);
+  const isAuthor =
+    useSelector<RootState, string | undefined>(
+      (state) => state.qna.post?.username,
+    ) === user?.username;
+  const postType: PostType = post.answer ? "replies" : "board";
   const { loading, data: comments } = useComments(postType, post.id);
   const onSubmit = useCallback(
     async (text: string) => {
@@ -153,6 +240,28 @@ export const QnaPostViewer: React.FC<QnaPostViewerProps> = ({
     },
     [post.id, postType],
   );
+  const history = useHistory();
+  const dispatch = useDispatch();
+  const onAcceptClick = useCallback(async () => {
+    await accept(post.id);
+    dispatch(qna.actions.acceptReply(post.id));
+  }, [post.id, dispatch]);
+  const onEditClick = useCallback(() => {
+    if (post.answer) {
+      history.push(`/qna/edit?id=${post.id}&type=replies`);
+    } else {
+      history.push(`/qna/edit?id=${post.id}`);
+    }
+  }, [history, post.id, post.answer]);
+  const onDeleteClick = useCallback(async () => {
+    await deletePost(postType, post.id);
+    if (postType === "board") {
+      dispatch(qna.actions.setPost(null));
+      history.goBack();
+    } else if (postType === "replies") {
+      dispatch(qna.actions.deleteReply(post.id));
+    }
+  }, [dispatch, history, post.id, postType]);
   return (
     <div
       css={css`
@@ -165,6 +274,10 @@ export const QnaPostViewer: React.FC<QnaPostViewerProps> = ({
         css={css`
           width: 20px;
           margin-top: 16px;
+
+          & > div {
+            margin-bottom: 12px;
+          }
         `}
       >
         <Vote
@@ -174,20 +287,26 @@ export const QnaPostViewer: React.FC<QnaPostViewerProps> = ({
           `}
         />
         {post.accepted && (
-          <svg
-            width="20"
-            height="20"
-            viewBox="0 0 17 14"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path
-              fillRule="evenodd"
-              clipRule="evenodd"
-              d="M13.94.94a1.5 1.5 0 012.142 2.1l-7.984 9.98a1.5 1.5 0 01-2.16.04L.648 7.768a1.5 1.5 0 112.12-2.12l4.188 4.186 6.946-8.85a.465.465 0 01.04-.044h-.002z"
-              fill="#627BFF"
-            />
-          </svg>
+          <div>
+            <AcceptIcon />
+          </div>
+        )}
+        <React.Fragment>
+          {postType === "replies" && isAuthor && !accepted && !post.accepted && (
+            <ButtonWrapper onClick={onAcceptClick}>
+              <AcceptIcon disabled />
+            </ButtonWrapper>
+          )}
+        </React.Fragment>
+        {user?.username === post.username && (
+          <React.Fragment>
+            <ButtonWrapper onClick={onEditClick}>
+              <PencilIcon disabled />
+            </ButtonWrapper>
+            <ButtonWrapper onClick={onDeleteClick}>
+              <TrashIcon disabled />
+            </ButtonWrapper>
+          </React.Fragment>
         )}
       </div>
       <div
@@ -199,11 +318,11 @@ export const QnaPostViewer: React.FC<QnaPostViewerProps> = ({
         `}
       >
         <PostHeader
-          username="@seowook12"
-          member_name="서욱"
-          created_at="2020-10-17 14:27"
-          title="안드로이드 스튜디오 블루투스 질문"
-          views={11379}
+          username={post.username}
+          member_name={post.member_name}
+          created_at={post.created_at}
+          title={post.title}
+          views={post.view}
           answer={post.answer}
         />
         <div
@@ -225,14 +344,17 @@ export const QnaPostViewer: React.FC<QnaPostViewerProps> = ({
           청춘의 이것이다. 인생에 없는 예가 피부가 천하를 원대하고, 가진 사랑의
           보는 이것이다. 할지니, 너의 우리의 희망의 많이 것이다.
         </div>
-        <QnaTagList
-          css={css`
-            padding-bottom: 26px;
-          `}
-        >
-          <div>안드로이드</div>
-          <div>Kotlin</div>
-        </QnaTagList>
+        {post.tags && (
+          <QnaTagList
+            css={css`
+              padding-bottom: 26px;
+            `}
+          >
+            {post.tags.map((tag) => (
+              <div key={tag}>{tag}</div>
+            ))}
+          </QnaTagList>
+        )}
         {loading && <div>loading</div>}
         {!loading && comments && (
           <QnaComments onSubmit={onSubmit} comments={comments} />

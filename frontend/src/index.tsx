@@ -10,6 +10,7 @@ import { createStore } from "@reduxjs/toolkit";
 import { Provider } from "react-redux";
 import { composeWithDevTools } from "redux-devtools-extension/developmentOnly";
 import { BrowserRouter } from "react-router-dom";
+import "./typography.css";
 
 const store = createStore(
   rootReducer,
