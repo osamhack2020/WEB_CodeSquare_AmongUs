@@ -1,6 +1,6 @@
 /** @jsx jsx */
 import { css, jsx } from "@emotion/core";
-import React, { useCallback } from "react";
+import React, { useCallback, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router-dom";
 import { AvatarIcon } from "../../components/common/AvatarIcon";
@@ -11,6 +11,7 @@ import {
   TrashIcon,
 } from "../../components/common/Icon";
 import { VerticalDivider } from "../../components/common/VerticalDivider";
+import { QnaAcceptPopper } from "../../components/qna/QnaAcceptPopper";
 import { QnaTagList } from "../../components/qna/QnaTagList";
 import { Vote } from "../../components/qna/Vote";
 import {
@@ -157,11 +158,13 @@ const PostHeader: React.FC<PostHeaderProps> = ({
 export interface QnaPostViewerProps {
   post: QnaPost;
   accepted?: boolean;
+  popper?: boolean;
 }
 
 export const QnaPostViewer: React.FC<QnaPostViewerProps> = ({
   post,
   accepted,
+  popper,
   ...props
 }) => {
   const user = useSelector<RootState, User | null>((state) => state.core.user);
@@ -199,6 +202,9 @@ export const QnaPostViewer: React.FC<QnaPostViewerProps> = ({
       dispatch(qna.actions.deleteReply(post.id));
     }
   }, [dispatch, history, post.id, postType]);
+  const [acceptButtonRef, setAcceptButtonRef] = useState<HTMLDivElement | null>(
+    null,
+  );
   return (
     <div
       css={css`
@@ -228,13 +234,14 @@ export const QnaPostViewer: React.FC<QnaPostViewerProps> = ({
             <AcceptIcon />
           </div>
         )}
-        <React.Fragment>
-          {postType === "replies" && isAuthor && !accepted && !post.accepted && (
-            <ButtonWrapper onClick={onAcceptClick}>
+        {postType === "replies" && isAuthor && !accepted && !post.accepted && (
+          <React.Fragment>
+            <ButtonWrapper ref={setAcceptButtonRef} onClick={onAcceptClick}>
               <AcceptIcon disabled />
             </ButtonWrapper>
-          )}
-        </React.Fragment>
+            <QnaAcceptPopper anchorEl={acceptButtonRef} show={popper} />
+          </React.Fragment>
+        )}
         {user?.username === post.username && (
           <React.Fragment>
             <ButtonWrapper onClick={onEditClick}>

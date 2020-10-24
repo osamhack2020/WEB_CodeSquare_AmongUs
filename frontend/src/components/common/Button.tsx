@@ -1,5 +1,4 @@
 /** @jsx jsx */
-import { jsx } from "@emotion/core";
 import styled from "@emotion/styled";
 
 export const Button = styled.button`
