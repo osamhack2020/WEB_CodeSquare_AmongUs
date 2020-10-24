@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 
+import javax.transaction.Transactional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -20,11 +22,14 @@ import org.springframework.web.bind.annotation.RestController;
 
 import codeholic.domain.Board;
 import codeholic.domain.Reply;
+import codeholic.domain.ReplyVote;
 import codeholic.domain.Response;
 import codeholic.domain.request.RequestNewReply;
-import codeholic.domain.request.RequestUpdateReply;
+import codeholic.domain.request.RequestUpdateBody;
+import codeholic.domain.request.RequestVote;
 import codeholic.service.BoardService;
 import codeholic.service.ReplyService;
+import codeholic.service.ReplyVoteService;
 
 
 @RestController
@@ -42,6 +47,9 @@ public class ReplyController {
     @Autowired
     ReplyService replyService;
 
+    @Autowired
+    ReplyVoteService replyVoteService;
+
     @GetMapping("/{board}/{pageNum}")
     public Response returnAllReplies(@PathVariable Optional<Integer> board,@PathVariable Optional<Integer> pageNum){
         Response response = new Response();
@@ -49,7 +57,6 @@ public class ReplyController {
             List<Reply> replies = replyService.getBoardReplies(board.isPresent()?board.get():null, countPerPage, pageNum.isPresent()?pageNum.get():1);
             response.setData(replies);
             response.setMessage("댓글 조회 성공");
-            response.setResponse("success");
         }catch(EmptyResultDataAccessException | NoSuchElementException e){
             response.setMessage("댓글 조회 실패");
             response.setResponse("fail");
@@ -63,12 +70,12 @@ public class ReplyController {
             Board getBoard = boardService.findById(board.isPresent()?board.get():null);
             Reply reply = new Reply();
             reply.setBody(requestNewReply.getBody());
-            reply.setUser_id(requestNewReply.getUser_id());
+            reply.setUsername(requestNewReply.getUsername());
+            reply.setMember_name(requestNewReply.getMember_name());
             reply.setBoard(getBoard);
             replyService.addReply(reply);
             response.setData(reply);
             response.setMessage("댓글 생성 성공");
-            response.setResponse("success");
         }catch(EmptyResultDataAccessException | NoSuchElementException e){
             response.setMessage("댓글 생성 실패");
             response.setResponse("fail");
@@ -76,7 +83,7 @@ public class ReplyController {
         return response;
     }
     @PutMapping("/{reply}")
-    public Response updateReply(@PathVariable Optional<Integer> reply, @RequestBody RequestUpdateReply requestupDateReply){
+    public Response updateReply(@PathVariable Optional<Integer> reply, @RequestBody RequestUpdateBody requestupDateReply){
         Response response = new Response();
         try{
             Reply updatedReply = replyService.findById(reply.isPresent()?reply.get():null);
@@ -84,7 +91,6 @@ public class ReplyController {
             updatedReply.setUpdated_at(new Date());
             replyService.updateReply(updatedReply);
             response.setMessage("댓글 수정 성공");
-            response.setResponse("success");
         }catch(EmptyResultDataAccessException | NoSuchElementException e){
             response.setMessage("댓글 수정 실패");
             response.setResponse("fail");
@@ -98,24 +104,34 @@ public class ReplyController {
             Reply deletedReply = replyService.findById(reply.isPresent()?reply.get():null);
             replyService.deleteReply(deletedReply);
             response.setMessage("댓글 삭제 성공");
-            response.setResponse("success");
         }catch(EmptyResultDataAccessException | NoSuchElementException e){
             response.setMessage("댓글 삭제 실패");
             response.setResponse("fail");
         }
         return response;
     }
-    @PutMapping("/recommend/{reply}")
-    public Response addRecommend(@PathVariable Optional<Integer> reply){
+    @Transactional
+    @PutMapping("/recommend")
+    public Response addRecommend(@RequestBody RequestVote requestVote){
         Response response = new Response();
         try{
-            Reply updatedReply = replyService.findById(reply.isPresent()?reply.get():null);
-            updatedReply.addRecommend();
+            Reply updatedReply = replyService.findById(requestVote.getId());
+            ReplyVote tmpVote = replyVoteService.findByUsername(requestVote.getUsername());
+            if(tmpVote != null){
+                updatedReply.fixRecommend(-tmpVote.getValue());
+                replyVoteService.deleteReplyVote(tmpVote);
+            }
+            ReplyVote newVote = new ReplyVote();
+            newVote.setReply(requestVote.getId());
+            newVote.setUsername(requestVote.getUsername());
+            newVote.setValue(requestVote.getValue());
+            updatedReply.fixRecommend(requestVote.getValue());
+            replyVoteService.createReplyVote(newVote);
+            
             replyService.updateReply(updatedReply);
-            response.setMessage("댓글 추천수 증가 성공");
-            response.setResponse("success");
+            response.setMessage("답글 추천수 수정 성공");
         }catch(EmptyResultDataAccessException | NoSuchElementException e){
-            response.setMessage("댓글 추천수 증가 실패");
+            response.setMessage("답글 추천수 수정 실패");
             response.setResponse("fail");
         }
         return response;
@@ -128,7 +144,6 @@ public class ReplyController {
             updatedReply.adopted();
             replyService.updateReply(updatedReply);
             response.setMessage("댓글 채택 성공");
-            response.setResponse("success");
         }catch(EmptyResultDataAccessException | NoSuchElementException e){
             response.setMessage("댓글 채택 실패");
             response.setResponse("fail");

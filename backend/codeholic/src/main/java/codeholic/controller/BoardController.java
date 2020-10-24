@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 
+import javax.transaction.Transactional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -19,14 +21,15 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import codeholic.domain.Board;
-import codeholic.domain.Reply;
+import codeholic.domain.BoardVote;
 import codeholic.domain.Response;
 import codeholic.domain.Tag;
 import codeholic.domain.request.RequestNewBoard;
 import codeholic.domain.request.RequestUpdateBoard;
+import codeholic.domain.request.RequestVote;
 import codeholic.domain.response.BoardResponse;
-import codeholic.repository.TagRepository;
 import codeholic.service.BoardService;
+import codeholic.service.BoardVoteService;
 import codeholic.service.ReplyService;
 import codeholic.service.TagService;
 
@@ -47,20 +50,8 @@ public class BoardController {
     @Autowired
     TagService tagService;
 
-    @GetMapping("/tag/{board}")
-    public Response tagList(@PathVariable Optional<Integer> board){
-        Response response = new Response();
-        try{
-            List<Tag> tags = tagService.findByBoard_id(board.isPresent()?board.get():null);
-            response.setData(tags);
-            response.setMessage("태그 조회 성공");
-            response.setResponse("success");
-        }catch(EmptyResultDataAccessException | NoSuchElementException e){
-            response.setMessage("태그 조회 실패");
-            response.setResponse("fail");
-        }
-        return response;
-    }
+    @Autowired
+    BoardVoteService boardVoteService;
 
     @GetMapping("/{pageNum}")
     public Response boardList(@PathVariable Optional<Integer> pageNum){
@@ -68,7 +59,6 @@ public class BoardController {
         try{
             BoardResponse br = boardService.findAll(countPerPage, pageNum.isPresent()?pageNum.get():1);
             response.setData(br);
-            response.setResponse("success");
             response.setMessage("조회성공");
         }catch(EmptyResultDataAccessException | NoSuchElementException e){
             response.setMessage("조회 실패");
@@ -85,10 +75,9 @@ public class BoardController {
         try{
             BoardResponse br = boardService.findByTitle(title.isPresent()?title.get():"", countPerPage, pageNum.isPresent()?pageNum.get():1);
             response.setData(br);
-            response.setResponse("success");
             response.setMessage("조회성공");
         }catch(EmptyResultDataAccessException | NoSuchElementException e){
-            response.setMessage("조회 실패");
+            response.setMessage("검색 실패");
             response.setResponse("fail");
         }
         return response;
@@ -102,9 +91,8 @@ public class BoardController {
             BoardResponse br = boardService.findByBody(body.isPresent()?body.get():"", countPerPage, pageNum.isPresent()?pageNum.get():1);
             response.setData(br);
             response.setMessage("조회성공");
-            response.setResponse("success");
         }catch(EmptyResultDataAccessException | NoSuchElementException e){
-            response.setMessage("조회 실패");
+            response.setMessage("검색 실패");
             response.setResponse("fail");
         }
         return response;
@@ -117,14 +105,14 @@ public class BoardController {
             Board board = new Board();
             board.setBody(requestNewBoard.getBody());
             board.setTitle(requestNewBoard.getTitle());
-            board.setUser_id(requestNewBoard.getUser_id());
+            board.setUsername(requestNewBoard.getUsername());
+            board.setMember_name(requestNewBoard.getMember_name());
+            String[] tagName = requestNewBoard.getTag().split("\\s");
+            List<Tag> tags = tagService.createTags(tagName);
+            board.setTags(tags);
             boardService.createBoard(board);
-    
-            String[] tags = requestNewBoard.getTag().split("\\s");
-            tagService.createTags(tags, board.getId());
             response.setData(board);
             response.setMessage("게시물 생성 성공");
-            response.setResponse("success");
         }catch(EmptyResultDataAccessException | NoSuchElementException e){
             response.setMessage("게시물 생성 실패");
             response.setResponse("fail");
@@ -142,8 +130,8 @@ public class BoardController {
             if(requestUpdateBoard.getBody()!=null)
                 board.setBody(requestUpdateBoard.getBody());
            if(requestUpdateBoard.getTag()!=null){
-               String[] tags =requestUpdateBoard.getTag().split("\\s");
-               tagService.updateTags(tags, board.getId());
+               String[] tagName =requestUpdateBoard.getTag().split("\\s");
+               tagService.updateTags(tagName, board);
            } 
             if(requestUpdateBoard.getTitle()!=null)
                 board.setTitle(requestUpdateBoard.getTitle());
@@ -151,7 +139,6 @@ public class BoardController {
             boardService.updateBoard(board);
             response.setData(board);
             response.setMessage("게시글을 수정하였습니다.");
-            response.setResponse("success");
         }catch(EmptyResultDataAccessException | NoSuchElementException e){
             response.setMessage("해당 게시물이 없습니다.");
             response.setResponse("fail");
@@ -165,15 +152,8 @@ public class BoardController {
         Response response = new Response();
         try{
             Integer id = board.isPresent()? board.get():null;
-            List<Reply> reply = replyService.findReplyByBoard_id(id);
-            reply.forEach(action->{
-                action.setBoard(null);
-                replyService.deleteReply(action);
-            });
-            tagService.deleteTags(id);
             boardService.deleteBoard(id);
             response.setMessage("게시글을 삭제하였습니다.");
-            response.setResponse("success");
         }catch(EmptyResultDataAccessException | NoSuchElementException e){
             response.setMessage("게시글 삭제를 실패하였습니다.");
             response.setResponse("fail");
@@ -189,25 +169,35 @@ public class BoardController {
             updatedBoard.addView();
             boardService.updateBoard(updatedBoard);
             response.setMessage("view 1회 증가");
-            response.setResponse("success");
         }catch(EmptyResultDataAccessException | NoSuchElementException e){
             response.setMessage("view 1회 증가에 실패하였습니다.");
             response.setResponse("fail");
         }
         return response;
     }
-    @PutMapping("/recommend/{board}")
-    public Response updateRecommend(@PathVariable Optional<Integer> board){
+    
+    @Transactional
+    @PutMapping("/recommend")
+    public Response updateRecommend(@RequestBody RequestVote requestBoardVote){
         Response response = new Response();
         try{
-            Integer id = board.isPresent()? board.get():null;
-            Board updatedBoard = boardService.findById(id);
-            updatedBoard.addRecommend();
+            Board updatedBoard = boardService.findById(requestBoardVote.getId());
+            //username이 이미 존재한다면 역으로 값 수정해주기
+            BoardVote tmpVote = boardVoteService.findByUsername(requestBoardVote.getUsername());
+            if(tmpVote!=null){
+                updatedBoard.fixRecommend(-tmpVote.getValue());
+                boardVoteService.deleteBoardVote(tmpVote);
+            }
+            BoardVote newVote = new BoardVote();
+            newVote.setBoard(requestBoardVote.getId());
+            newVote.setUsername(requestBoardVote.getUsername());
+            newVote.setValue(requestBoardVote.getValue());
+            updatedBoard.fixRecommend(requestBoardVote.getValue());
+            boardVoteService.createBoardVote(newVote);
             boardService.updateBoard(updatedBoard);
-            response.setMessage("recommend 1회 증가");
-            response.setResponse("success");
+            response.setMessage("recommend 수정");
         }catch(EmptyResultDataAccessException | NoSuchElementException e){
-            response.setMessage("recommend 1회 증가에 실패하였습니다.");
+            response.setMessage("recommend 수정 실패하였습니다.");
             response.setResponse("fail");
         }
         return response;
@@ -220,7 +210,6 @@ public class BoardController {
             Board returnBoard = boardService.findById(id);
             response.setData(returnBoard);
             response.setMessage("반환된 게시물");
-            response.setResponse("success");
         }catch(EmptyResultDataAccessException | NoSuchElementException e){
             response.setMessage("게시물 반환에 실패하였습니다.");
             response.setResponse("fail");
