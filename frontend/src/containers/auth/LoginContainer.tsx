@@ -3,7 +3,7 @@ import { css, jsx } from "@emotion/core";
 import { useCallback } from "react";
 import { useDispatch } from "react-redux";
 import { useHistory } from "react-router-dom";
-import { LoginForm } from "../../components/auth/LoginForm";
+import { LoginForm, LoginFormInput } from "../../components/auth/LoginForm";
 import { login } from "../../lib/api/auth";
 import core from "../../modules/core";
 
@@ -11,13 +11,10 @@ export const LoginContainer: React.FC = (props) => {
   const dispatch = useDispatch();
   const history = useHistory();
   const onSubmit = useCallback(
-    async (id, password) => {
-      const loggedIn = await login(id, password);
-      if (loggedIn) {
-        dispatch(core.actions.setUser({ username: "seowook12" }));
-        history.goBack();
-      }
-      return loggedIn;
+    async ({ username, password }: LoginFormInput) => {
+      await login(username, password);
+      dispatch(core.actions.setUser({ username: "seowook12" }));
+      history.push("/seowook12");
     },
     [dispatch, history],
   );

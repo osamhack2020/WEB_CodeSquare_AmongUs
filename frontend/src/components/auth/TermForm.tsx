@@ -1,14 +1,8 @@
 /** @jsx jsx */
 import { css, jsx } from "@emotion/core";
 import styled from "@emotion/styled";
-import { useCallback, useState } from "react";
-import { Button } from "../common/Button";
-import { RadioInput } from "../common/RadioInput";
 
-interface Terms {
-  service: boolean;
-  privacy: boolean;
-}
+export type TermType = "service" | "privacy";
 
 const TermFormBlock = styled.div`
   display: flex;
@@ -24,72 +18,13 @@ const TextBox = styled.div`
 `;
 
 export interface TermFormProps {
-  onCancel: () => void;
-  onNext: () => void;
+  term: TermType;
 }
 
-export const TermForm: React.FC<TermFormProps> = ({
-  onCancel,
-  onNext,
-  ...props
-}) => {
-  const [terms, setTerms] = useState<Terms>({ service: false, privacy: false });
-  const handleAgreeAll = useCallback(() => {
-    setTerms((terms) => {
-      if (terms.privacy && terms.service) {
-        return { privacy: false, service: false };
-      }
-      return { privacy: true, service: true };
-    });
-  }, [setTerms]);
-  const handleAgreeService = useCallback(() => {
-    setTerms((terms) => ({ ...terms, service: !terms.service }));
-  }, [setTerms]);
-  const handleAgreePrivacy = useCallback(() => {
-    setTerms((terms) => ({ ...terms, privacy: !terms.privacy }));
-  }, [setTerms]);
-
+export const TermForm: React.FC<TermFormProps> = ({ term, ...props }) => {
   return (
     <TermFormBlock {...props}>
-      <RadioInput
-        checked={terms.privacy && terms.service}
-        onClick={handleAgreeAll}
-        css={css`
-          padding-top: 16px;
-          font-size: 14px;
-          font-style: normal;
-          font-weight: 700;
-          line-height: 20px;
-          letter-spacing: -0.02em;
-        `}
-      >
-        코드스퀘어 이용약관, 개인정보의 수집 및 이용에 모두 동의합니다.
-      </RadioInput>
-      <div
-        css={css`
-          padding-top: 32px;
-        `}
-      >
-        <RadioInput
-          checked={terms.service}
-          onClick={handleAgreeService}
-          css={css`
-            font-size: 14px;
-            font-style: normal;
-            font-weight: 400;
-            line-height: 20px;
-            letter-spacing: -0.02em;
-          `}
-        >
-          <div>이용약관 동의</div>
-          <div
-            css={css`
-              color: #627bff;
-            `}
-          >
-            (필수)
-          </div>
-        </RadioInput>
+      {term === "service" && (
         <TextBox
           css={css`
             margin-top: 10px;
@@ -110,32 +45,8 @@ export const TermForm: React.FC<TermFormProps> = ({
             기본적인 사항과 기타 필요한 사항을 규정하는 것을 목적으로 합니다.
           </p>
         </TextBox>
-      </div>
-      <div
-        css={css`
-          padding-top: 32px;
-        `}
-      >
-        <RadioInput
-          checked={terms.privacy}
-          onClick={handleAgreePrivacy}
-          css={css`
-            font-size: 14px;
-            font-style: normal;
-            font-weight: 400;
-            line-height: 20px;
-            letter-spacing: -0.02em;
-          `}
-        >
-          <div>개인정보 수집 및 이용 동의</div>
-          <div
-            css={css`
-              color: #627bff;
-            `}
-          >
-            (필수)
-          </div>
-        </RadioInput>
+      )}
+      {term === "privacy" && (
         <TextBox
           css={css`
             margin-top: 10px;
@@ -156,60 +67,7 @@ export const TermForm: React.FC<TermFormProps> = ({
           </p>
           <p>1. 수집하는 개인정보</p>
         </TextBox>
-      </div>
-      <div
-        css={css`
-          display: flex;
-          margin-top: 36px;
-        `}
-      >
-        <Button
-          onClick={onCancel}
-          css={css`
-            background: #c4c4c4;
-            color: black;
-            border-radius: 4px;
-            width: 100%;
-            height: 45px;
-            margin-right: 16px;
-          `}
-        >
-          <div
-            css={css`
-              font-size: 18px;
-              font-style: normal;
-              font-weight: 600;
-              line-height: 26px;
-              letter-spacing: -0.02em;
-              text-align: center;
-            `}
-          >
-            취소
-          </div>
-        </Button>
-        <Button
-          disabled={!terms.privacy || !terms.service}
-          onClick={onNext}
-          css={css`
-            border-radius: 4px;
-            height: 45px;
-            width: 100%;
-          `}
-        >
-          <div
-            css={css`
-              font-size: 18px;
-              font-style: normal;
-              font-weight: 600;
-              line-height: 26px;
-              letter-spacing: -0.02em;
-              text-align: center;
-            `}
-          >
-            다음
-          </div>
-        </Button>
-      </div>
+      )}
     </TermFormBlock>
   );
 };

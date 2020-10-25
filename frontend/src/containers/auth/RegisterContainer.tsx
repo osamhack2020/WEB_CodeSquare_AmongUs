@@ -1,22 +1,29 @@
 /** @jsx jsx */
 import { css, jsx } from "@emotion/core";
-import { useCallback, useState } from "react";
+import { useCallback } from "react";
+import { useDispatch } from "react-redux";
 import { useHistory } from "react-router-dom";
-import { RegisterForm } from "../../components/auth/RegisterForm";
-import { TermForm } from "../../components/auth/TermForm";
-import { Progress } from "../../components/common/Progress";
+import {
+  RegisterForm,
+  RegisterFormInput,
+} from "../../components/auth/RegisterForm";
+import { register } from "../../lib/api/auth";
+import core from "../../modules/core";
 
 export const RegisterContainer: React.FC = (props) => {
   const history = useHistory();
-  const [phase, setPhase] = useState(1);
+  const dispatch = useDispatch();
   const onCancel = useCallback(() => {
     history.goBack();
   }, [history]);
-  const onNext = useCallback(() => {
-    setPhase((phase) => phase + 1);
-  }, [setPhase]);
-  const onSubmit = useCallback(async (username: string, password: string) => {},
-  []);
+  const onSubmit = useCallback(
+    async (data: RegisterFormInput) => {
+      await register(data);
+      dispatch(core.actions.setUser({ username: "seowook12" }));
+      history.push("/seowook12");
+    },
+    [dispatch, history],
+  );
   return (
     <div
       css={css`
@@ -40,26 +47,13 @@ export const RegisterContainer: React.FC = (props) => {
           user-select: none;
         `}
       >
-        {phase === 1 && (
-          <div>
-            코드스퀘어 가입을
-            <br />
-            환영합니다 :)
-          </div>
-        )}
-        {phase === 2 && (
-          <div>
-            가입에 필요한
-            <br />
-            정보를 입력해 주세요.
-          </div>
-        )}
+        <div>
+          코드스퀘어 가입을
+          <br />
+          환영합니다 :)
+        </div>
       </div>
-      <Progress percent={Math.round((100 / 3) * phase)} />
-      {phase === 1 && <TermForm onCancel={onCancel} onNext={onNext}></TermForm>}
-      {phase === 2 && (
-        <RegisterForm onCancel={onCancel} onSubmit={onSubmit}></RegisterForm>
-      )}
+      <RegisterForm onCancel={onCancel} onSubmit={onSubmit}></RegisterForm>
     </div>
   );
 };

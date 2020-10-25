@@ -2,13 +2,14 @@
 import { css, jsx } from "@emotion/core";
 
 export interface RadioInputProps {
+  disabled?: boolean;
   checked: boolean;
   onClick: () => void;
 }
 
 export const RadioInput: React.FC<
   RadioInputProps & React.HTMLProps<HTMLDivElement>
-> = ({ onClick, checked, children, ...props }) => {
+> = ({ onClick, checked, disabled, children, ...props }) => {
   return (
     <div
       css={css`
@@ -16,6 +17,13 @@ export const RadioInput: React.FC<
         display: flex;
         cursor: pointer;
         user-select: none;
+        ${disabled &&
+        css`
+           {
+            pointer-events: none;
+            cursor: not-allowed;
+          }
+        `}
       `}
       onClick={onClick}
       {...props}
@@ -33,7 +41,7 @@ export const RadioInput: React.FC<
             border: 1px solid #c4c4c4;
             border-radius: 100%;
             content: "";
-            background: #c4c4c4;
+            background: ${disabled ? "#959da5" : "#c4c4c4"};
             box-sizing: border-box;
             display: block;
             position: absolute;
@@ -46,7 +54,7 @@ export const RadioInput: React.FC<
             width: 10px;
             height: 10px;
             box-sizing: border-box;
-            background-color: #627bff;
+            background-color: ${disabled ? "#959da5" : "#627bff"};
             border-radius: 100%;
             display: block;
             position: absolute;

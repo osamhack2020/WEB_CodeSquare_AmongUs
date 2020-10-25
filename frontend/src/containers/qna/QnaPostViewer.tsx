@@ -239,7 +239,9 @@ export const QnaPostViewer: React.FC<QnaPostViewerProps> = ({
             <ButtonWrapper ref={setAcceptButtonRef} onClick={onAcceptClick}>
               <AcceptIcon disabled />
             </ButtonWrapper>
-            <QnaAcceptPopper anchorEl={acceptButtonRef} show={popper} />
+            {!loading && (
+              <QnaAcceptPopper anchorEl={acceptButtonRef} show={popper} />
+            )}
           </React.Fragment>
         )}
         {user?.username === post.username && (

@@ -1,11 +1,11 @@
 /** @jsx jsx */
 import { css, jsx } from "@emotion/core";
 import styled from "@emotion/styled";
-import { useCallback, useState } from "react";
-import useInput from "../../lib/hooks/useInput";
+import { useEffect } from "react";
 import { Button } from "../common/Button";
 import { WrapperLink } from "../common/WrapperLink";
-import { LoginInput } from "./LoginInput";
+import { Input } from "../common/Input";
+import { useForm } from "react-hook-form";
 
 const LoginFormBlock = styled.div`
   display: flex;
@@ -14,8 +14,13 @@ const LoginFormBlock = styled.div`
 `;
 
 export interface LoginForm {
-  onSubmit: (id: string, password: string) => Promise<boolean>;
+  onSubmit: (data: LoginFormInput) => Promise<void>;
   onCancel: () => void;
+}
+
+export interface LoginFormInput {
+  username: string;
+  password: string;
 }
 
 export const LoginForm: React.FC<LoginForm> = ({
@@ -23,16 +28,23 @@ export const LoginForm: React.FC<LoginForm> = ({
   onCancel,
   ...props
 }) => {
-  const [loginFailed, setLoginFailed] = useState<boolean>(false);
-  const [loading, setLoading] = useState<boolean>(false);
-  const [username, onChangeUsername] = useInput("");
-  const [password, onChangePassword] = useInput("");
-  const onSubmit = useCallback(async () => {
-    setLoading(true);
-    const loggedIn = await login(username, password);
-    setLoading(false);
-    setLoginFailed(!loggedIn);
-  }, [login, username, password, setLoading]);
+  const {
+    register,
+    handleSubmit,
+    errors,
+    clearErrors,
+    setError,
+    formState,
+  } = useForm<LoginFormInput>({ mode: "onChange" });
+
+  useEffect(() => {
+    if (formState.submitCount > 0 && formState.isValid) {
+      setError("password", {
+        type: "manual",
+        message: "존재하지 않는 아이디거나, 비밀번호가 일치하지 않습니다.",
+      });
+    }
+  }, [formState.submitCount, formState.isValid, setError]);
 
   return (
     <LoginFormBlock {...props}>
@@ -53,27 +65,30 @@ export const LoginForm: React.FC<LoginForm> = ({
       >
         다시 만나서 반가워요!
       </div>
-      <LoginInput
+      <Input
+        name="username"
         label="아이디"
-        value={username}
-        onChange={onChangeUsername}
+        ref={register({ required: true, minLength: 1 })}
         css={css`
-          margin-bottom: 4px;
+          margin-bottom: 15px;
         `}
-        disabled={loading}
+        disabled={formState.isSubmitting}
+        message={errors.username && "아이디를 입력해 주세요."}
+        invalid={!!errors.username}
       />
-      <LoginInput
+      <Input
+        name="password"
         label="비밀번호"
-        value={password}
-        onChange={onChangePassword}
-        onSubmit={onSubmit}
+        ref={register({
+          required: "비밀번호를 입력해 주세요.",
+          minLength: { value: 1, message: "비밀번호를 입력해 주세요." },
+        })}
+        onClick={() => clearErrors("password")}
+        onSubmit={handleSubmit(login)}
         password
-        disabled={loading}
-        hint={
-          loginFailed &&
-          "존재하지 않는 아이디거나, 비밀번호가 일치하지 않습니다."
-        }
-        invalid={loginFailed}
+        disabled={formState.isSubmitting}
+        message={errors.password?.message}
+        invalid={!!errors.password}
       />
       <div
         css={css`
@@ -91,7 +106,6 @@ export const LoginForm: React.FC<LoginForm> = ({
             height: 45px;
             margin-right: 16px;
           `}
-          disabled={loading}
         >
           <div
             css={css`
@@ -107,13 +121,13 @@ export const LoginForm: React.FC<LoginForm> = ({
           </div>
         </Button>
         <Button
-          onClick={onSubmit}
+          onClick={handleSubmit(login)}
           css={css`
             border-radius: 4px;
             height: 45px;
             width: 100%;
           `}
-          disabled={loading}
+          disabled={formState.isSubmitting}
         >
           <div
             css={css`

@@ -2,15 +2,15 @@ import { useState, useCallback, useEffect } from "react";
 
 export default function useInput(
   defaultValue: string,
-  cb?: (next: string) => boolean,
+  cb?: (next: string) => string | null,
 ) {
   const [input, setInput] = useState(defaultValue);
-  const [validate, setValidate] = useState(false);
+  const [errorMsg, setErrorMsg] = useState<string | null>(null);
   useEffect(() => {
     if (cb) {
-      setValidate(cb(input));
+      setErrorMsg(cb(input));
     } else {
-      setValidate(true);
+      setErrorMsg(null);
     }
   }, [cb, input]);
   const onChange = useCallback(
@@ -20,10 +20,10 @@ export default function useInput(
     [],
   );
   const onReset = useCallback((value = "") => setInput(value), []);
-  return [input, onChange, onReset, validate] as [
+  return [input, onChange, onReset, errorMsg] as [
     string,
     typeof onChange,
     typeof onReset,
-    boolean,
+    string | null,
   ];
 }
