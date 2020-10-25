@@ -21,15 +21,17 @@ server.get('/urlinfo', (req, res) => {
 	return res.json(urlinfo);
 });
 
-server.delete('/urlinfo/:id', (req, res) => {
-	const infoId = parseInt(req.params.id, 10);
-	console.log(req.params.id);
-	
+server.delete('/urlinfo/:name', (req, res) => {
+	//const infoId = parseInt(req.params.id, 10);
+	/*
 	if(!infoId) {
 		return res.status(400).json({err: 'Incorrect id'});
 	}
-
-	db.get('urlinfo').remove({id: infoId}).write();
+	*/
+	let retval = db.get('urlinfo').remove({name: req.params.name}).write();
+	if(retval.length === 0) {
+		return res.status(400).json({err: 'Invalid name'});
+	}
 	return res.status(204).send();
 
 });
@@ -44,20 +46,21 @@ server.post('/urlinfo', (req, res) => {
 	if(!addr.length){
 		return res.status(400).json({err: 'Incorrect address'});
 	}
+	if(db.get('urlinfo').find({name: name}).value()) {
+		return res.status(400).json({err: 'User '+name+' aleady exists'});
+	}
 
 	const id = urlinfo.reduce((maxId, name) => {
-		return name.id > maxId ? name.id : maxId;
-	}, 0) + 1;
+               return name.id > maxId ? name.id : maxId;
+        }, 0) + 1;
 
-	const newInfo = {
-		id: id,
-		name: name,
-		addr: addr
-	};
-
-	db.get('urlinfo').push(newInfo).write();
-
-	return res.status(201).json(newInfo);
+        const newInfo = {
+                id: id,
+                name: name,
+                addr: addr
+        };
+        db.get('urlinfo').push(newInfo).write();
+        return res.status(201).json(newInfo);
 });
 
 server.use(router);
