@@ -1,5 +1,5 @@
 /** @jsx jsx */
-import { jsx } from "@emotion/core";
+import { css, jsx } from "@emotion/core";
 import { useCallback, useState } from "react";
 import { useHistory } from "react-router-dom";
 import { QnaWriteForm } from "../../components/qna/QnaWriteForm";
@@ -26,6 +26,10 @@ export const QnaWriteContainer: React.FC = ({ ...props }) => {
       onTagChange={setTags}
       onSubmit={onSubmit}
       submitType="등록"
+      css={css`
+        margin: 0 auto;
+        padding-top: 74px;
+      `}
     />
   );
 };
