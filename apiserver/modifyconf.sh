@@ -1,12 +1,13 @@
 #!/bin/bash
 
 idx=0
+ext_ip=$(curl icanhazip.com)
 
 rm -f ./code-server.conf
 echo "server {
 listen 8989;
 listen [::]:8989;
-server_name 3.235.236.245;" >> code-server.conf
+server_name $ext_ip;" >> code-server.conf
 
 while [ $(cat db.json | jq '.urlinfo' | jq '.['"$idx"']' | jq '.name') != "null" ]; do
 	name=$(cat db.json | jq '.urlinfo' | jq '.['"$idx"']' | jq '.name')
