@@ -1,7 +1,7 @@
 /** @jsx jsx */
 import { css, jsx } from "@emotion/core";
 import { useSelector } from "react-redux";
-import { Route, Switch } from "react-router-dom";
+import { Redirect, Route, Switch } from "react-router-dom";
 import { Header } from "./components/base/Header";
 import { LoginContainer } from "./containers/auth/LoginContainer";
 import { RegisterContainer } from "./containers/auth/RegisterContainer";
@@ -32,7 +32,7 @@ const App: React.FC = () => {
       >
         <Switch>
           <Route exact path="/">
-            {user ? <ProfileContainer /> : <HomeContainer />}
+            {user ? <Redirect to={`/${user.username}`} /> : <HomeContainer />}
           </Route>
           <Route path="/vm">
             <VmHomeContainer />
@@ -54,6 +54,9 @@ const App: React.FC = () => {
           </Route>
           <Route path="/register">
             <RegisterContainer />
+          </Route>
+          <Route exact path="/:username">
+            <ProfileContainer />
           </Route>
         </Switch>
       </div>

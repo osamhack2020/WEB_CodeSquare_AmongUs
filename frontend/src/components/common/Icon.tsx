@@ -80,3 +80,35 @@ export const TrashIcon: React.FC<CommonIconProps> = ({
     />
   </svg>
 );
+
+export const GitLabIcon: React.FC = (props) => (
+  <svg
+    width="17"
+    height="15"
+    viewBox="0 0 17 15"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+    {...props}
+  >
+    <path
+      d="M16.971 8.312L14.653.7c-.145-.419-.491-.7-.955-.7-.464 0-.84.252-.985.671l-1.535 4.422H5.82L4.285.673C4.14.255 3.764.003 3.3.003c-.464 0-.84.278-.955.7L.029 8.311c-.087.28.03.587.261.755L8.487 15l8.225-5.933a.694.694 0 00.26-.755z"
+      fill="#797979"
+    />
+  </svg>
+);
+
+export const LocationIcon: React.FC = (props) => (
+  <svg
+    width="12"
+    height="16"
+    viewBox="0 0 12 16"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+    {...props}
+  >
+    <path
+      d="M5.6 0A5.596 5.596 0 000 5.6C0 9.8 5.6 16 5.6 16s5.6-6.2 5.6-10.4C11.2 2.504 8.696 0 5.6 0zm0 7.6a2 2 0 110-4 2 2 0 010 4z"
+      fill="#797979"
+    />
+  </svg>
+);
