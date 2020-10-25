@@ -16,14 +16,21 @@ module.exports = {
       },
       items: [
         {
-          to: 'docs/',
-          activeBasePath: 'docs',
-          label: 'Docs',
+          type: 'doc',
           position: 'left',
+          docId: 'introduction',
+          label: 'Docs',
+        },
+        {
+          type: 'doc',
+          position: 'left',
+          docId: 'api/backend/user',
+          label: 'API',
         },
         {
           href: 'https://github.com/osamhack2020/WEB_CodeSquare_AmongUs',
           label: 'GitHub',
+          className: 'header-github-link',
           position: 'right',
         },
       ],
@@ -48,29 +55,12 @@ module.exports = {
           title: 'Community',
           items: [
             {
-              label: 'Stack Overflow',
-              href: 'https://stackoverflow.com/questions/tagged/docusaurus',
-            },
-            {
-              label: 'Discord',
-              href: 'https://discordapp.com/invite/docusaurus',
-            },
-            {
-              label: 'Twitter',
-              href: 'https://twitter.com/docusaurus',
-            },
-          ],
-        },
-        {
-          title: 'More',
-          items: [
-            {
-              label: 'Blog',
-              to: 'blog',
+              label: 'OSAM',
+              href: 'https://osam.kr/',
             },
             {
               label: 'GitHub',
-              href: 'https://github.com/facebook/docusaurus',
+              href: 'https://github.com/osamhack2020/WEB_CodeSquare_AmongUs',
             },
           ],
         },
