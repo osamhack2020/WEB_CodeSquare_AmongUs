@@ -1,7 +1,7 @@
 module.exports = {
   title: 'CodeSquare',
   tagline: '군 복무중인 개발자를 위한 국방망용 통합 개발 플랫폼',
-  url: 'https://osamhack2020.github.io',
+  url: 'https://docs.codesquare.space',
   baseUrl: '/',
   onBrokenLinks: 'throw',
   favicon: 'img/favicon.ico',
