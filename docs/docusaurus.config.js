@@ -1,17 +1,17 @@
 module.exports = {
-  title: 'My Site',
-  tagline: 'The tagline of my site',
-  url: 'https://your-docusaurus-test-site.com',
+  title: 'CodeSquare',
+  tagline: '군 복무중인 개발자를 위한 국방망용 통합 개발 플랫폼',
+  url: 'https://osamhack2020.github.io',
   baseUrl: '/',
   onBrokenLinks: 'throw',
   favicon: 'img/favicon.ico',
-  organizationName: 'facebook', // Usually your GitHub org/user name.
-  projectName: 'docusaurus', // Usually your repo name.
+  organizationName: 'osamhack2020', // Usually your GitHub org/user name.
+  projectName: 'WEB_CodeSquare_AmongUs', // Usually your repo name.
   themeConfig: {
     navbar: {
-      title: 'My Site',
+      title: 'CodeSquare',
       logo: {
-        alt: 'My Site Logo',
+        alt: 'CodeSquare Logo',
         src: 'img/logo.svg',
       },
       items: [
@@ -21,9 +21,8 @@ module.exports = {
           label: 'Docs',
           position: 'left',
         },
-        {to: 'blog', label: 'Blog', position: 'left'},
         {
-          href: 'https://github.com/facebook/docusaurus',
+          href: 'https://github.com/osamhack2020/WEB_CodeSquare_AmongUs',
           label: 'GitHub',
           position: 'right',
         },
@@ -76,7 +75,7 @@ module.exports = {
           ],
         },
       ],
-      copyright: `Copyright © ${new Date().getFullYear()} My Project, Inc. Built with Docusaurus.`,
+      copyright: `Copyright © ${new Date().getFullYear()} CodeSquare. Built with Docusaurus.`,
     },
   },
   presets: [
