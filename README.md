@@ -20,11 +20,13 @@
 ### Front-end
 - Typescript
 - React.js
-- Emotion
+- Emotion (CSS-in-JS)
 
 ### Infra/Cloud
+- Docker
 - OpenStack
 - OpenStack Heat
+- OpenStack Zun
 - OpenStack Keystone (for SAML SSO)
 
 ## 팀 정보
