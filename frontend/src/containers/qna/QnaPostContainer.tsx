@@ -115,8 +115,13 @@ export const QnaPostContainer: React.FC = () => {
           replies
             ?.slice()
             .sort((sortOrder === "recent" && recentCompare) || recommendCompare)
-            .map((repl) => (
-              <QnaPostViewer key={repl.id} accepted={accepted} post={repl} />
+            .map((repl, idx) => (
+              <QnaPostViewer
+                key={repl.id}
+                popper={idx === 0}
+                accepted={accepted}
+                post={repl}
+              />
             ))}
         <div
           css={css`

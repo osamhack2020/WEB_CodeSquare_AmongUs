@@ -1,3 +1,4 @@
+import { RegisterFormInput } from "../../components/auth/RegisterForm";
 import apiClient from "./apiClient";
 
 export interface LoginResponse {
@@ -9,27 +10,31 @@ export interface LoginResponse {
   data: string;
 }
 
-export const login = async (
-  username: string,
-  password: string,
-): Promise<boolean> => {
-  try {
-    const response = await apiClient.post<LoginResponse>("/user/signin", {
-      username,
-      password,
-    });
-    const { data } = response;
-    if (!data || data.response !== "success") {
-      return false;
-    }
-    // accessToken을 Authorization 헤더 기본값으로 설정
-    apiClient.defaults.headers.common["Authorization"] = response.data.data;
+export const register = async ({
+  username,
+  password,
+  member_group,
+  member_name,
+  member_rank,
+}: RegisterFormInput) => {
+  const response = await apiClient.post<LoginResponse>("/user/signup", {
+    username,
+    password,
+    member_group,
+    member_name,
+    member_rank,
+  });
+  // accessToken을 Authorization 헤더 기본값으로 설정
+  apiClient.defaults.headers.common["Authorization"] = response.data.data;
+};
 
-    return true;
-  } catch (e) {
-    console.error(e);
-    return false;
-  }
+export const login = async (username: string, password: string) => {
+  const response = await apiClient.post<LoginResponse>("/user/signin", {
+    username,
+    password,
+  });
+  // accessToken을 Authorization 헤더 기본값으로 설정
+  apiClient.defaults.headers.common["Authorization"] = response.data.data;
 };
 
 export const logout = async () => {

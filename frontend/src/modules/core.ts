@@ -8,12 +8,13 @@ export interface CoreState {
   user: User | null;
 }
 
-const initialState: CoreState =
-  process.env.NODE_ENV === "development"
-    ? {
-        user: { username: "seowook12" },
-      }
-    : { user: null };
+const initialState: CoreState = { user: null };
+// const initialState: CoreState =
+//   process.env.NODE_ENV === "development"
+//     ? {
+//         user: { username: "seowook12" },
+//       }
+//     : { user: null };
 
 const core = createSlice({
   name: "core",
