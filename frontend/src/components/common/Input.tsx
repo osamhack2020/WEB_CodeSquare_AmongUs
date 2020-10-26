@@ -20,6 +20,7 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
     {
       className,
       onClick,
+      onSubmit,
       name,
       label,
       password = false,
@@ -64,6 +65,7 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
           type={password ? "password" : "text"}
           placeholder={placeholder}
           disabled={disabled}
+          onSubmit={onSubmit}
           onClick={onClick}
           ref={ref}
           css={css`
