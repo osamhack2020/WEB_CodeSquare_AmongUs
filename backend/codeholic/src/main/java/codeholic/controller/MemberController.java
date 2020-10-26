@@ -52,13 +52,19 @@ public class MemberController {
     private RedisUtil redisUtil;
 
     @PostMapping("/signup")
-    public Response signUpUser(@RequestBody Member member){
+    public Response signUpUser(@RequestBody Member member,HttpServletResponse res){
         Response response = new Response();
 
         //실행
         try{
             authService.signUpUser(member);
+            final String token = jwtUtil.generateToken(member);
+            final String refreshJwt = jwtUtil.generateRefreshToken(member);
+            Cookie refreshToken = cookieUtil.createCookie(JwtUtil.REFRESH_TOKEN_NAME, refreshJwt);
+            redisUtil.setDataExpire(member.getUsername(), refreshJwt, JwtUtil.REFRESH_TOKEN_VALIDATION_SECOND);
+            res.addCookie(refreshToken);
             response.setMessage("회원가입을 성공적으로 완료했습니다.");
+            response.setData("Bearer "+token);
         }
         catch(Exception e){
             //아이디 중복시 오류검사....
@@ -90,7 +96,6 @@ public class MemberController {
             return new Response("error", "로그인에 실패했습니다.", e.getMessage());
         }
     }
-
     //로그아웃 처리하기
     //https://velog.io/@tlatldms/%EC%84%9C%EB%B2%84%EA%B0%9C%EB%B0%9C%EC%BA%A0%ED%94%84-Spring-boot-Spring-security-Refresh-JWT-Redis-JPA-4%ED%8E%B8-%EB%A1%9C%EA%B7%B8%EC%9D%B8-%EC%9C%A0%EC%A7%80%EC%99%80-%EB%A1%9C%EA%B7%B8%EC%95%84%EC%9B%83-%EC%B2%98%EB%A6%AC
     //로그아웃시 오픈스텍 토큰도 없애야함
