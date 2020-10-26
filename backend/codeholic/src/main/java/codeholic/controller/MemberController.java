@@ -35,11 +35,7 @@ import io.jsonwebtoken.ExpiredJwtException;
 @RequestMapping("user")
 public class MemberController {
     
-    public final static String authentication_d = "{ \"auth\": {\"identity\": {\"methods\": [\"password\"],\"password\": {\"user\": {\"name\":"+
-                    "\"admin\",\"domain\": { \"id\": \"default\" },\"password\": \"cert0188!\"}}},\"scope\": {\"project\": {\"name\": \"admin\",\"domain\": { \"id\": \"default\" }}}}}";
-
-    public final static String user_create_d ="{\"user\": {\"name\": \"newuser\", \"password\": \"changeme\"}}";
-
+   
     @Autowired
     private AuthService authService;
 
@@ -53,18 +49,13 @@ public class MemberController {
     private RedisUtil redisUtil;
 
     @PostMapping("/signup")
-    public Response signUpUser(@Valid @RequestBody Member member){
+    public Response signUpUser(@RequestBody Member member){
         Response response = new Response();
 
         //실행
         try{
             authService.signUpUser(member);
             response.setMessage("회원가입을 성공적으로 완료했습니다.");
-        }
-        catch(IllegalStateException ie){
-            response.setResponse("failed");
-            response.setMessage("회원가입을 하는 도중 오류가 발생했습니다.");
-            response.setData(ie.getMessage());
         }
         catch(Exception e){
             //아이디 중복시 오류검사....
@@ -96,8 +87,10 @@ public class MemberController {
             return new Response("error", "로그인에 실패했습니다.", e.getMessage());
         }
     }
+
     //로그아웃 처리하기
     //https://velog.io/@tlatldms/%EC%84%9C%EB%B2%84%EA%B0%9C%EB%B0%9C%EC%BA%A0%ED%94%84-Spring-boot-Spring-security-Refresh-JWT-Redis-JPA-4%ED%8E%B8-%EB%A1%9C%EA%B7%B8%EC%9D%B8-%EC%9C%A0%EC%A7%80%EC%99%80-%EB%A1%9C%EA%B7%B8%EC%95%84%EC%9B%83-%EC%B2%98%EB%A6%AC
+    //로그아웃시 오픈스텍 토큰도 없애야함
     @PostMapping("/signout")
     public Response logout(
                             HttpServletRequest req,
@@ -117,6 +110,8 @@ public class MemberController {
             redisUtil.setDataExpire(accessToken, accessToken,  JwtUtil.REFRESH_TOKEN_VALIDATION_SECOND);
             //refresh token을 redis에서 삭제
             redisUtil.deleteData(username);
+            //오픈스텍 토큰도 삭제
+            redisUtil.deleteData(username+"Openstack");
             response.setResponse("success");
             response.setMessage("로그아웃에 성공했습니다.");
         }catch(ExpiredJwtException ee){

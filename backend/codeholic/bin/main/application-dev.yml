@@ -21,5 +21,6 @@ spring:
   redis:
     host: 54.211.158.203
     port: 6379
-openstackDomain: 34.64.180.218
+openstackDomain: "http://3.236.100.160"
 countPerPage: 5
+frontend: "http://localhost:3000"

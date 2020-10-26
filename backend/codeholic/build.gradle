@@ -31,12 +31,18 @@ dependencies {
 	
     implementation 'org.springframework.boot:spring-boot-starter-security'
     testCompile('org.springframework.security:spring-security-test')
+    
     compile group: 'io.jsonwebtoken', name: 'jjwt-api', version: '0.11.2'
     runtime group: 'io.jsonwebtoken', name: 'jjwt-impl', version: '0.11.2'
     runtime group: 'io.jsonwebtoken', name: 'jjwt-jackson', version: '0.11.2'
     compile group: 'com.squareup.okhttp3', name: 'okhttp', version: '4.9.0'
     compile group: 'com.google.code.gson', name: 'gson', version: '2.8.6'
     implementation('org.springframework.boot:spring-boot-starter-validation')
+    implementation 'org.webjars:webjars-locator-core'
+    
+    implementation 'org.springframework.boot:spring-boot-starter-websocket'
+	compile group: 'org.webjars', name: 'sockjs-client', version: '1.1.2'
+	compile group: 'org.webjars', name: 'stomp-websocket', version: '2.3.3-1'
 }
 
 test {
