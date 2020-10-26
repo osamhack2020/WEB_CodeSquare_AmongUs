@@ -2,6 +2,7 @@ package codeholic.controller;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
@@ -14,6 +15,8 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -123,6 +126,23 @@ public class MemberController {
         }catch(Exception e){
             response.setResponse("failed");
             response.setMessage("로그아웃에 실패하였습니다.");
+        }
+        return response;
+    }
+    @GetMapping("/detail")
+    public Response getuserDetail(HttpServletRequest req){
+        Response response = new Response();
+        String username;
+        String accessToken = null;
+        try{
+            accessToken = req.getHeader("Authorization").substring(7);
+            username = jwtUtil.getUsername(accessToken);
+            Member member = authService.findByUsername(username);
+            response.setData(member);
+            response.setMessage("조회 성공하였습니다");
+        }catch(Exception e){
+            response.setResponse("failed");
+            response.setMessage("조회 실패하였습니다.");
         }
         return response;
 
