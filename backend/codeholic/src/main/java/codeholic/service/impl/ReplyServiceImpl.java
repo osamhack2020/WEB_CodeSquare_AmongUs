@@ -38,10 +38,9 @@ public class ReplyServiceImpl implements ReplyService {
     }
 
     @Override
-    public List<Reply> getBoardReplies(int board,int countPerPage,int currentPage) {
-        Pageable pageable = PageRequest.of(currentPage-1,countPerPage);
-        Page<Reply> page = replyRepository.findReplyByBoard_idOrderByIdAsc(board, pageable);
-        return page.getContent();
+    public List<Reply> getBoardReplies(int board) {
+        List<Reply> page = replyRepository.findReplyByBoard_idOrderByIdAsc(board);
+        return page;
     }
     
 

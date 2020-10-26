@@ -150,7 +150,31 @@ public class MemberController {
             response.setMessage("조회 실패하였습니다.");
         }
         return response;
+    }
+    @GetMapping("/refreshtoken")
+    public Response refreshToken(HttpServletRequest req){
+        Cookie refreshToken = cookieUtil.getCookie(req,JwtUtil.REFRESH_TOKEN_NAME);
+        String refreshJwt = null;
+        if(refreshToken!=null){
+            refreshJwt = refreshToken.getValue();
+        }
 
+        if(refreshJwt != null){
+            refreshUname = redisUtil.getData(refreshJwt);
+            if(refreshUname.equals(jwtUtil.getUsername(refreshJwt))){
+                UserDetails userDetails = userDetailsService.loadUserByUsername(refreshUname);
+                UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(userDetails,null,userDetails.getAuthorities());
+                usernamePasswordAuthenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(req));
+                SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
+
+                Member member = new Member();
+                member.setUsername(refreshUname);
+                String newToken =jwtUtil.generateToken(member);
+
+                Cookie newAccessToken = cookieUtil.createCookie(JwtUtil.ACCESS_TOKEN_NAME,newToken);
+                httpServletResponse.addCookie(newAccessToken);
+            }
+        }
     }
     // @Valid 에 대한 예외 처리 담당
     @ResponseStatus(HttpStatus.BAD_REQUEST)

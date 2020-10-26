@@ -11,7 +11,6 @@ import codeholic.service.AuthService;
 import codeholic.service.JwtUtil;
 import codeholic.service.OpenStackApiService;
 import codeholic.service.RedisUtil;
-//import codeholic.service.OpenStackApiService;
 import codeholic.service.SaltUtil;
 import javassist.NotFoundException;
 
