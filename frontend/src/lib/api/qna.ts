@@ -189,7 +189,7 @@ export const writePost = async (
 ): Promise<QnaPost> => {
   const {
     data: { data: board },
-  } = await apiClient.post<ApiBoardSpecificResponse>("/board", {
+  } = await apiClient.post<ApiBoardSpecificResponse>("/board/", {
     body: text,
     title,
     tag: tags.join(" "),
