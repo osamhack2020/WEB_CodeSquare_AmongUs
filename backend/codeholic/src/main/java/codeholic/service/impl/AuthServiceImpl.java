@@ -1,4 +1,6 @@
 package codeholic.service.impl;
+import javax.transaction.Transactional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -6,7 +8,9 @@ import codeholic.domain.Member;
 import codeholic.domain.Salt;
 import codeholic.repository.MemberRepository;
 import codeholic.service.AuthService;
-//import codeholic.service.OpenStackApiService;
+import codeholic.service.JwtUtil;
+import codeholic.service.OpenStackApiService;
+import codeholic.service.RedisUtil;
 import codeholic.service.SaltUtil;
 import javassist.NotFoundException;
 
@@ -18,10 +22,13 @@ public class AuthServiceImpl implements AuthService {
 
     @Autowired
     private SaltUtil saltUtil;
-    /*
+    
+    @Autowired
+    private RedisUtil redisUtil;
     @Autowired
     private OpenStackApiService openstackApiService;
-    */
+    
+    @Transactional
     @Override
     public void signUpUser(Member member) {
         validateDuplicateMember(member);
@@ -29,7 +36,7 @@ public class AuthServiceImpl implements AuthService {
         String salt = saltUtil.genSalt();
         member.setSalt(new Salt(salt));
         member.setPassword(saltUtil.encodePassword(salt,password));
-        //openstackApiService.signinProcess(member.getUsername(), member.getPassword());
+        openstackApiService.signinProcess(member.getUsername(), member.getPassword());
         memberRepository.save(member);
     }
     // 중복 회원 검증
@@ -42,13 +49,16 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public Member loginUser(String id, String password) throws Exception{
-        //String openstackToken = openstackApiService.signinProcess(id, password);
         Member member = memberRepository.findByUsername(id);
         if(member==null) throw new Exception ("멤버가 조회되지 않음");
         String salt = member.getSalt().getSalt();
-        password = saltUtil.encodePassword(salt,password);
-        if(!member.getPassword().equals(password))
+        String passwd = saltUtil.encodePassword(salt,password);
+        if(!member.getPassword().equals(passwd))
             throw new Exception ("비밀번호가 틀립니다.");
+
+        String openstackToken = openstackApiService.signinProcess(id, passwd);
+        redisUtil.setDataExpire(id+"Openstack", openstackToken, JwtUtil.REFRESH_TOKEN_VALIDATION_SECOND);   
+
         return member;
     }
     @Override

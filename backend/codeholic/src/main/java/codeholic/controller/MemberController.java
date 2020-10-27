@@ -2,6 +2,7 @@ package codeholic.controller;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
@@ -14,6 +15,8 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -35,11 +38,7 @@ import io.jsonwebtoken.ExpiredJwtException;
 @RequestMapping("user")
 public class MemberController {
     
-    public final static String authentication_d = "{ \"auth\": {\"identity\": {\"methods\": [\"password\"],\"password\": {\"user\": {\"name\":"+
-                    "\"admin\",\"domain\": { \"id\": \"default\" },\"password\": \"cert0188!\"}}},\"scope\": {\"project\": {\"name\": \"admin\",\"domain\": { \"id\": \"default\" }}}}}";
-
-    public final static String user_create_d ="{\"user\": {\"name\": \"newuser\", \"password\": \"changeme\"}}";
-
+   
     @Autowired
     private AuthService authService;
 
@@ -53,18 +52,19 @@ public class MemberController {
     private RedisUtil redisUtil;
 
     @PostMapping("/signup")
-    public Response signUpUser(@Valid @RequestBody Member member){
+    public Response signUpUser(@RequestBody Member member,HttpServletResponse res){
         Response response = new Response();
 
         //실행
         try{
             authService.signUpUser(member);
+            final String token = jwtUtil.generateToken(member);
+            final String refreshJwt = jwtUtil.generateRefreshToken(member);
+            Cookie refreshToken = cookieUtil.createCookie(JwtUtil.REFRESH_TOKEN_NAME, refreshJwt);
+            redisUtil.setDataExpire(member.getUsername(), refreshJwt, JwtUtil.REFRESH_TOKEN_VALIDATION_SECOND);
+            res.addCookie(refreshToken);
             response.setMessage("회원가입을 성공적으로 완료했습니다.");
-        }
-        catch(IllegalStateException ie){
-            response.setResponse("failed");
-            response.setMessage("회원가입을 하는 도중 오류가 발생했습니다.");
-            response.setData(ie.getMessage());
+            response.setData("Bearer "+token);
         }
         catch(Exception e){
             //아이디 중복시 오류검사....
@@ -98,6 +98,7 @@ public class MemberController {
     }
     //로그아웃 처리하기
     //https://velog.io/@tlatldms/%EC%84%9C%EB%B2%84%EA%B0%9C%EB%B0%9C%EC%BA%A0%ED%94%84-Spring-boot-Spring-security-Refresh-JWT-Redis-JPA-4%ED%8E%B8-%EB%A1%9C%EA%B7%B8%EC%9D%B8-%EC%9C%A0%EC%A7%80%EC%99%80-%EB%A1%9C%EA%B7%B8%EC%95%84%EC%9B%83-%EC%B2%98%EB%A6%AC
+    //로그아웃시 오픈스텍 토큰도 없애야함
     @PostMapping("/signout")
     public Response logout(
                             HttpServletRequest req,
@@ -117,6 +118,8 @@ public class MemberController {
             redisUtil.setDataExpire(accessToken, accessToken,  JwtUtil.REFRESH_TOKEN_VALIDATION_SECOND);
             //refresh token을 redis에서 삭제
             redisUtil.deleteData(username);
+            //오픈스텍 토큰도 삭제
+            redisUtil.deleteData(username+"Openstack");
             response.setResponse("success");
             response.setMessage("로그아웃에 성공했습니다.");
         }catch(ExpiredJwtException ee){
@@ -130,7 +133,48 @@ public class MemberController {
             response.setMessage("로그아웃에 실패하였습니다.");
         }
         return response;
-
+    }
+    @GetMapping("/detail")
+    public Response getuserDetail(HttpServletRequest req){
+        Response response = new Response();
+        String username;
+        String accessToken = null;
+        try{
+            accessToken = req.getHeader("Authorization").substring(7);
+            username = jwtUtil.getUsername(accessToken);
+            Member member = authService.findByUsername(username);
+            response.setData(member);
+            response.setMessage("조회 성공하였습니다");
+        }catch(Exception e){
+            response.setResponse("failed");
+            response.setMessage("조회 실패하였습니다.");
+        }
+        return response;
+    }
+    @GetMapping("/refreshtoken")
+    public Response refreshToken(HttpServletRequest req){
+        Response response = new Response();
+        Cookie refreshToken = cookieUtil.getCookie(req,JwtUtil.REFRESH_TOKEN_NAME);
+        String refreshJwt = null;
+        try{
+            if(refreshToken == null)
+                throw new Exception();
+            refreshJwt = refreshToken.getValue();
+            if(refreshJwt == null)
+                throw new Exception();
+            String refreshUname = redisUtil.getData(refreshJwt);
+            if(refreshUname.equals(jwtUtil.getUsername(refreshJwt))){
+                Member member = new Member();
+                member.setUsername(refreshUname);
+                String newToken =jwtUtil.generateToken(member);
+                response.setMessage("accessToken 생성 성공");
+                response.setData("Bearer "+newToken);
+            }
+        }catch(Exception e){
+            response.setMessage("accessToken 생성 실패");
+            response.setResponse("fail");
+        }
+        return response;
     }
     // @Valid 에 대한 예외 처리 담당
     @ResponseStatus(HttpStatus.BAD_REQUEST)

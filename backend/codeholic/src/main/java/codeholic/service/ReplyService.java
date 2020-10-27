@@ -5,7 +5,7 @@ import java.util.List;
 import codeholic.domain.Reply;
 
 public interface ReplyService {
-    List<Reply> getBoardReplies(int board,int countPerPage,int currentPage);
+    List<Reply> getBoardReplies(int board);
     List<Reply> findReplyByBoard_id(int id);
     void addReply(Reply reply);
     void updateReply(Reply reply);

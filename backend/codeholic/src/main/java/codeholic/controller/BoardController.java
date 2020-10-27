@@ -98,7 +98,7 @@ public class BoardController {
         return response;
     }
     // 새로운 board 등록
-    @PostMapping("/")
+    @PostMapping
     public Response newBoard(@RequestBody RequestNewBoard requestNewBoard){
         Response response = new Response();
         try{

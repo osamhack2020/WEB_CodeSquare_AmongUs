@@ -50,15 +50,15 @@ public class ReplyController {
     @Autowired
     ReplyVoteService replyVoteService;
 
-    @GetMapping("/{board}/{pageNum}")
-    public Response returnAllReplies(@PathVariable Optional<Integer> board,@PathVariable Optional<Integer> pageNum){
+    @GetMapping("/{board}")
+    public Response returnAllReplies(@PathVariable Optional<Integer> board){
         Response response = new Response();
         try{
-            List<Reply> replies = replyService.getBoardReplies(board.isPresent()?board.get():null, countPerPage, pageNum.isPresent()?pageNum.get():1);
+            List<Reply> replies = replyService.getBoardReplies(board.isPresent()?board.get():null);
             response.setData(replies);
-            response.setMessage("댓글 조회 성공");
+            response.setMessage("답글 조회 성공");
         }catch(EmptyResultDataAccessException | NoSuchElementException e){
-            response.setMessage("댓글 조회 실패");
+            response.setMessage("답글 조회 실패");
             response.setResponse("fail");
         }
         return response;
@@ -75,9 +75,9 @@ public class ReplyController {
             reply.setBoard(getBoard);
             replyService.addReply(reply);
             response.setData(reply);
-            response.setMessage("댓글 생성 성공");
+            response.setMessage("답글 생성 성공");
         }catch(EmptyResultDataAccessException | NoSuchElementException e){
-            response.setMessage("댓글 생성 실패");
+            response.setMessage("답글 생성 실패");
             response.setResponse("fail");
         }
         return response;
@@ -90,9 +90,9 @@ public class ReplyController {
             updatedReply.setBody(requestupDateReply.getBody());
             updatedReply.setUpdated_at(new Date());
             replyService.updateReply(updatedReply);
-            response.setMessage("댓글 수정 성공");
+            response.setMessage("답글 수정 성공");
         }catch(EmptyResultDataAccessException | NoSuchElementException e){
-            response.setMessage("댓글 수정 실패");
+            response.setMessage("답글 수정 실패");
             response.setResponse("fail");
         }
         return response;
@@ -103,9 +103,9 @@ public class ReplyController {
         try{
             Reply deletedReply = replyService.findById(reply.isPresent()?reply.get():null);
             replyService.deleteReply(deletedReply);
-            response.setMessage("댓글 삭제 성공");
+            response.setMessage("답글 삭제 성공");
         }catch(EmptyResultDataAccessException | NoSuchElementException e){
-            response.setMessage("댓글 삭제 실패");
+            response.setMessage("답글 삭제 실패");
             response.setResponse("fail");
         }
         return response;
@@ -143,9 +143,9 @@ public class ReplyController {
             Reply updatedReply = replyService.findById(reply.isPresent()?reply.get():null);
             updatedReply.adopted();
             replyService.updateReply(updatedReply);
-            response.setMessage("댓글 채택 성공");
+            response.setMessage("답글 채택 성공");
         }catch(EmptyResultDataAccessException | NoSuchElementException e){
-            response.setMessage("댓글 채택 실패");
+            response.setMessage("답글 채택 실패");
             response.setResponse("fail");
         }
         return response;
