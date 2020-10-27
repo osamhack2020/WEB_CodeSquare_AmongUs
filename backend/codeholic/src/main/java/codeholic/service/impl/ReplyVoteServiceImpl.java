@@ -22,7 +22,13 @@ public class ReplyVoteServiceImpl implements ReplyVoteService {
 
     @Override
     public ReplyVote findByUsername(String username) {
-        return replyVoteRepository.findByUsername(username);
+        ReplyVote result = null;
+        try{
+            result = replyVoteRepository.findByUsername(username);
+        }catch(Exception e){
+            
+        }
+        return result;
     }
 
     @Override

@@ -22,7 +22,13 @@ public class BoardVoteServiceImpl implements BoardVoteService {
 
     @Override
     public BoardVote findByUsername(String username) {
-        return boardVoteRepository.findByUsername(username);
+        BoardVote result = null;
+        try{
+            result = boardVoteRepository.findByUsername(username);
+        }catch(Exception e){
+
+        }
+        return result;
     }
 
     @Override

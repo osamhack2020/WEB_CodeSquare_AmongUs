@@ -1,5 +1,6 @@
 package codeholic.controller;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -23,6 +24,7 @@ import org.springframework.web.bind.annotation.RestController;
 import codeholic.domain.Board;
 import codeholic.domain.Reply;
 import codeholic.domain.ReplyVote;
+import codeholic.domain.ReplyWithVote;
 import codeholic.domain.Response;
 import codeholic.domain.request.RequestNewReply;
 import codeholic.domain.request.RequestUpdateBody;
@@ -55,6 +57,15 @@ public class ReplyController {
         Response response = new Response();
         try{
             List<Reply> replies = replyService.getBoardReplies(board.isPresent()?board.get():null);
+            List<ReplyWithVote> result = new ArrayList<>();
+            replies.forEach(reply->{
+                ReplyWithVote tmp = new ReplyWithVote();
+                tmp.setReply(reply);
+                ReplyVote replyVote = replyVoteService.findByUsername(reply.getUsername());
+                int value = replyVote.getValue();
+                tmp.setValue(value);
+                result.add(tmp);
+            });
             response.setData(replies);
             response.setMessage("답글 조회 성공");
         }catch(EmptyResultDataAccessException | NoSuchElementException e){

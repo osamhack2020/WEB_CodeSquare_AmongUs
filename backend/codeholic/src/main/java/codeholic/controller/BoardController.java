@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import codeholic.domain.Board;
 import codeholic.domain.BoardVote;
+import codeholic.domain.BoardWithVote;
 import codeholic.domain.Response;
 import codeholic.domain.Tag;
 import codeholic.domain.request.RequestNewBoard;
@@ -52,6 +53,7 @@ public class BoardController {
 
     @Autowired
     BoardVoteService boardVoteService;
+    
 
     @GetMapping("/{pageNum}")
     public Response boardList(@PathVariable Optional<Integer> pageNum){
@@ -208,8 +210,17 @@ public class BoardController {
         try{
             Integer id = board.isPresent()? board.get():null;
             Board returnBoard = boardService.findById(id);
-            response.setData(returnBoard);
+            // 작업
+            String username = returnBoard.getUsername();
+            BoardVote vote = boardVoteService.findByUsername(username);
+            int value = vote!=null?vote.getValue():null;
+
+            BoardWithVote returnValue = new BoardWithVote();
+            returnValue.setBoard(returnBoard);
+            returnValue.setValue(value);
+            response.setData(returnValue);
             response.setMessage("반환된 게시물");
+
         }catch(EmptyResultDataAccessException | NoSuchElementException e){
             response.setMessage("게시물 반환에 실패하였습니다.");
             response.setResponse("fail");
