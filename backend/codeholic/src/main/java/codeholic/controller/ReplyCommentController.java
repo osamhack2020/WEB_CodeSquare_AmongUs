@@ -28,13 +28,13 @@ import codeholic.domain.request.RequestUpdateBody;
 import codeholic.service.AuthService;
 import codeholic.service.ReplyCommentService;
 import codeholic.service.ReplyService;
+import javassist.NotFoundException;
 
 @RestController
-@CrossOrigin(origins="*")
+@CrossOrigin(origins = "*")
 @RequestMapping("replycomment")
 public class ReplyCommentController {
 
-    
     @Autowired
     ReplyCommentService replyCommentService;
 
@@ -44,13 +44,13 @@ public class ReplyCommentController {
     AuthService authService;
 
     @GetMapping("/{reply}")
-    public Response returnAllReplyComments(@PathVariable Optional<Integer> reply){
+    public Response returnAllReplyComments(@PathVariable Optional<Integer> reply) {
         Response response = new Response();
-        try{
-            List<ReplyComment> comments = replyCommentService.getReplyComments(reply.isPresent()?reply.get():null);
+        try {
+            List<ReplyComment> comments = replyCommentService.getReplyComments(reply.isPresent() ? reply.get() : null);
             response.setData(comments);
             response.setMessage("답글 댓글 조회 성공");
-        }catch(EmptyResultDataAccessException | NoSuchElementException e){
+        } catch (EmptyResultDataAccessException | NoSuchElementException e) {
             response.setMessage("답글 댓글 조회 실패");
             response.setResponse("fail");
         }
@@ -58,7 +58,8 @@ public class ReplyCommentController {
     }
 
     @PostMapping("/{reply}")
-    public Response addReplyComment(@PathVariable Optional<Integer> reply, @RequestBody RequestNewComment newComment, HttpServletRequest req){
+    public Response addReplyComment(@PathVariable Optional<Integer> reply, @RequestBody RequestNewComment newComment,
+            HttpServletRequest req) throws NotFoundException {
         Response response = new Response();
         try{
             Reply gReply = replyService.findById(reply.isPresent()?reply.get():null);
