@@ -11,11 +11,17 @@ import { Provider } from "react-redux";
 import { composeWithDevTools } from "redux-devtools-extension/developmentOnly";
 import { BrowserRouter } from "react-router-dom";
 import "./typography.css";
+import { refreshToken } from "./lib/api/auth";
+import core from "./modules/core";
 
 const store = createStore(
   rootReducer,
   (window as any).__REDUX_STATE__,
   composeWithDevTools(),
+);
+
+refreshToken().then((username) =>
+  store.dispatch(core.actions.setUser({ username })),
 );
 
 ReactDOM.render(
