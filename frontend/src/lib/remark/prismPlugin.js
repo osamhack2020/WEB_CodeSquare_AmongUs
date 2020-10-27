@@ -32,7 +32,6 @@ import "prismjs/components/prism-dart";
 
 export default function attacher({ include, exclude } = {}) {
   function visitor(node) {
-    console.log(node);
     let { lang, data } = node;
 
     if (!data) {
@@ -43,7 +42,6 @@ export default function attacher({ include, exclude } = {}) {
     if (!data.hProperties) {
       data.hProperties = {};
     }
-    console.log(Prism);
 
     const highlighted = Prism.highlight(
       node.value,
