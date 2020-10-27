@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,20 +27,21 @@ import codeholic.domain.Reply;
 import codeholic.domain.ReplyVote;
 import codeholic.domain.ReplyWithVote;
 import codeholic.domain.Response;
+import codeholic.domain.User;
 import codeholic.domain.request.RequestNewReply;
 import codeholic.domain.request.RequestUpdateBody;
 import codeholic.domain.request.RequestVote;
+import codeholic.service.AuthService;
 import codeholic.service.BoardService;
 import codeholic.service.ReplyService;
 import codeholic.service.ReplyVoteService;
-
+import javassist.NotFoundException;
 
 @RestController
-@CrossOrigin(origins="*")
+@CrossOrigin(origins = "*")
 @RequestMapping("replies")
 public class ReplyController {
 
-    
     @Value("${countPerPage}")
     int countPerPage;
 
@@ -50,15 +52,18 @@ public class ReplyController {
     ReplyService replyService;
 
     @Autowired
+    AuthService authService;
+
+    @Autowired
     ReplyVoteService replyVoteService;
 
     @GetMapping("/{board}")
-    public Response returnAllReplies(@PathVariable Optional<Integer> board){
+    public Response returnAllReplies(@PathVariable Optional<Integer> board) {
         Response response = new Response();
-        try{
-            List<Reply> replies = replyService.getBoardReplies(board.isPresent()?board.get():null);
+        try {
+            List<Reply> replies = replyService.getBoardReplies(board.isPresent() ? board.get() : null);
             List<ReplyWithVote> result = new ArrayList<>();
-            replies.forEach(reply->{
+            replies.forEach(reply -> {
                 ReplyWithVote tmp = new ReplyWithVote();
                 tmp.setReply(reply);
                 ReplyVote replyVote = replyVoteService.findByUsername(reply.getUsername());
@@ -68,21 +73,27 @@ public class ReplyController {
             });
             response.setData(replies);
             response.setMessage("답글 조회 성공");
-        }catch(EmptyResultDataAccessException | NoSuchElementException e){
+        } catch (EmptyResultDataAccessException | NoSuchElementException e) {
             response.setMessage("답글 조회 실패");
             response.setResponse("fail");
         }
         return response;
     }
+
     @PostMapping("/{board}")
-    public Response addReply(@PathVariable Optional<Integer> board, @RequestBody RequestNewReply requestNewReply){
+    public Response addReply(@PathVariable Optional<Integer> board, @RequestBody RequestNewReply requestNewReply,
+            HttpServletRequest req) throws NotFoundException {
         Response response = new Response();
         try{
             Board getBoard = boardService.findById(board.isPresent()?board.get():null);
             Reply reply = new Reply();
             reply.setBody(requestNewReply.getBody());
-            reply.setUsername(requestNewReply.getUsername());
-            reply.setMember_name(requestNewReply.getMember_name());
+
+            final String accessJwtHeader = req.getHeader("Authorization"); 
+            User user = authService.findByToken(accessJwtHeader);
+
+            reply.setUsername(user.getUsername());
+            reply.setMember_name(user.getName());
             reply.setBoard(getBoard);
             replyService.addReply(reply);
             response.setData(reply);

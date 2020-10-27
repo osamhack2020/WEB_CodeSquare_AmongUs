@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -20,8 +22,10 @@ import org.springframework.web.bind.annotation.RestController;
 import codeholic.domain.Reply;
 import codeholic.domain.ReplyComment;
 import codeholic.domain.Response;
+import codeholic.domain.User;
 import codeholic.domain.request.RequestNewComment;
 import codeholic.domain.request.RequestUpdateBody;
+import codeholic.service.AuthService;
 import codeholic.service.ReplyCommentService;
 import codeholic.service.ReplyService;
 
@@ -36,6 +40,8 @@ public class ReplyCommentController {
 
     @Autowired
     ReplyService replyService;
+    @Autowired
+    AuthService authService;
 
     @GetMapping("/{reply}")
     public Response returnAllReplyComments(@PathVariable Optional<Integer> reply){
@@ -52,15 +58,19 @@ public class ReplyCommentController {
     }
 
     @PostMapping("/{reply}")
-    public Response addReplyComment(@PathVariable Optional<Integer> reply, @RequestBody RequestNewComment newComment){
+    public Response addReplyComment(@PathVariable Optional<Integer> reply, @RequestBody RequestNewComment newComment, HttpServletRequest req){
         Response response = new Response();
         try{
             Reply gReply = replyService.findById(reply.isPresent()?reply.get():null);
             ReplyComment replyComment = new ReplyComment();
             replyComment.setReply(gReply);
             replyComment.setBody(newComment.getBody());
-            replyComment.setUsername(newComment.getUsername());
-            replyComment.setMember_name(newComment.getMember_name());
+
+            final String accessJwtHeader = req.getHeader("Authorization"); 
+            User user = authService.findByToken(accessJwtHeader);
+            
+            replyComment.setUsername(user.getUsername());
+            replyComment.setMember_name(user.getName());
             replyCommentService.addReplyComment(replyComment);
     
             response.setMessage("답글 댓글 생성 성공");

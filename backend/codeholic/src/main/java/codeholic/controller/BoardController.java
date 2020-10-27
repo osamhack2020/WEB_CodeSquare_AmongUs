@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,23 +26,29 @@ import codeholic.domain.BoardVote;
 import codeholic.domain.BoardWithVote;
 import codeholic.domain.Response;
 import codeholic.domain.Tag;
+import codeholic.domain.User;
 import codeholic.domain.request.RequestNewBoard;
 import codeholic.domain.request.RequestUpdateBoard;
 import codeholic.domain.request.RequestVote;
 import codeholic.domain.response.BoardResponse;
+import codeholic.service.AuthService;
 import codeholic.service.BoardService;
 import codeholic.service.BoardVoteService;
+import codeholic.service.JwtUtil;
+import codeholic.service.RedisUtil;
 import codeholic.service.ReplyService;
 import codeholic.service.TagService;
+import io.lettuce.core.RedisURI;
+import javassist.NotFoundException;
 
 @RestController
-@CrossOrigin(origins="*")
+@CrossOrigin(origins = "*")
 @RequestMapping("board")
 public class BoardController {
 
     @Value("${countPerPage}")
     int countPerPage;
-    
+
     @Autowired
     BoardService boardService;
 
@@ -53,16 +60,24 @@ public class BoardController {
 
     @Autowired
     BoardVoteService boardVoteService;
-    
+
+    @Autowired
+    JwtUtil jwtUtil;
+
+    @Autowired
+    RedisUtil redisUtil;
+
+    @Autowired
+    AuthService authService;
 
     @GetMapping("/{pageNum}")
-    public Response boardList(@PathVariable Optional<Integer> pageNum){
+    public Response boardList(@PathVariable Optional<Integer> pageNum) {
         Response response = new Response();
-        try{
-            BoardResponse br = boardService.findAll(countPerPage, pageNum.isPresent()?pageNum.get():1);
+        try {
+            BoardResponse br = boardService.findAll(countPerPage, pageNum.isPresent() ? pageNum.get() : 1);
             response.setData(br);
             response.setMessage("조회성공");
-        }catch(EmptyResultDataAccessException | NoSuchElementException e){
+        } catch (EmptyResultDataAccessException | NoSuchElementException e) {
             response.setMessage("조회 실패");
             response.setResponse("fail");
         }
@@ -70,15 +85,15 @@ public class BoardController {
     }
 
     @GetMapping("/title/{title}/{pageNum}")
-    public Response searchByTitle(@PathVariable Optional<String> title,
-                                    @PathVariable Optional<Integer> pageNum){
-        
+    public Response searchByTitle(@PathVariable Optional<String> title, @PathVariable Optional<Integer> pageNum) {
+
         Response response = new Response();
-        try{
-            BoardResponse br = boardService.findByTitle(title.isPresent()?title.get():"", countPerPage, pageNum.isPresent()?pageNum.get():1);
+        try {
+            BoardResponse br = boardService.findByTitle(title.isPresent() ? title.get() : "", countPerPage,
+                    pageNum.isPresent() ? pageNum.get() : 1);
             response.setData(br);
             response.setMessage("조회성공");
-        }catch(EmptyResultDataAccessException | NoSuchElementException e){
+        } catch (EmptyResultDataAccessException | NoSuchElementException e) {
             response.setMessage("검색 실패");
             response.setResponse("fail");
         }
@@ -86,32 +101,39 @@ public class BoardController {
     }
 
     @GetMapping("/body/{body}/{pageNum}")
-    public Response searchByBody(@PathVariable Optional<String> body,
-                                    @PathVariable Optional<Integer> pageNum){
+    public Response searchByBody(@PathVariable Optional<String> body, @PathVariable Optional<Integer> pageNum) {
         Response response = new Response();
-        try{
-            BoardResponse br = boardService.findByBody(body.isPresent()?body.get():"", countPerPage, pageNum.isPresent()?pageNum.get():1);
+        try {
+            BoardResponse br = boardService.findByBody(body.isPresent() ? body.get() : "", countPerPage,
+                    pageNum.isPresent() ? pageNum.get() : 1);
             response.setData(br);
             response.setMessage("조회성공");
-        }catch(EmptyResultDataAccessException | NoSuchElementException e){
+        } catch (EmptyResultDataAccessException | NoSuchElementException e) {
             response.setMessage("검색 실패");
             response.setResponse("fail");
         }
         return response;
     }
+
     // 새로운 board 등록
     @PostMapping
-    public Response newBoard(@RequestBody RequestNewBoard requestNewBoard){
+    public Response newBoard(@RequestBody RequestNewBoard requestNewBoard, HttpServletRequest req)
+            throws NotFoundException {
         Response response = new Response();
         try{
             Board board = new Board();
             board.setBody(requestNewBoard.getBody());
             board.setTitle(requestNewBoard.getTitle());
-            board.setUsername(requestNewBoard.getUsername());
-            board.setMember_name(requestNewBoard.getMember_name());
+
             String[] tagName = requestNewBoard.getTag().split("\\s");
             List<Tag> tags = tagService.createTags(tagName);
             board.setTags(tags);
+            
+            final String accessJwtHeader = req.getHeader("Authorization"); 
+            User user = authService.findByToken(accessJwtHeader);
+            board.setUsername(user.getUsername());
+            board.setMember_name(user.getName());
+            
             boardService.createBoard(board);
             response.setData(board);
             response.setMessage("게시물 생성 성공");

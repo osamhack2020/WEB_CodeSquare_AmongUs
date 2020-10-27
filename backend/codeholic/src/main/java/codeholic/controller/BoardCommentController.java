@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -20,10 +22,13 @@ import org.springframework.web.bind.annotation.RestController;
 import codeholic.domain.Board;
 import codeholic.domain.BoardComment;
 import codeholic.domain.Response;
+import codeholic.domain.User;
 import codeholic.domain.request.RequestNewComment;
 import codeholic.domain.request.RequestUpdateBody;
+import codeholic.service.AuthService;
 import codeholic.service.BoardCommentService;
 import codeholic.service.BoardService;
+import javassist.NotFoundException;
 
 @RestController
 @CrossOrigin(origins="*")
@@ -31,6 +36,8 @@ import codeholic.service.BoardService;
 public class BoardCommentController {
 
     
+    @Autowired
+    AuthService authService;
     @Autowired
     BoardCommentService boardCommentService;
 
@@ -52,15 +59,20 @@ public class BoardCommentController {
     }
 
     @PostMapping("/{board}")
-    public Response addBoardComment(@PathVariable Optional<Integer> board, @RequestBody RequestNewComment newBoardComment){
+    public Response addBoardComment(@PathVariable Optional<Integer> board, @RequestBody RequestNewComment newBoardComment,HttpServletRequest req) throws NotFoundException{
         Response response = new Response();
         try{
             Board gBoard = boardService.findById(board.isPresent()?board.get():null);
             BoardComment boardComment = new BoardComment();
             boardComment.setBoard(gBoard);
             boardComment.setBody(newBoardComment.getBody());
-            boardComment.setUsername(newBoardComment.getUsername());
-            boardComment.setMember_name(newBoardComment.getMember_name());
+
+            final String accessJwtHeader = req.getHeader("Authorization"); 
+            User user = authService.findByToken(accessJwtHeader);
+            
+            boardComment.setUsername(user.getUsername());
+            boardComment.setMember_name(user.getName());
+            
             boardCommentService.addBoardComment(boardComment);
     
             response.setMessage("게시물 댓글 생성 성공");
