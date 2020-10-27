@@ -19,8 +19,8 @@ export const RegisterContainer: React.FC = (props) => {
   const onSubmit = useCallback(
     async (data: RegisterFormInput) => {
       await register(data);
-      dispatch(core.actions.setUser({ username: "seowook12" }));
-      history.push("/seowook12");
+      dispatch(core.actions.setUser({ username: data.username }));
+      history.push(`/${data.username}`);
     },
     [dispatch, history],
   );
