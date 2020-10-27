@@ -1,6 +1,7 @@
 package codeholic.controller;
 
 import java.io.IOException;
+import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -10,7 +11,11 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import codeholic.domain.Board;
+import codeholic.domain.Tag;
+import codeholic.service.BoardService;
 import codeholic.service.OpenStackApiService;
+import codeholic.service.TagService;
 
 @RestController
 @RequestMapping
@@ -21,34 +26,40 @@ class MainController {
     @Autowired
     OpenStackApiService openStackApiService;
 
+    @Autowired
+    BoardService boardService;
+
+    @Autowired
+    TagService tagService;
+
+    
     @GetMapping("/")
     public String helloworld1(final HttpServletRequest req) {
         return "helloworld";
     }
 
-    @GetMapping("/system")
-    public String helloworld2(final HttpServletRequest req) {
-        return "helloworld from ";
-    }
 
-   @GetMapping("/test1")
+   @GetMapping("/test")
     public String test1() throws IOException {
-        String url = openStackApiService.signupProcess("test20", "$2a$10$gvIrFTx6d6CnUKWeOF4cb.dRLvBFlGbAbOQPK2FoHCUTr6wC7l7uO");
-        //String networkId = openStackApiService.getNetworkId(authenticationToken);
-        //String imageId = openStackApiService.getImageId(authenticationToken);
-        //String instanceId = openStackApiService.createVm("test10", imageId, networkId, authenticationToken);
-        
-        //String listInstances = openStackApiService.listInstances(authenticationToken);
-        //String fixedIpAddress = openStackApiService.getFixedIpAddress(authenticationToken,"55ae077d-a0d5-45f8-8408-0c1f2abf27fd");
-        //String portId = openStackApiService.getPortId(authenticationToken,fixedIpAddress);
-        //String floatingNetworkId = openStackApiService.getFloatingNetworkId(authenticationToken);
-        //String floatingIp = openStackApiService.assignFloatingIp(floatingNetworkId, fixedIpAddress, portId, authenticationToken);
-        //172.24.4.190
-        //String url = openStackApiService.getCodeServer(authenticationToken, "172.24.4.190", "test10");
-        return url;
-        //{ "id": 8, "name": "test10", "addr": "172.24.4.190" }????
+        try{
+            Board board = new Board();
+            board.setBody("test");
+            board.setTitle("test");
+    
+            String[] tagName = "test1 test2 test3".split("\\s");
+            List<Tag> tags = tagService.createTags(tagName);
+            board.setTags(tags);
+            
+            board.setUsername("test");
+            board.setMember_name("test");
+            
+            boardService.createBoard(board);
+    
+            return "db_connection_success";
+        }catch(Exception e){
+            return "db_connection_fail";
+        }
 
-        //어떤 인스턴스는 되고 어떤 인스턴스는 안된다....
     }
     @GetMapping("/authorized")
     public String helloworld2() {   

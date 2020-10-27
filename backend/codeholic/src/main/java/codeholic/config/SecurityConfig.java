@@ -53,6 +53,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             .antMatchers("/user/signin").permitAll()
             .antMatchers("/user/signout").permitAll()
             .antMatchers("/").permitAll()
+            .antMatchers("/test").permitAll()
             .antMatchers("/refreshtoken").permitAll()
             // 나중에 .authenticated()로 바꾸어야 한다.
             //.anyRequest().permitAll();
