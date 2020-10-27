@@ -16,6 +16,7 @@ export const register = async ({
   member_group,
   member_name,
   member_rank,
+  dog_tags,
 }: RegisterFormInput) => {
   const response = await apiClient.post<LoginResponse>("/user/signup", {
     username,
@@ -23,6 +24,7 @@ export const register = async ({
     member_group,
     member_name,
     member_rank,
+    dog_tags,
   });
   // accessToken을 Authorization 헤더 기본값으로 설정
   apiClient.defaults.headers.common["Authorization"] = response.data.data;

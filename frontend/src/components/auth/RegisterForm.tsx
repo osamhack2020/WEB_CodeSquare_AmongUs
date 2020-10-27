@@ -83,7 +83,7 @@ export interface RegisterFormInput {
   member_name: string;
   member_group: MemberGroupEnum;
   member_rank: MemberRankEnum;
-  member_number: string;
+  dog_tags: string;
 }
 
 export interface RegisterFormProps {
@@ -253,7 +253,7 @@ export const RegisterForm: React.FC<RegisterFormProps> = ({
           ref={register({ required: true, pattern: /^[0-9]+$/i })}
           placeholder="‘-’를 제외하고 입력"
           label="군번"
-          name="member_number"
+          name="dog_tags"
           css={css`
             flex-basis: 60%;
           `}
