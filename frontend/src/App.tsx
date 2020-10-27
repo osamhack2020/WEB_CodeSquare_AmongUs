@@ -2,9 +2,9 @@
 import { css, jsx } from "@emotion/core";
 import { useSelector } from "react-redux";
 import { Redirect, Route, Switch } from "react-router-dom";
-import { Header } from "./components/base/Header";
 import { LoginContainer } from "./containers/auth/LoginContainer";
 import { RegisterContainer } from "./containers/auth/RegisterContainer";
+import { HeaderContainer } from "./containers/base/HeaderContainer";
 import { HomeContainer } from "./containers/HomeContainer";
 import { ProfileContainer } from "./containers/profile/ProfileContainer";
 import { QnaEditContainer } from "./containers/qna/QnaEditContainer";
@@ -24,7 +24,7 @@ const App: React.FC = () => {
         height: 100%;
       `}
     >
-      <Header />
+      <HeaderContainer />
       <div
         css={css`
           flex: 1 1 auto;

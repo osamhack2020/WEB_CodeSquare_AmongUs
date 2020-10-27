@@ -1,14 +1,13 @@
 /** @jsx jsx */
 import { css, jsx } from "@emotion/core";
 import styled from "@emotion/styled";
+import { User } from "../../modules/core";
 import { AvatarIcon } from "../common/AvatarIcon";
-import { Button } from "../common/Button";
 import { Logo } from "../common/Logo";
 import { OutlineButton } from "../common/OutlineButton";
 import { TextButton } from "../common/TextButton";
 import { VerticalDivider } from "../common/VerticalDivider";
 import { WrapperLink } from "../common/WrapperLink";
-import useHeader from "./hooks/useHeader";
 
 const HeaderBlock = styled.div`
   display: flex;
@@ -32,8 +31,12 @@ const ButtonBlock = styled.div`
   text-align: left;
 `;
 
-export const Header: React.FC = ({ ...props }) => {
-  const { user, onLogout } = useHeader();
+export interface HeaderProps {
+  user: User | null;
+  onLogout: () => void;
+}
+
+export const Header: React.FC<HeaderProps> = ({ user, onLogout, ...props }) => {
   return (
     <HeaderBlock {...props}>
       <WrapperLink
