@@ -10,6 +10,7 @@ import { RadioInput } from "../../components/common/RadioInput";
 import { WrapperLink } from "../../components/common/WrapperLink";
 import { QnaListWidget } from "../../components/qna/QnaListWidget";
 import { MarkdownEditor } from "../../components/write/MarkdownEditor";
+import { MarkdownRender } from "../../components/write/MarkdownRender";
 import { QnaPost } from "../../lib/api/qna";
 import { RootState } from "../../modules";
 import qna from "../../modules/qna";
@@ -142,14 +143,28 @@ export const QnaPostContainer: React.FC = () => {
           >
             답변 등록하기
           </div>
-          <MarkdownEditor
-            text={text}
-            onChange={setText}
-            height={153}
-            css={css`
-              margin-bottom: 12px;
-            `}
-          />
+          {!preview && (
+            <MarkdownEditor
+              text={text}
+              onChange={setText}
+              height={153}
+              css={css`
+                margin-bottom: 12px;
+              `}
+            />
+          )}
+          {preview && (
+            <MarkdownRender
+              text={text}
+              css={css`
+                margin-bottom: 12px;
+                min-height: 210px;
+                padding: 13px 15px;
+                border: 1px solid #dbdbdb;
+                border-radius: 8px;
+              `}
+            />
+          )}
           <div
             css={css`
               display: flex;

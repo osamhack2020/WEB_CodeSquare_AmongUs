@@ -1,8 +1,11 @@
 /** @jsx jsx */
 import { css, jsx } from "@emotion/core";
+import { useState } from "react";
 import { Button } from "../common/Button";
+import { RadioInput } from "../common/RadioInput";
 import { TagInput } from "../common/TagInput";
 import { MarkdownEditor } from "../write/MarkdownEditor";
+import { MarkdownRender } from "../write/MarkdownRender";
 
 export interface QnaWriteFormProps {
   formTitle: string;
@@ -30,6 +33,7 @@ export const QnaWriteForm: React.FC<QnaWriteFormProps> = ({
   submitType,
   ...props
 }) => {
+  const [preview, setPreview] = useState(false);
   return (
     <div
       css={css`
@@ -90,14 +94,43 @@ export const QnaWriteForm: React.FC<QnaWriteFormProps> = ({
           />
         </div>
       )}
-      <MarkdownEditor
-        text={text}
-        onChange={onTextChange}
-        height={240}
+      {!preview && (
+        <MarkdownEditor
+          text={text}
+          onChange={onTextChange}
+          height={240}
+          css={css`
+            margin-bottom: 12px;
+          `}
+        />
+      )}
+      {preview && (
+        <MarkdownRender
+          text={text}
+          css={css`
+            margin-bottom: 12px;
+            min-height: 300px;
+            padding: 13px 15px;
+            border: 1px solid #dbdbdb;
+            border-radius: 8px;
+          `}
+        />
+      )}
+      <RadioInput
+        checked={preview}
+        onClick={() => setPreview((val) => !val)}
         css={css`
+          font-size: 13px;
+          font-style: normal;
+          font-weight: 400;
+          line-height: 19px;
+          letter-spacing: -0.02em;
+          text-align: left;
           margin-bottom: ${reply ? 40 : 28}px;
         `}
-      />
+      >
+        미리보기
+      </RadioInput>
       {!reply && (
         <div
           css={css`

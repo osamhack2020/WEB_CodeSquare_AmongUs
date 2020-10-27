@@ -17,26 +17,27 @@ const generatePost = (id, answer = false) => ({
   title: !answer && "안드로이드 블루투스 연결 질문",
   body: `ArrayList 는 데이터를 순서대로 등록하기만 하는 줄 알았는데,
 
-    key 값이 같은 HashMap 을 연속으로 등록했더니 먼저 등록한 데이터들까지 마지막에 등록한 데이터와 같은 데이터로 변경되었습니다.
-    
-    이것저것 시험해본 결과, key 값이 같은 경우에만 이렇게 되는 거 같은데, ArrayList 는 원래 key 값이 같은 데이터가 들어오면, 예전에 등록된 데이터까지 수정해버리나요?
-    
-    아니면 다른 조건이 더 필요한가요?
-    
-    그 때 코드는 대충 이런 모양이었습니다.
-    
-    \`\`\`java
-    ArrayList<HashMap<String, String>> al = new ArrayList<HashMap<String, String>>();
-    HashMap<String, String> hm = new HashMap<String, String>();
-    
-    for (int i=0; i<3 ; i++ ) { 
-        hm.put("목록", i);
-        aList.add(hm);
-        System.out.println("aList >>> : " + aList);
-    }
-    \`\`\`참고로 for문 안에 HashMap hm = new HashMap();를 옮겨 쓰면 되는 건 알고있습니다.
-    
-    제가 알고싶은 건 ArrayList에 등록 된 데이터가 나중에 등록 된 데이터로 인해 수정되는 조건입니다.`,
+key 값이 같은 HashMap 을 연속으로 등록했더니 먼저 등록한 데이터들까지 마지막에 등록한 데이터와 같은 데이터로 변경되었습니다.
+
+이것저것 시험해본 결과, key 값이 같은 경우에만 이렇게 되는 거 같은데, ArrayList 는 원래 key 값이 같은 데이터가 들어오면, 예전에 등록된 데이터까지 수정해버리나요?
+
+아니면 다른 조건이 더 필요한가요?
+
+그 때 코드는 대충 이런 모양이었습니다.
+
+\`\`\`java
+ArrayList<HashMap<String, String>> al = new ArrayList<HashMap<String, String>>();
+HashMap<String, String> hm = new HashMap<String, String>();
+
+for (int i=0; i<3 ; i++ ) { 
+    hm.put("목록", i);
+    aList.add(hm);
+    System.out.println("aList >>> : " + aList);
+}
+\`\`\`
+참고로 for문 안에 \`HashMap hm = new HashMap();\`를 옮겨 쓰면 되는 건 알고있습니다.
+
+제가 알고싶은 건 ArrayList에 등록 된 데이터가 나중에 등록 된 데이터로 인해 수정되는 조건입니다.`,
   tags: !answer && [{ body: "java" }, { body: "안드로이드" }],
   view: 321,
   recommend: 14,

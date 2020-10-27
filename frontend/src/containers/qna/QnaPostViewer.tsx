@@ -14,6 +14,7 @@ import { VerticalDivider } from "../../components/common/VerticalDivider";
 import { QnaAcceptPopper } from "../../components/qna/QnaAcceptPopper";
 import { QnaTagList } from "../../components/qna/QnaTagList";
 import { Vote } from "../../components/qna/Vote";
+import { MarkdownRender } from "../../components/write/MarkdownRender";
 import {
   accept,
   deletePost,
@@ -271,7 +272,7 @@ export const QnaPostViewer: React.FC<QnaPostViewerProps> = ({
           views={post.view}
           answer={post.answer}
         />
-        <div
+        {/* <div
           css={css`
             padding-top: 20px;
             padding-bottom: 40px;
@@ -284,7 +285,15 @@ export const QnaPostViewer: React.FC<QnaPostViewerProps> = ({
           `}
         >
           {post.text}
-        </div>
+        </div> */}
+        <MarkdownRender
+          text={post.text}
+          css={css`
+            width: 100%;
+            padding-top: 20px;
+            padding-bottom: 40px;
+          `}
+        />
         {post.tags && (
           <QnaTagList
             css={css`

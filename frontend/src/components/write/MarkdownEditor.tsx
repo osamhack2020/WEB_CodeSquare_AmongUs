@@ -40,8 +40,8 @@ export const MarkdownEditor: React.FC<MarkdownEditorProps> = ({
           font-size: 13px;
           line-height: 19px;
           color: #2c2b2b;
-          font-family: source-code-pro, Consolas, Menlo, Monaco, Consolas,
-            "Courier New";
+          font-family: "Malgun Gothic", source-code-pro, Consolas, Menlo, Monaco,
+            Consolas, "Courier New";
           cursor: text;
         }
         pre {
