@@ -46,3 +46,11 @@
   src: local("Nanum Gothic Coding"),
     url(./fonts/NanumGothicCoding-Bold.ttf) format("truetype");
 }
+@font-face {
+  font-display: swap;
+  font-family: "IBM Plex Sans";
+  font-style: normal;
+  font-weight: 500;
+  src: local("IBM Plex Sans"),
+    url(./fonts/IBMPlexSans-Medium.ttf) format("truetype");
+}
