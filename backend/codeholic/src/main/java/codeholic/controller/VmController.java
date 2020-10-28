@@ -3,6 +3,7 @@ package codeholic.controller;
 import java.io.IOException;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -47,7 +48,7 @@ public class VmController {
     // 이미 만든 사용자라면... 그냥 도메인에 url을 추가하면 되지 않을까?
     // vm 삭제하기
     @GetMapping("/create")
-    public Response createVm(HttpServletRequest httpServletRequest) {
+    public Response createVm(HttpServletRequest httpServletRequest,HttpServletResponse res) {
 
         Response response = new Response();
         final String accessJwtHeader = httpServletRequest.getHeader("Authorization");
@@ -61,6 +62,7 @@ public class VmController {
             openStackApiService.createVm(username, authenticationToken);
             response.setMessage("vm 생성중입니다");
         } catch (Exception e) {
+            res.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             response.setResponse("fail");
             response.setMessage("vm 생성실패");
         }        
@@ -69,7 +71,7 @@ public class VmController {
 
     @MessageMapping("/check")
     @SendTo("/topic/check")
-    public SocketMessage broadCast(SocketMessage message) {
+    public SocketMessage broadCast(SocketMessage message,HttpServletResponse res) {
 
         SocketMessage result = new SocketMessage();
 
@@ -113,6 +115,7 @@ public class VmController {
         }
         result.setStatus("fail");
         result.setData("loading");
+        res.setStatus(HttpServletResponse.SC_BAD_REQUEST);
         return result;
     }
 }

@@ -53,10 +53,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             .antMatchers("/user/signin").permitAll()
             .antMatchers("/user/signout").permitAll()
             .antMatchers("/").permitAll()
-            .antMatchers("/post").permitAll()
-            .antMatchers("/authorized").hasRole("USER") // 그외 나머지 요청은 모두 인증된 회원만 접근 가능  ??????
+            .antMatchers("/test").permitAll()
+            .antMatchers("/refreshtoken").permitAll()
             // 나중에 .authenticated()로 바꾸어야 한다.
-            .anyRequest().permitAll();
+            //.anyRequest().permitAll();
+            .anyRequest().authenticated();
 
         http.addFilterBefore(JwtRequestFilter, UsernamePasswordAuthenticationFilter.class); // jwt token 필터를 id/password 인증 필터 전에 넣어라.
  

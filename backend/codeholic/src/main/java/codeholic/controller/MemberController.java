@@ -2,7 +2,6 @@ package codeholic.controller;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Optional;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
@@ -16,7 +15,6 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -125,17 +123,21 @@ public class MemberController {
         }catch(ExpiredJwtException ee){
             username = ee.getClaims().getSubject();
             redisUtil.deleteData(username);
+
+            res.setStatus(HttpServletResponse.SC_BAD_REQUEST);
         }catch(AlreadyLogoutException ae){
             response.setResponse("failed");
             response.setMessage("이미 로그아웃하였습니다.");
+            res.setStatus(HttpServletResponse.SC_BAD_REQUEST);
         }catch(Exception e){
             response.setResponse("failed");
             response.setMessage("로그아웃에 실패하였습니다.");
+            res.setStatus(HttpServletResponse.SC_BAD_REQUEST);
         }
         return response;
     }
     @GetMapping("/detail")
-    public Response getuserDetail(HttpServletRequest req){
+    public Response getuserDetail(HttpServletRequest req,HttpServletResponse res){
         Response response = new Response();
         String username;
         String accessToken = null;
@@ -148,11 +150,12 @@ public class MemberController {
         }catch(Exception e){
             response.setResponse("failed");
             response.setMessage("조회 실패하였습니다.");
+            res.setStatus(HttpServletResponse.SC_BAD_REQUEST);
         }
         return response;
     }
     @GetMapping("/refreshtoken")
-    public Response refreshToken(HttpServletRequest req){
+    public Response refreshToken(HttpServletRequest req,HttpServletResponse res){
         Response response = new Response();
         Cookie refreshToken = cookieUtil.getCookie(req,JwtUtil.REFRESH_TOKEN_NAME);
         String refreshJwt = null;
@@ -173,6 +176,7 @@ public class MemberController {
         }catch(Exception e){
             response.setMessage("accessToken 생성 실패");
             response.setResponse("fail");
+            res.setStatus(HttpServletResponse.SC_BAD_REQUEST);
         }
         return response;
     }
@@ -192,5 +196,4 @@ public class MemberController {
         response.setMessage("오류가 발생했습니다.");
         return response;
     }
-
 }
