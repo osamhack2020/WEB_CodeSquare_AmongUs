@@ -243,7 +243,7 @@ public class BoardController {
             // 작업
             String username = returnBoard.getUsername();
             BoardVote vote = boardVoteService.findByUsername(username);
-            int value = vote!=null?vote.getValue():null;
+            Integer value = vote!=null?vote.getValue():0;
 
             BoardWithVote returnValue = new BoardWithVote();
             returnValue.setBoard(returnBoard);
