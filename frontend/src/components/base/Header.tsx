@@ -131,6 +131,7 @@ export const Header: React.FC<HeaderProps> = ({ user, onLogout, ...props }) => {
 
                     padding: 8px 14px;
                     color: #6c63ff;
+                    border-color: #6c63ff;
                   `}
                 >
                   시작하기
