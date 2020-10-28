@@ -2,9 +2,10 @@
 import { css, jsx } from "@emotion/core";
 import { useSelector } from "react-redux";
 import { Redirect, Route, Switch } from "react-router-dom";
-import { Header } from "./components/base/Header";
+import { NotFound } from "./components/base/NotFound";
 import { LoginContainer } from "./containers/auth/LoginContainer";
 import { RegisterContainer } from "./containers/auth/RegisterContainer";
+import { HeaderContainer } from "./containers/base/HeaderContainer";
 import { HomeContainer } from "./containers/HomeContainer";
 import { ProfileContainer } from "./containers/profile/ProfileContainer";
 import { QnaEditContainer } from "./containers/qna/QnaEditContainer";
@@ -24,7 +25,7 @@ const App: React.FC = () => {
         height: 100%;
       `}
     >
-      <Header />
+      <HeaderContainer />
       <div
         css={css`
           flex: 1 1 auto;
@@ -55,8 +56,14 @@ const App: React.FC = () => {
           <Route path="/register">
             <RegisterContainer />
           </Route>
-          <Route exact path="/:username">
+          <Route path="/404">
+            <NotFound />
+          </Route>
+          <Route exact path="/user/:username">
             <ProfileContainer />
+          </Route>
+          <Route path="/:unknown">
+            <Redirect to="/404" />
           </Route>
         </Switch>
       </div>

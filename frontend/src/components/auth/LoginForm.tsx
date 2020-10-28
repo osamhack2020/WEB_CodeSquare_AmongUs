@@ -84,7 +84,11 @@ export const LoginForm: React.FC<LoginForm> = ({
           minLength: { value: 1, message: "비밀번호를 입력해 주세요." },
         })}
         onClick={() => clearErrors("password")}
-        onSubmit={handleSubmit(login)}
+        onKeyDown={(e) => {
+          if (e.key === "Enter") {
+            handleSubmit(login)();
+          }
+        }}
         password
         disabled={formState.isSubmitting}
         message={errors.password?.message}

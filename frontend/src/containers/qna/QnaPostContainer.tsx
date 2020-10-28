@@ -10,7 +10,8 @@ import { RadioInput } from "../../components/common/RadioInput";
 import { WrapperLink } from "../../components/common/WrapperLink";
 import { QnaListWidget } from "../../components/qna/QnaListWidget";
 import { MarkdownEditor } from "../../components/write/MarkdownEditor";
-import { QnaPost } from "../../lib/api/qna";
+import { MarkdownRender } from "../../components/write/MarkdownRender";
+import { QnaPost, writeReply } from "../../lib/api/qna";
 import { RootState } from "../../modules";
 import qna from "../../modules/qna";
 import usePost from "./hooks/usePost";
@@ -48,15 +49,24 @@ export const QnaPostContainer: React.FC = () => {
   const replies = useSelector<RootState, QnaPost[] | null>(
     (state) => state.qna.replies,
   );
-  const { data, loading } = usePost(postId);
+  const { data, loading, error } = usePost(postId);
   useEffect(() => {
     if (data) {
       dispatch(qna.actions.setPost(data.post));
       dispatch(qna.actions.setReplies(data.replies));
     }
   }, [data, dispatch]);
+  useEffect(() => {
+    if (error) {
+      history.replace("/404");
+    }
+  }, [error, history]);
   const [text, setText] = useState("");
   const accepted = replies?.some((repl) => repl.accepted);
+  const onSubmit = useCallback(async () => {
+    // TODO
+    const reply = await writeReply(postId, text);
+  }, []);
   return (
     <div
       css={css`
@@ -142,14 +152,28 @@ export const QnaPostContainer: React.FC = () => {
           >
             답변 등록하기
           </div>
-          <MarkdownEditor
-            text={text}
-            onChange={setText}
-            height={153}
-            css={css`
-              margin-bottom: 12px;
-            `}
-          />
+          {!preview && (
+            <MarkdownEditor
+              text={text}
+              onChange={setText}
+              height={153}
+              css={css`
+                margin-bottom: 12px;
+              `}
+            />
+          )}
+          {preview && (
+            <MarkdownRender
+              text={text}
+              css={css`
+                margin-bottom: 12px;
+                min-height: 210px;
+                padding: 13px 15px;
+                border: 1px solid #dbdbdb;
+                border-radius: 8px;
+              `}
+            />
+          )}
           <div
             css={css`
               display: flex;
@@ -171,6 +195,7 @@ export const QnaPostContainer: React.FC = () => {
               미리보기
             </RadioInput>
             <Button
+              onClick={onSubmit}
               css={css`
                 padding: 7px 45px;
                 border-radius: 6px;
@@ -238,6 +263,7 @@ export const QnaPostContainer: React.FC = () => {
       </div>
       <div
         css={css`
+          max-width: 190px;
           flex: 1 0 190px;
           margin-top: 52px;
           margin-left: 40px;

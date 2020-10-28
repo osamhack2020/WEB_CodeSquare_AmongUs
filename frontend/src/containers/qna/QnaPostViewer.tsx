@@ -14,6 +14,7 @@ import { VerticalDivider } from "../../components/common/VerticalDivider";
 import { QnaAcceptPopper } from "../../components/qna/QnaAcceptPopper";
 import { QnaTagList } from "../../components/qna/QnaTagList";
 import { Vote } from "../../components/qna/Vote";
+import { MarkdownRender } from "../../components/write/MarkdownRender";
 import {
   accept,
   deletePost,
@@ -271,7 +272,7 @@ export const QnaPostViewer: React.FC<QnaPostViewerProps> = ({
           views={post.view}
           answer={post.answer}
         />
-        <div
+        {/* <div
           css={css`
             padding-top: 20px;
             padding-bottom: 40px;
@@ -283,13 +284,16 @@ export const QnaPostViewer: React.FC<QnaPostViewerProps> = ({
             text-align: left;
           `}
         >
-          같으며, 보이는 이성은 노년에게서 동력은 것이다. 그들의 위하여 공자는
-          눈에 열매를 가진 청춘이 속에 천고에 부패뿐이다. 우리 수 창공에 듣기만
-          별과 천하를 피어나기 말이다. 설레는 크고 청춘을 옷을 커다란 듣기만
-          눈이 그들의 천하를 운다. 끝에 찾아 인간의 있는 청춘의 싹이 이상의
-          청춘의 이것이다. 인생에 없는 예가 피부가 천하를 원대하고, 가진 사랑의
-          보는 이것이다. 할지니, 너의 우리의 희망의 많이 것이다.
-        </div>
+          {post.text}
+        </div> */}
+        <MarkdownRender
+          text={post.text}
+          css={css`
+            width: 100%;
+            padding-top: 20px;
+            padding-bottom: 40px;
+          `}
+        />
         {post.tags && (
           <QnaTagList
             css={css`

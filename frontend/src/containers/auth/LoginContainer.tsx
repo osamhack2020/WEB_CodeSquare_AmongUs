@@ -13,8 +13,8 @@ export const LoginContainer: React.FC = (props) => {
   const onSubmit = useCallback(
     async ({ username, password }: LoginFormInput) => {
       await login(username, password);
-      dispatch(core.actions.setUser({ username: "seowook12" }));
-      history.push("/seowook12");
+      dispatch(core.actions.setUser({ username }));
+      history.push(`/${username}`);
     },
     [dispatch, history],
   );

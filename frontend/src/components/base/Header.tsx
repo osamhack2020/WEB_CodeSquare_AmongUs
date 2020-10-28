@@ -1,107 +1,146 @@
 /** @jsx jsx */
 import { css, jsx } from "@emotion/core";
 import styled from "@emotion/styled";
-import { Button } from "../common/Button";
+import { User } from "../../modules/core";
+import { AvatarIcon } from "../common/AvatarIcon";
+import { Logo } from "../common/Logo";
+import { OutlineButton } from "../common/OutlineButton";
 import { TextButton } from "../common/TextButton";
+import { VerticalDivider } from "../common/VerticalDivider";
 import { WrapperLink } from "../common/WrapperLink";
-import useHeader from "./hooks/useHeader";
 
 const HeaderBlock = styled.div`
   display: flex;
   width: 100%;
   flex-basis: 60px;
-  height: 60px;
+  height: 74px;
   justify-content: space-between;
-  background-color: #2c2b2b;
-  color: white;
+  background-color: #ffffff;
+  color: #454a4e;
   padding: 14px 40px;
   align-items: center;
 `;
 
 const ButtonBlock = styled.div`
   display: flex;
-  font-size: 1rem;
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 17px;
+  letter-spacing: -0.02em;
+  text-align: left;
 `;
 
-export const Header: React.FC = ({ ...props }) => {
-  const { user, onLogout } = useHeader();
+export interface HeaderProps {
+  user: User | null;
+  onLogout: () => void;
+}
+
+export const Header: React.FC<HeaderProps> = ({ user, onLogout, ...props }) => {
   return (
     <HeaderBlock {...props}>
-      <WrapperLink to="/">
-        <div
-          css={css`
-            font-size: 1.125rem;
-            font-weight: 800;
-          `}
-        >
-          CodeSquare
-        </div>
+      <WrapperLink
+        to="/"
+        css={css`
+          flex: 1 1 auto;
+        `}
+      >
+        <Logo />
       </WrapperLink>
       <div
         css={css`
-          position: absolute;
-          top: 0;
-          left: 0;
-          width: 100%;
-          height: 60px;
-          pointer-events: none;
+          display: flex;
+          & > div {
+            padding-right: 24px;
+          }
         `}
       >
         <div
           css={css`
-            height: 60px;
-            box-sizing: border-box;
+            align-self: center;
             display: flex;
-            justify-content: center;
-            align-items: center;
-            cursor: default;
-            position: relative;
-            pointer-events: none;
+            font-family: IBM Plex Sans;
+            font-size: 16px;
+            font-style: normal;
+            font-weight: 500;
+            line-height: 21px;
+            letter-spacing: -0.02em;
+            text-align: left;
+            & > div:not(:last-child) {
+              padding-right: 32px;
+            }
           `}
         >
-          <div
-            css={css`
-              display: flex;
-              font-size: 1rem;
-              pointer-events: all;
-              div:not(:last-child) {
-                margin-right: 36px;
-              }
-            `}
-          >
-            <div>
-              <WrapperLink to="/vm">개발하기</WrapperLink>
-            </div>
-            <div>
-              <WrapperLink to="/qna">Q&A</WrapperLink>
-            </div>
-            <div>매거진</div>
-            <div>GitLab</div>
+          <div>
+            <WrapperLink to="/vm">IDE</WrapperLink>
           </div>
+          <div>
+            <WrapperLink to="/qna">Q&A</WrapperLink>
+          </div>
+          <div>Magazine</div>
+          <div>GitLab</div>
         </div>
-      </div>
-      {user ? (
-        <ButtonBlock>
-          <TextButton onClick={onLogout}>로그아웃</TextButton>
-        </ButtonBlock>
-      ) : (
-        <ButtonBlock>
-          <WrapperLink to="/login">
-            <TextButton>로그인</TextButton>
-          </WrapperLink>
-          <WrapperLink to="/register">
-            <Button>
-              <div
+        <VerticalDivider
+          height={10}
+          css={css`
+            align-self: center;
+            margin-right: 24px;
+          `}
+        />
+        <div>
+          {user ? (
+            <ButtonBlock>
+              <TextButton
+                onClick={onLogout}
                 css={css`
-                  font-weight: 700;
+                  font-size: 12px;
+                  font-style: normal;
+                  font-weight: 500;
+                  line-height: 17px;
+                  letter-spacing: -0.02em;
+                  text-align: left;
+                  padding: 0;
+                  padding-right: 14px;
                 `}
               >
-                시작하기
-              </div>
-            </Button>
-          </WrapperLink>
-        </ButtonBlock>
-      )}
+                로그아웃
+              </TextButton>
+              <AvatarIcon width={32} height={32} alt={user.username} />
+            </ButtonBlock>
+          ) : (
+            <ButtonBlock>
+              <WrapperLink
+                to="/login"
+                css={css`
+                  padding-right: 22px;
+                  cursor: pointer;
+                  align-self: center;
+                `}
+              >
+                로그인
+              </WrapperLink>
+              <WrapperLink to="/register">
+                <OutlineButton
+                  css={css`
+                    font-size: 12px;
+                    font-style: normal;
+                    font-weight: 700;
+                    line-height: 17px;
+                    letter-spacing: 0em;
+                    text-align: center;
+
+                    padding: 8px 14px;
+                    color: #6c63ff;
+                    border-color: #6c63ff;
+                  `}
+                >
+                  시작하기
+                </OutlineButton>
+              </WrapperLink>
+            </ButtonBlock>
+          )}
+        </div>
+      </div>
     </HeaderBlock>
   );
 };

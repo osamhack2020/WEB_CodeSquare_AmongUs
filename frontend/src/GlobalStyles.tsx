@@ -4,9 +4,6 @@ const GlobalStyles = css`
   html {
     font-family: "Noto Sans KR", "Malgun Gothic", sans-serif;
   }
-  code {
-    font-family: "Nanum Gothic Coding";
-  }
   body {
     margin: 0;
     padding: 0;
@@ -18,7 +15,7 @@ const GlobalStyles = css`
     box-sizing: inherit;
   }
   code {
-    font-family: "Fira Mono", source-code-pro, Menlo, Monaco, Consolas,
+    font-family: "Nanum Gothic Coding", source-code-pro, Menlo, Monaco, Consolas,
       "Courier New", monospace;
   }
   input,
