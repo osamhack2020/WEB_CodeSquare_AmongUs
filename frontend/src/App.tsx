@@ -2,6 +2,7 @@
 import { css, jsx } from "@emotion/core";
 import { useSelector } from "react-redux";
 import { Redirect, Route, Switch } from "react-router-dom";
+import { NotFound } from "./components/base/NotFound";
 import { LoginContainer } from "./containers/auth/LoginContainer";
 import { RegisterContainer } from "./containers/auth/RegisterContainer";
 import { HeaderContainer } from "./containers/base/HeaderContainer";
@@ -54,6 +55,9 @@ const App: React.FC = () => {
           </Route>
           <Route path="/register">
             <RegisterContainer />
+          </Route>
+          <Route path="/404">
+            <NotFound />
           </Route>
           <Route exact path="/:username">
             <ProfileContainer />
