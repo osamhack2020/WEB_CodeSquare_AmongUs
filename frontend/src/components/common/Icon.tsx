@@ -112,3 +112,24 @@ export const LocationIcon: React.FC = (props) => (
     />
   </svg>
 );
+
+export const ArrowIcon: React.FC<{ color?: string }> = ({
+  color,
+  ...props
+}) => (
+  <svg
+    width="21"
+    height="16"
+    viewBox="0 0 21 16"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+    {...props}
+  >
+    <path
+      fillRule="evenodd"
+      clipRule="evenodd"
+      d="M14.343.929l6.364 6.364a1 1 0 010 1.414l-6.364 6.364a1 1 0 01-1.414-1.414L17.586 9H1a1 1 0 010-2h16.586l-4.657-4.657A1 1 0 0114.343.93z"
+      fill={color ? color : "#000"}
+    />
+  </svg>
+);
