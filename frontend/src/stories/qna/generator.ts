@@ -16,6 +16,7 @@ export const generatePosts = (num: number): QnaPost[] =>
     updated_at: new Date().toString(),
     comments: generateComments(5),
     answer: false,
+    voted: 0,
   }));
 
 let COMMENT_ID = 1;

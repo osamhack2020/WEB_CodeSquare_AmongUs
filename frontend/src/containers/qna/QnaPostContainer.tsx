@@ -11,7 +11,7 @@ import { WrapperLink } from "../../components/common/WrapperLink";
 import { QnaListWidget } from "../../components/qna/QnaListWidget";
 import { MarkdownEditor } from "../../components/write/MarkdownEditor";
 import { MarkdownRender } from "../../components/write/MarkdownRender";
-import { QnaPost } from "../../lib/api/qna";
+import { QnaPost, writeReply } from "../../lib/api/qna";
 import { RootState } from "../../modules";
 import qna from "../../modules/qna";
 import usePost from "./hooks/usePost";
@@ -58,6 +58,9 @@ export const QnaPostContainer: React.FC = () => {
   }, [data, dispatch]);
   const [text, setText] = useState("");
   const accepted = replies?.some((repl) => repl.accepted);
+  const onSubmit = useCallback(async () => {
+    const reply = await writeReply(postId, text);
+  }, []);
   return (
     <div
       css={css`
@@ -186,6 +189,7 @@ export const QnaPostContainer: React.FC = () => {
               미리보기
             </RadioInput>
             <Button
+              onClick={onSubmit}
               css={css`
                 padding: 7px 45px;
                 border-radius: 6px;
@@ -253,6 +257,7 @@ export const QnaPostContainer: React.FC = () => {
       </div>
       <div
         css={css`
+          max-width: 190px;
           flex: 1 0 190px;
           margin-top: 52px;
           margin-left: 40px;
