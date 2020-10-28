@@ -2,6 +2,7 @@
 import { css, jsx } from "@emotion/core";
 import { useCallback } from "react";
 import { useHistory } from "react-router-dom";
+import format from "date-fns/format";
 import { Footer } from "../components/base/Footer";
 import { ArrowIcon } from "../components/common/Icon";
 import { OutlineButton } from "../components/common/OutlineButton";
@@ -58,6 +59,83 @@ const BranchSvg: React.FC = (props) => (
     />
     <path d="M209 457l-7.5 4.33v-8.66L209 457z" fill="#333" />
   </svg>
+);
+
+const Card: React.FC<{
+  src: string;
+  title: string;
+  source: string;
+  created_at: string;
+}> = ({ src, title, source, created_at, ...props }) => (
+  <div
+    css={css`
+      width: 265px;
+      display: flex;
+      flex-direction: column;
+    `}
+    {...props}
+  >
+    <div
+      css={css`
+        width: 265px;
+        height: 188px;
+        background-size: 265px 188px;
+        background-image: url(${src});
+        background-repeat: no-repeat;
+      `}
+    />
+    <div
+      css={css`
+        padding: 18px;
+        padding-top: 16px;
+        display: flex;
+        flex-direction: column;
+      `}
+    >
+      <div
+        css={css`
+          font-style: normal;
+          font-weight: bold;
+          font-size: 18px;
+          line-height: 26px;
+          letter-spacing: -0.02em;
+          text-align: left;
+          text-overflow: ellipsis;
+          word-break: break-word;
+          overflow-wrap: break-word;
+          display: -webkit-box;
+          -webkit-line-clamp: 2;
+          -webkit-box-orient: vertical;
+          overflow: hidden;
+
+          color: #242627;
+
+          padding-bottom: 18px;
+          display: flex;
+          flex-direction: column;
+        `}
+      >
+        {title}
+      </div>
+      <div
+        css={css`
+          font-style: normal;
+          font-weight: normal;
+          font-size: 12px;
+          line-height: 17px;
+          letter-spacing: -0.02em;
+
+          color: #85898b;
+
+          display: flex;
+          flex-direction: column;
+        `}
+      >
+        <div>{source}</div>
+        <div>{format(new Date(created_at), "yyyy.MM.dd")}</div>
+      </div>
+    </div>
+  </div>
 );
 
 const ArrowButton: React.FC<{ to: string; color?: string }> = ({
@@ -413,9 +491,126 @@ export const HomeContainer: React.FC = () => {
       </div>
       <div
         css={css`
-          height: 300px;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
         `}
-      ></div>
+      >
+        <div
+          css={css`
+            display: flex;
+            flex-direction: column;
+            padding-top: 87px;
+            padding-bottom: 104px;
+            width: 1120px;
+          `}
+        >
+          <div
+            css={css`
+              display: flex;
+              padding-bottom: 60px;
+            `}
+          >
+            <div
+              css={css`
+                font-style: normal;
+                font-weight: bold;
+                font-size: 36px;
+                line-height: 48px;
+                letter-spacing: -0.02em;
+
+                color: #242627;
+
+                display: flex;
+                flex-direction: column;
+                padding-right: 263px;
+              `}
+            >
+              <div>개발하다 막혀도</div>
+              <div>걱정은 뚝</div>
+            </div>
+            <div
+              css={css`
+                display: flex;
+                flex-direction: column;
+              `}
+            >
+              <div
+                css={css`
+                  font-style: normal;
+                  font-weight: 500;
+                  font-size: 18px;
+                  line-height: 26px;
+                  /* or 144% */
+                  letter-spacing: -0.02em;
+
+                  color: #878686;
+
+                  display: flex;
+                  flex-direction: column;
+                `}
+              >
+                <div>열심히 개발하다 보면 많은 어려움을 마주하게 되죠.</div>
+                <div
+                  css={css`
+                    padding-bottom: 18px;
+                  `}
+                >
+                  하지만 CodeSquare와 함께라면 문제 없습니다.
+                </div>
+                <div>인터넷이 없어도 주요 레퍼런스 문서를 찾아볼 수 있고,</div>
+                <div>
+                  질문이 있다면 CodeSquare의 전우들에게 물어보면 되니까요.
+                </div>
+                <div>스킬업을 할 수 있는 멋진 블로그 글들은 덤이죠.</div>
+              </div>
+            </div>
+          </div>
+          <ArrowButton
+            to="/"
+            css={css`
+              align-self: flex-end;
+              margin-bottom: 36px;
+            `}
+          >
+            더보기
+          </ArrowButton>
+          <div
+            css={css`
+              display: flex;
+
+              & > div:not(:last-child) {
+                margin-right: 20px;
+              }
+            `}
+          >
+            <Card
+              src="content-1.png"
+              title="Python 3.10.0a1 Documentation"
+              source="Python Software Foundation"
+              created_at="2020.10.16"
+            />
+            <Card
+              src="content-2.png"
+              title="WebXR Device API를 이용한 웹 AR 구현, 그 한계와 대안"
+              source="NAVER D2 Hello World"
+              created_at="2020.10.16"
+            />
+            <Card
+              src="content-3.png"
+              title="2020년과 이후 JavaScript의 동향 - WebAssembly"
+              source="NAVER D2 Hello World"
+              created_at="2020.09.02"
+            />
+            <Card
+              src="content-4.png"
+              title="TypeScript 환경에서 Redux를 프로처럼 사용하기"
+              source="velopert.log"
+              created_at="2020.10.16"
+            />
+          </div>
+        </div>
+      </div>
       <div
         css={css`
           background: #1d1c28;
