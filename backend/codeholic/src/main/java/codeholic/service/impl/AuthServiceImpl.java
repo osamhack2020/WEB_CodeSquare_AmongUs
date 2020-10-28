@@ -1,4 +1,7 @@
 package codeholic.service.impl;
+
+import java.io.IOException;
+
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +26,7 @@ public class AuthServiceImpl implements AuthService {
 
     @Autowired
     private SaltUtil saltUtil;
-    
+
     @Autowired
     private RedisUtil redisUtil;
 
@@ -35,16 +38,23 @@ public class AuthServiceImpl implements AuthService {
 
     @Autowired
     private OpenStackApiService openstackApiService;
-    
+
     @Transactional
     @Override
-    public void signUpUser(Member member) {
+    public void signUpUser(Member member) throws IOException {
         validateDuplicateMember(member);
         String password = member.getPassword();
         String salt = saltUtil.genSalt();
         member.setSalt(new Salt(salt));
         member.setPassword(saltUtil.encodePassword(salt,password));
-        openstackApiService.signinProcess(member.getUsername(), member.getPassword());
+        
+        //
+        try {
+			openstackApiService.signupProcess(member.getUsername(), member.getPassword());
+		} catch (IOException e) {
+            throw new IOException();
+        }
+        
         memberRepository.save(member);
     }
     // 중복 회원 검증
