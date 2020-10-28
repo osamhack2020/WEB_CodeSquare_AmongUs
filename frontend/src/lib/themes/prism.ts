@@ -42,7 +42,7 @@ export const prismTheme = css`
   }
   .token.selector,
   .token.attr-name,
-  .token.attr-value .punctuation:first-child,
+  .token.attr-value .punctuation:first-of-type,
   .token.keyword,
   .token.regex,
   .token.important {
