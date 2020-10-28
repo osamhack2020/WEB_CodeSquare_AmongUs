@@ -140,7 +140,7 @@ public class BoardController {
             boardService.createBoard(board);
             response.setData(board);
             response.setMessage("게시물 생성 성공");
-        }catch(EmptyResultDataAccessException | NoSuchElementException e){
+        }catch(Exception e){
             response.setMessage("게시물 생성 실패");
             res.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             response.setResponse("fail");

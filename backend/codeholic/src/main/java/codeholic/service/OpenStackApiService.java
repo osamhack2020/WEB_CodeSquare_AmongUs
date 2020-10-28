@@ -110,8 +110,7 @@ public class OpenStackApiService {
                                     .get("id")
                                     .getAsString();
                                     
-        return result;
-        
+        return result; 
     }
     // 이거 나중에 값 저장되어있으면 그냥 바로 꺼내오기
     public String getProjectId(String authenticationToken) throws IOException {
