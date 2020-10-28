@@ -411,6 +411,49 @@ export const HomeContainer: React.FC = () => {
           </div>
         </div>
       </div>
+      <div
+        css={css`
+          height: 300px;
+        `}
+      ></div>
+      <div
+        css={css`
+          background: #1d1c28;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+        `}
+      >
+        <div
+          css={css`
+            font-style: normal;
+            font-weight: bold;
+            font-size: 36px;
+            line-height: 48px;
+            text-align: center;
+            letter-spacing: -0.02em;
+
+            color: #ffffff;
+
+            display: flex;
+            flex-direction: column;
+            padding-top: 114px;
+            padding-bottom: 24px;
+          `}
+        >
+          <div>CodeSquare와 함께</div>
+          <div>당신의 열정을 펼쳐보세요.</div>
+        </div>
+        <ArrowButton
+          to="/register"
+          color="#ffffff"
+          css={css`
+            margin-bottom: 130px;
+          `}
+        >
+          지금 시작하기
+        </ArrowButton>
+      </div>
       <Footer />
     </div>
   );
