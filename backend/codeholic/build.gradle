@@ -5,7 +5,7 @@ plugins {
 }
 
 group = 'codeholic'
-version = '1.2.0'
+version = '1.3.0'
 sourceCompatibility = '8'
 
 configurations {
