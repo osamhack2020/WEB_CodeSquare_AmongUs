@@ -54,10 +54,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             .antMatchers("/user/signout").permitAll()
             .antMatchers("/").permitAll()
             .antMatchers("/test").permitAll()
-            .antMatchers("/refreshtoken").permitAll()
+            .antMatchers("/board").permitAll()
+            .antMatchers("/board/").permitAll()
+            .antMatchers("/board/{pageNum}").permitAll()
+            .antMatchers("user/refreshtoken").permitAll()
             // 나중에 .authenticated()로 바꾸어야 한다.
-            //.anyRequest().permitAll();
-            .anyRequest().authenticated();
+            .anyRequest().permitAll();
+            //.anyRequest().authenticated();
 
         http.addFilterBefore(JwtRequestFilter, UsernamePasswordAuthenticationFilter.class); // jwt token 필터를 id/password 인증 필터 전에 넣어라.
  
