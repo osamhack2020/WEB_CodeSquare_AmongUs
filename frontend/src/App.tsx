@@ -59,8 +59,11 @@ const App: React.FC = () => {
           <Route path="/404">
             <NotFound />
           </Route>
-          <Route exact path="/:username">
+          <Route exact path="/user/:username">
             <ProfileContainer />
+          </Route>
+          <Route path="/:unknown">
+            <Redirect to="/404" />
           </Route>
         </Switch>
       </div>

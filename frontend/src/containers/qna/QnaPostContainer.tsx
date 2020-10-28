@@ -49,16 +49,22 @@ export const QnaPostContainer: React.FC = () => {
   const replies = useSelector<RootState, QnaPost[] | null>(
     (state) => state.qna.replies,
   );
-  const { data, loading } = usePost(postId);
+  const { data, loading, error } = usePost(postId);
   useEffect(() => {
     if (data) {
       dispatch(qna.actions.setPost(data.post));
       dispatch(qna.actions.setReplies(data.replies));
     }
   }, [data, dispatch]);
+  useEffect(() => {
+    if (error) {
+      history.replace("/404");
+    }
+  }, [error, history]);
   const [text, setText] = useState("");
   const accepted = replies?.some((repl) => repl.accepted);
   const onSubmit = useCallback(async () => {
+    // TODO
     const reply = await writeReply(postId, text);
   }, []);
   return (
