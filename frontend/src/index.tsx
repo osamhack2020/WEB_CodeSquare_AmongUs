@@ -10,9 +10,11 @@ import { createStore } from "@reduxjs/toolkit";
 import { Provider } from "react-redux";
 import { composeWithDevTools } from "redux-devtools-extension/developmentOnly";
 import { BrowserRouter } from "react-router-dom";
+import decode from "jwt-decode";
 import "./typography.css";
-import { refreshToken } from "./lib/api/auth";
+// import { refreshToken } from "./lib/api/auth";
 import core from "./modules/core";
+import apiClient from "./lib/api/apiClient";
 
 const store = createStore(
   rootReducer,
@@ -20,9 +22,19 @@ const store = createStore(
   composeWithDevTools(),
 );
 
-refreshToken().then((username) =>
-  store.dispatch(core.actions.setUser({ username })),
-);
+// API 오류로 인해 사용불가
+// refreshToken()
+//   .then((username) => store.dispatch(core.actions.setUser({ username })))
+//   .catch(() => {});
+
+(function () {
+  const token = localStorage.getItem("accessToken");
+  if (token) {
+    const { username } = decode(token);
+    apiClient.defaults.headers.common["Authorization"] = token;
+    store.dispatch(core.actions.setUser({ username }));
+  }
+})();
 
 ReactDOM.render(
   <React.StrictMode>

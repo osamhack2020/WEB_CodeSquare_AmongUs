@@ -29,6 +29,7 @@ export const register = async ({
   });
   // accessToken을 Authorization 헤더 기본값으로 설정
   apiClient.defaults.headers.common["Authorization"] = response.data.data;
+  localStorage.setItem("accessToken", response.data.data);
 };
 
 export const login = async (username: string, password: string) => {
@@ -36,20 +37,26 @@ export const login = async (username: string, password: string) => {
     username,
     password,
   });
+  if (response.data.response !== "success") {
+    throw new Error(response.data.message);
+  }
   // accessToken을 Authorization 헤더 기본값으로 설정
   apiClient.defaults.headers.common["Authorization"] = response.data.data;
+  localStorage.setItem("accessToken", response.data.data);
 };
 
-export const refreshToken = async (): Promise<string> => {
-  const response = await apiClient.get<LoginResponse>("/refreshtoken");
-  // accessToken을 Authorization 헤더 기본값으로 설정
-  apiClient.defaults.headers.common["Authorization"] = response.data.data;
-  const { username } = decode(response.data.data);
-  return username;
-};
+// export const refreshToken = async (): Promise<string> => {
+//   const response = await apiClient.get<LoginResponse>("/user/refreshtoken");
+//   // accessToken을 Authorization 헤더 기본값으로 설정
+//   apiClient.defaults.headers.common["Authorization"] = response.data.data;
+//   localStorage.setItem("accessToken", response.data.data);
+//   const { username } = decode(response.data.data);
+//   return username;
+// };
 
 export const logout = async () => {
   await apiClient.post("/user/signout");
   // Authorization 헤더 제거
   delete apiClient.defaults.headers.common["Authorization"];
+  localStorage.removeItem("accessToken");
 };
