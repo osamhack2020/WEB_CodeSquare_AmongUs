@@ -64,9 +64,11 @@ public class JwtRequestFilter extends OncePerRequestFilter {
                     UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(userDetails,null,userDetails.getAuthorities());
                     usernamePasswordAuthenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(httpServletRequest));
                     SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
+                }else{
+                    throw new Exception();
                 }
             }
-        }catch (ExpiredJwtException e) { // 에러처리
+        }catch (Exception e) { // 에러처리
             Cookie refreshToken = cookieUtil.getCookie(httpServletRequest,JwtUtil.REFRESH_TOKEN_NAME);
             if(refreshToken!=null){
                 refreshJwt = refreshToken.getValue();
@@ -89,8 +91,6 @@ public class JwtRequestFilter extends OncePerRequestFilter {
                 }
             }
 
-        }catch(AlreadyLogoutException e){
-            
         }
         filterChain.doFilter(httpServletRequest,httpServletResponse);
         
