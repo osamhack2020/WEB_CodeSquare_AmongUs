@@ -16,7 +16,7 @@ const Template: Story<HeaderProps> = (args) => (
     <div
       css={css`
         padding: 8px;
-        background: black;
+        background: #c4c4c4;
       `}
     >
       <Header {...args} />
