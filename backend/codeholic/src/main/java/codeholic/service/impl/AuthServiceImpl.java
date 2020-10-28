@@ -48,7 +48,7 @@ public class AuthServiceImpl implements AuthService {
         member.setSalt(new Salt(salt));
         member.setPassword(saltUtil.encodePassword(salt,password));
         
-        //
+        
         try {
 			openstackApiService.signupProcess(member.getUsername(), member.getPassword());
 		} catch (IOException e) {

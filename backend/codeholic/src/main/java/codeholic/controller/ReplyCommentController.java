@@ -6,6 +6,7 @@ import java.util.NoSuchElementException;
 import java.util.Optional;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -44,13 +45,14 @@ public class ReplyCommentController {
     AuthService authService;
 
     @GetMapping("/{reply}")
-    public Response returnAllReplyComments(@PathVariable Optional<Integer> reply) {
+    public Response returnAllReplyComments(@PathVariable Optional<Integer> reply,HttpServletResponse res) {
         Response response = new Response();
         try {
             List<ReplyComment> comments = replyCommentService.getReplyComments(reply.isPresent() ? reply.get() : null);
             response.setData(comments);
             response.setMessage("답글 댓글 조회 성공");
         } catch (EmptyResultDataAccessException | NoSuchElementException e) {
+            res.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             response.setMessage("답글 댓글 조회 실패");
             response.setResponse("fail");
         }
@@ -59,7 +61,7 @@ public class ReplyCommentController {
 
     @PostMapping("/{reply}")
     public Response addReplyComment(@PathVariable Optional<Integer> reply, @RequestBody RequestNewComment newComment,
-            HttpServletRequest req) throws NotFoundException {
+            HttpServletRequest req,HttpServletResponse res) throws NotFoundException {
         Response response = new Response();
         try{
             Reply gReply = replyService.findById(reply.isPresent()?reply.get():null);
@@ -76,6 +78,7 @@ public class ReplyCommentController {
     
             response.setMessage("답글 댓글 생성 성공");
         }catch(EmptyResultDataAccessException | NoSuchElementException e){
+            res.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             response.setMessage("답글 댓글 생성 실패");
             response.setResponse("fail");
         }
@@ -83,7 +86,7 @@ public class ReplyCommentController {
     }
 
     @PutMapping("/{comment}")
-    public Response updateReplyComment(@PathVariable Optional<Integer> comment, @RequestBody RequestUpdateBody newBody){
+    public Response updateReplyComment(@PathVariable Optional<Integer> comment, @RequestBody RequestUpdateBody newBody,HttpServletResponse res){
         Response response = new Response();
         try{
             ReplyComment updateComment = replyCommentService.findById(comment.isPresent()?comment.get():null);
@@ -92,19 +95,21 @@ public class ReplyCommentController {
             replyCommentService.updateReplyComment(updateComment);
             response.setMessage("게시물 댓글 수정 성공");
         }catch(EmptyResultDataAccessException | NoSuchElementException e){
+            res.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             response.setMessage("게시물 댓글 수정 실패");
             response.setResponse("fail");
         }
         return response;
     }
     @DeleteMapping("/{comment}")
-    public Response deleteReplyComment(@PathVariable Optional<Integer> comment){
+    public Response deleteReplyComment(@PathVariable Optional<Integer> comment,HttpServletResponse res){
         Response response = new Response();
         try{
             ReplyComment deleteComment = replyCommentService.findById(comment.isPresent()?comment.get():null);
             replyCommentService.deleteReplyComment(deleteComment);
             response.setMessage("게시물 댓글 삭제 성공");
         }catch(EmptyResultDataAccessException | NoSuchElementException e){
+            res.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             response.setMessage("게시물 댓글 삭제 실패");
             response.setResponse("fail");
         }

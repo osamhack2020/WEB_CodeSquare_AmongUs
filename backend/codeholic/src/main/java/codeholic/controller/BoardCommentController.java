@@ -6,6 +6,7 @@ import java.util.NoSuchElementException;
 import java.util.Optional;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -45,7 +46,7 @@ public class BoardCommentController {
     BoardService boardService;
 
     @GetMapping("/{board}")
-    public Response returnAllBoardComments(@PathVariable Optional<Integer> board){
+    public Response returnAllBoardComments(@PathVariable Optional<Integer> board,HttpServletResponse res){
         Response response = new Response();
         try{
             List<BoardComment> comments = boardCommentService.getBoardComments(board.isPresent()?board.get():null);
@@ -53,13 +54,14 @@ public class BoardCommentController {
             response.setMessage("게시물 댓글 조회 성공");
         }catch(EmptyResultDataAccessException | NoSuchElementException e){
             response.setMessage("게시물 댓글 조회 실패");
+            res.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             response.setResponse("fail");
         }
         return response;
     }
 
     @PostMapping("/{board}")
-    public Response addBoardComment(@PathVariable Optional<Integer> board, @RequestBody RequestNewComment newBoardComment,HttpServletRequest req) throws NotFoundException{
+    public Response addBoardComment(@PathVariable Optional<Integer> board, @RequestBody RequestNewComment newBoardComment,HttpServletRequest req,HttpServletResponse res) throws NotFoundException{
         Response response = new Response();
         try{
             Board gBoard = boardService.findById(board.isPresent()?board.get():null);
@@ -78,13 +80,14 @@ public class BoardCommentController {
             response.setMessage("게시물 댓글 생성 성공");
         }catch(EmptyResultDataAccessException | NoSuchElementException e){
             response.setMessage("게시물 댓글 생성 실패");
+            res.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             response.setResponse("fail");
         }
         return response;
     }
 
     @PutMapping("/{comment}")
-    public Response updateBoardComment(@PathVariable Optional<Integer> comment, @RequestBody RequestUpdateBody newBody){
+    public Response updateBoardComment(@PathVariable Optional<Integer> comment, @RequestBody RequestUpdateBody newBody,HttpServletResponse res){
         Response response = new Response();
         try{
             BoardComment updateComment = boardCommentService.findById(comment.isPresent()?comment.get():null);
@@ -94,18 +97,20 @@ public class BoardCommentController {
             response.setMessage("게시물 댓글 수정 성공");
         }catch(EmptyResultDataAccessException | NoSuchElementException e){
             response.setMessage("게시물 댓글 수정 실패");
+            res.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             response.setResponse("fail");
         }
         return response;
     }
     @DeleteMapping("/{comment}")
-    public Response deleteBoardComment(@PathVariable Optional<Integer> comment){
+    public Response deleteBoardComment(@PathVariable Optional<Integer> comment,HttpServletResponse res){
         Response response = new Response();
         try{
             BoardComment deleteComment = boardCommentService.findById(comment.isPresent()?comment.get():null);
             boardCommentService.deleteBoardComment(deleteComment);
             response.setMessage("게시물 댓글 삭제 성공");
         }catch(EmptyResultDataAccessException | NoSuchElementException e){
+            res.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             response.setMessage("게시물 댓글 삭제 실패");
             response.setResponse("fail");
         }

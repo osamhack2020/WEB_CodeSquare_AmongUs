@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -40,7 +41,7 @@ class MainController {
 
 
    @GetMapping("/test")
-    public String test1() throws IOException {
+    public String test1(HttpServletResponse res) throws IOException {
         try{
             Board board = new Board();
             board.setBody("test");
@@ -57,7 +58,9 @@ class MainController {
     
             return "db_connection_success";
         }catch(Exception e){
+            res.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             return "db_connection_fail";
+            
         }
 
     }

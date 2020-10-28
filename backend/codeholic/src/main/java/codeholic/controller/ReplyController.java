@@ -7,6 +7,7 @@ import java.util.NoSuchElementException;
 import java.util.Optional;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -58,7 +59,7 @@ public class ReplyController {
     ReplyVoteService replyVoteService;
 
     @GetMapping("/{board}")
-    public Response returnAllReplies(@PathVariable Optional<Integer> board) {
+    public Response returnAllReplies(@PathVariable Optional<Integer> board,HttpServletResponse res) {
         Response response = new Response();
         try {
             List<Reply> replies = replyService.getBoardReplies(board.isPresent() ? board.get() : null);
@@ -74,6 +75,7 @@ public class ReplyController {
             response.setData(replies);
             response.setMessage("답글 조회 성공");
         } catch (EmptyResultDataAccessException | NoSuchElementException e) {
+            res.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             response.setMessage("답글 조회 실패");
             response.setResponse("fail");
         }
@@ -82,7 +84,7 @@ public class ReplyController {
 
     @PostMapping("/{board}")
     public Response addReply(@PathVariable Optional<Integer> board, @RequestBody RequestNewReply requestNewReply,
-            HttpServletRequest req) throws NotFoundException {
+            HttpServletRequest req,HttpServletResponse res) throws NotFoundException {
         Response response = new Response();
         try{
             Board getBoard = boardService.findById(board.isPresent()?board.get():null);
@@ -99,13 +101,14 @@ public class ReplyController {
             response.setData(reply);
             response.setMessage("답글 생성 성공");
         }catch(EmptyResultDataAccessException | NoSuchElementException e){
+            res.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             response.setMessage("답글 생성 실패");
             response.setResponse("fail");
         }
         return response;
     }
     @PutMapping("/{reply}")
-    public Response updateReply(@PathVariable Optional<Integer> reply, @RequestBody RequestUpdateBody requestupDateReply){
+    public Response updateReply(@PathVariable Optional<Integer> reply, @RequestBody RequestUpdateBody requestupDateReply,HttpServletResponse res){
         Response response = new Response();
         try{
             Reply updatedReply = replyService.findById(reply.isPresent()?reply.get():null);
@@ -114,19 +117,21 @@ public class ReplyController {
             replyService.updateReply(updatedReply);
             response.setMessage("답글 수정 성공");
         }catch(EmptyResultDataAccessException | NoSuchElementException e){
+            res.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             response.setMessage("답글 수정 실패");
             response.setResponse("fail");
         }
         return response;
     }
     @DeleteMapping("/{reply}")
-    public Response deleteReply(@PathVariable Optional<Integer> reply){
+    public Response deleteReply(@PathVariable Optional<Integer> reply,HttpServletResponse res){
         Response response = new Response();
         try{
             Reply deletedReply = replyService.findById(reply.isPresent()?reply.get():null);
             replyService.deleteReply(deletedReply);
             response.setMessage("답글 삭제 성공");
         }catch(EmptyResultDataAccessException | NoSuchElementException e){
+            res.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             response.setMessage("답글 삭제 실패");
             response.setResponse("fail");
         }
@@ -134,7 +139,7 @@ public class ReplyController {
     }
     @Transactional
     @PutMapping("/recommend")
-    public Response addRecommend(@RequestBody RequestVote requestVote){
+    public Response addRecommend(@RequestBody RequestVote requestVote,HttpServletResponse res){
         Response response = new Response();
         try{
             Reply updatedReply = replyService.findById(requestVote.getId());
@@ -153,13 +158,14 @@ public class ReplyController {
             replyService.updateReply(updatedReply);
             response.setMessage("답글 추천수 수정 성공");
         }catch(EmptyResultDataAccessException | NoSuchElementException e){
+            res.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             response.setMessage("답글 추천수 수정 실패");
             response.setResponse("fail");
         }
         return response;
     }
     @PutMapping("/adopted/{reply}")
-    public Response adoptedReply(@PathVariable Optional<Integer> reply){
+    public Response adoptedReply(@PathVariable Optional<Integer> reply,HttpServletResponse res){
         Response response = new Response();
         try{
             Reply updatedReply = replyService.findById(reply.isPresent()?reply.get():null);
@@ -167,6 +173,7 @@ public class ReplyController {
             replyService.updateReply(updatedReply);
             response.setMessage("답글 채택 성공");
         }catch(EmptyResultDataAccessException | NoSuchElementException e){
+            res.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             response.setMessage("답글 채택 실패");
             response.setResponse("fail");
         }

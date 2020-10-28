@@ -6,6 +6,7 @@ import java.util.NoSuchElementException;
 import java.util.Optional;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,7 +39,6 @@ import codeholic.service.JwtUtil;
 import codeholic.service.RedisUtil;
 import codeholic.service.ReplyService;
 import codeholic.service.TagService;
-import io.lettuce.core.RedisURI;
 import javassist.NotFoundException;
 
 @RestController
@@ -71,13 +71,14 @@ public class BoardController {
     AuthService authService;
 
     @GetMapping("/{pageNum}")
-    public Response boardList(@PathVariable Optional<Integer> pageNum) {
+    public Response boardList(@PathVariable Optional<Integer> pageNum,HttpServletResponse res) {
         Response response = new Response();
         try {
             BoardResponse br = boardService.findAll(countPerPage, pageNum.isPresent() ? pageNum.get() : 1);
             response.setData(br);
             response.setMessage("조회성공");
         } catch (EmptyResultDataAccessException | NoSuchElementException e) {
+            res.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             response.setMessage("조회 실패");
             response.setResponse("fail");
         }
@@ -85,7 +86,7 @@ public class BoardController {
     }
 
     @GetMapping("/title/{title}/{pageNum}")
-    public Response searchByTitle(@PathVariable Optional<String> title, @PathVariable Optional<Integer> pageNum) {
+    public Response searchByTitle(@PathVariable Optional<String> title, @PathVariable Optional<Integer> pageNum,HttpServletResponse res) {
 
         Response response = new Response();
         try {
@@ -95,13 +96,14 @@ public class BoardController {
             response.setMessage("조회성공");
         } catch (EmptyResultDataAccessException | NoSuchElementException e) {
             response.setMessage("검색 실패");
+            res.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             response.setResponse("fail");
         }
         return response;
     }
 
     @GetMapping("/body/{body}/{pageNum}")
-    public Response searchByBody(@PathVariable Optional<String> body, @PathVariable Optional<Integer> pageNum) {
+    public Response searchByBody(@PathVariable Optional<String> body, @PathVariable Optional<Integer> pageNum,HttpServletResponse res) {
         Response response = new Response();
         try {
             BoardResponse br = boardService.findByBody(body.isPresent() ? body.get() : "", countPerPage,
@@ -110,6 +112,7 @@ public class BoardController {
             response.setMessage("조회성공");
         } catch (EmptyResultDataAccessException | NoSuchElementException e) {
             response.setMessage("검색 실패");
+            res.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             response.setResponse("fail");
         }
         return response;
@@ -117,7 +120,7 @@ public class BoardController {
 
     // 새로운 board 등록
     @PostMapping
-    public Response newBoard(@RequestBody RequestNewBoard requestNewBoard, HttpServletRequest req)
+    public Response newBoard(@RequestBody RequestNewBoard requestNewBoard, HttpServletRequest req,HttpServletResponse res)
             throws NotFoundException {
         Response response = new Response();
         try{
@@ -139,6 +142,7 @@ public class BoardController {
             response.setMessage("게시물 생성 성공");
         }catch(EmptyResultDataAccessException | NoSuchElementException e){
             response.setMessage("게시물 생성 실패");
+            res.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             response.setResponse("fail");
         }
         return response;
@@ -146,7 +150,7 @@ public class BoardController {
     // 게시물 업데이트
     // 없는 번호 예외처리해야함
     @PutMapping
-    public Response updateBoard(@RequestBody RequestUpdateBoard requestUpdateBoard){
+    public Response updateBoard(@RequestBody RequestUpdateBoard requestUpdateBoard,HttpServletResponse res){
         
         Response response = new Response();
         try{
@@ -165,6 +169,7 @@ public class BoardController {
             response.setMessage("게시글을 수정하였습니다.");
         }catch(EmptyResultDataAccessException | NoSuchElementException e){
             response.setMessage("해당 게시물이 없습니다.");
+            res.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             response.setResponse("fail");
         }
         return response;
@@ -172,7 +177,7 @@ public class BoardController {
     // 게시물 삭제
     // 없는 번호 예외처리
     @DeleteMapping("/{board}")
-    public Response deleteBoard(@PathVariable Optional<Integer> board){
+    public Response deleteBoard(@PathVariable Optional<Integer> board,HttpServletResponse res){
         Response response = new Response();
         try{
             Integer id = board.isPresent()? board.get():null;
@@ -180,12 +185,13 @@ public class BoardController {
             response.setMessage("게시글을 삭제하였습니다.");
         }catch(EmptyResultDataAccessException | NoSuchElementException e){
             response.setMessage("게시글 삭제를 실패하였습니다.");
+            res.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             response.setResponse("fail");
         }
         return response;
     }
     @PutMapping("/view/{board}")
-    public Response updateView(@PathVariable Optional<Integer> board){
+    public Response updateView(@PathVariable Optional<Integer> board,HttpServletResponse res){
         Response response = new Response();
         try{
             Integer id = board.isPresent()? board.get():null;
@@ -195,6 +201,7 @@ public class BoardController {
             response.setMessage("view 1회 증가");
         }catch(EmptyResultDataAccessException | NoSuchElementException e){
             response.setMessage("view 1회 증가에 실패하였습니다.");
+            res.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             response.setResponse("fail");
         }
         return response;
@@ -202,7 +209,7 @@ public class BoardController {
     
     @Transactional
     @PutMapping("/recommend")
-    public Response updateRecommend(@RequestBody RequestVote requestBoardVote){
+    public Response updateRecommend(@RequestBody RequestVote requestBoardVote,HttpServletResponse res){
         Response response = new Response();
         try{
             Board updatedBoard = boardService.findById(requestBoardVote.getId());
@@ -222,12 +229,13 @@ public class BoardController {
             response.setMessage("recommend 수정");
         }catch(EmptyResultDataAccessException | NoSuchElementException e){
             response.setMessage("recommend 수정 실패하였습니다.");
+            res.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             response.setResponse("fail");
         }
         return response;
     }
     @GetMapping("/specific/{board}")
-    public Response specificBoard(@PathVariable Optional<Integer> board){
+    public Response specificBoard(@PathVariable Optional<Integer> board, HttpServletResponse res){
         Response response = new Response();
         try{
             Integer id = board.isPresent()? board.get():null;
@@ -246,6 +254,7 @@ public class BoardController {
         }catch(EmptyResultDataAccessException | NoSuchElementException e){
             response.setMessage("게시물 반환에 실패하였습니다.");
             response.setResponse("fail");
+            res.setStatus(HttpServletResponse.SC_BAD_REQUEST);
         }
         return response;
     }
