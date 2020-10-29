@@ -26,16 +26,14 @@ public class RedisUtil {
 
     public void setData(String key, String value){
         // 이미 데이터가 있는경우 제외
-        if(!this.getData(key).isEmpty())
-            this.deleteData(key);
+        this.deleteData(key);
         ValueOperations<String,String> valueOperations = stringRedisTemplate.opsForValue();
         valueOperations.set(key,value);
     }
 
     // 만료기간설정해서 데이터 집어넣음
     public void setDataExpire(String key,String value,long duration){
-        if(!this.getData(key).isEmpty())
-            this.deleteData(key);
+        this.deleteData(key);
         ValueOperations<String,String> valueOperations = stringRedisTemplate.opsForValue();
         Duration expireDuration = Duration.ofSeconds(duration);
         valueOperations.set(key,value,expireDuration);
