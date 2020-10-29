@@ -43,9 +43,9 @@ User들에게 나누어줄 Ubuntu VM은 Tenant 독립적인 사설망에서 구�
 
 ```bash
 openstack stack create codesquare-private-network \
-											-t create_private_network.yml \
-											--parameter "public_net=public" \
-											--parameter "private_net_name=private-cdr-net"
+		-t create_private_network.yml \
+		--parameter "public_net=public" \
+		--parameter "private_net_name=private-cdr-net"
 ```
 
 또한, devstack에는 기본적으로 cirros와 fedora image가 내장되어 있는데, 범용적으로 많이 사용되는 Ubuntu18.04와 CentOS7을 image list에 등록해줍니다.
@@ -54,12 +54,12 @@ openstack stack create codesquare-private-network \
 #CentOS7
 wget https://cloud.centos.org/centos/7/images/CentOS-7-x86_64-GenericCloud.qcow2
 openstack image create --disk-format qcow2 --container-format bare \
-												--public --file CentOS-7-x86_64-GenericCloud.qcow2 \
+			--public --file CentOS-7-x86_64-GenericCloud.qcow2 \
 												CentOS7
 #Ubuntu18.04 amd64
 wget https://cloud-images.ubuntu.com/bionic/current/bionic-server-cloudimg-amd64.img
 openstack image create --disk-format qcow2 --container-format bare \
-												--public --file bionic-server-cloudimg-amd64.img \
+			--public --file bionic-server-cloudimg-amd64.img \
 												Ubuntu18.04-amd64
 ```
 
@@ -82,15 +82,15 @@ User VM을 배포할 네트워크와 image가 준비되었으니, 이제 Instanc
 
 ```bash
 openstack stack create cdr-admin -t create_cdr_instance.yml \
-					--parameter "hostname=cdr-admin" \
-					--parameter "key_name=cdr_key" \
-					--parameter "image=Ubuntu18.04-amd64" \
-					--parameter "flavor=m1.small" \
-					--parameter "public_net_id=$(openstack network list | grep public | cut -f2 -d '|' | tr -d ' ')" \
-					--parameter "private_net_id=$(openstack network list | grep private-cdr-net | cut -f2 -d '|' | tr -d ' ')" \
-					--parameter "private_subnet_id=$(openstack network list | grep private-cdr-net | cut -f4 -d '|' | tr -d ' ')" \
-					--parameter "zone_host_name=nova:codesquare-devstack-compute2" \
-					--parameter "security_group=$(openstack security group list | grep cdr-rule | cut -f2 -d '|' | tr -d ' ')"
+		--parameter "hostname=cdr-admin" \
+		--parameter "key_name=cdr_key" \
+		--parameter "image=Ubuntu18.04-amd64" \
+		--parameter "flavor=m1.small" \
+		--parameter "public_net_id=$(openstack network list | grep public | cut -f2 -d '|' | tr -d ' ')" \
+		--parameter "private_net_id=$(openstack network list | grep private-cdr-net | cut -f2 -d '|' | tr -d ' ')" \
+		--parameter "private_subnet_id=$(openstack network list | grep private-cdr-net | cut -f4 -d '|' | tr -d ' ')" \
+		--parameter "zone_host_name=nova:codesquare-devstack-compute2" \
+		--parameter "security_group=$(openstack security group list | grep cdr-rule | cut -f2 -d '|' | tr -d ' ')"
 ```
 
 # How to contribute

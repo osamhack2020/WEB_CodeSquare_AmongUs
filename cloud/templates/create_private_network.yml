@@ -4,11 +4,11 @@ parameters:
   public_net:
     type: string
     description: public network name
-    default: admin_floating_net 
+    default: public
   private_net_name:
     type: string
     description: private network name
-    default: net04 
+    default: private-cdr-net
 
 resources:
   private_net:
@@ -19,8 +19,8 @@ resources:
     type: OS::Neutron::Subnet
     properties:
       network_id: { get_resource: private_net }
-      cidr: 172.16.200.0/24
-      gateway_ip: 172.16.200.1 
+      cidr: 192.168.122.0/24
+      gateway_ip: 192.168.122.1 
   router:
     type: OS::Neutron::Router
     properties:
