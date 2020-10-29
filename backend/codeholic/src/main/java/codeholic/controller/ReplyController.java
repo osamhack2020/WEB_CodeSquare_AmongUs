@@ -68,7 +68,7 @@ public class ReplyController {
                 ReplyWithVote tmp = new ReplyWithVote();
                 tmp.setReply(reply);
                 ReplyVote replyVote = replyVoteService.findByUsername(reply.getUsername());
-                int value = replyVote.getValue();
+                int value = replyVote!=null?replyVote.getValue():0;
                 tmp.setValue(value);
                 result.add(tmp);
             });

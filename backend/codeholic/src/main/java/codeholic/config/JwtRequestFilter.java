@@ -75,20 +75,17 @@ public class JwtRequestFilter extends OncePerRequestFilter {
             }
 
             if(refreshJwt != null){
-                refreshUname = redisUtil.getData(refreshJwt);
-                if(refreshUname.equals(jwtUtil.getUsername(refreshJwt))){
-                    UserDetails userDetails = userDetailsService.loadUserByUsername(refreshUname);
-                    UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(userDetails,null,userDetails.getAuthorities());
-                    usernamePasswordAuthenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(httpServletRequest));
-                    SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
+                UserDetails userDetails = userDetailsService.loadUserByUsername(jwtUtil.getUsername(refreshJwt));
+                UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(userDetails,null,userDetails.getAuthorities());
+                usernamePasswordAuthenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(httpServletRequest));
+                SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
 
-                    Member member = new Member();
-                    member.setUsername(refreshUname);
-                    String newToken =jwtUtil.generateToken(member);
+                Member member = new Member();
+                member.setUsername(jwtUtil.getUsername(refreshJwt));
+                String newToken =jwtUtil.generateToken(member);
 
-                    Cookie newAccessToken = cookieUtil.createCookie(JwtUtil.ACCESS_TOKEN_NAME,newToken);
-                    httpServletResponse.addCookie(newAccessToken);
-                }
+                Cookie newAccessToken = cookieUtil.createCookie(JwtUtil.ACCESS_TOKEN_NAME,newToken);
+                httpServletResponse.addCookie(newAccessToken);
             }
 
         }
