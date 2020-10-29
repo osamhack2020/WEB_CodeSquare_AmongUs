@@ -19,7 +19,7 @@ services:
      - ./docker-config/mariadb/initcnf:/etc/mysql/conf.d
      - ./docker-config/mariadb/initsql:/docker-entrypoint-initdb.d
     ports:
-     - '3306:3306'
+     - '4406:4406'
     depends_on:
       - redis
   backend:
