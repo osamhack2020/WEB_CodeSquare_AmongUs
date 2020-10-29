@@ -144,7 +144,7 @@ public class ReplyController {
         try{
             Reply updatedReply = replyService.findById(requestVote.getId());
             ReplyVote tmpVote = replyVoteService.findByUsername(requestVote.getUsername());
-            if(!tmpVote.equals(null)){
+            if(tmpVote != null){
                 updatedReply.fixRecommend(-tmpVote.getValue());
                 replyVoteService.deleteReplyVote(tmpVote);
             }
