@@ -66,6 +66,7 @@ public class MemberController {
         }
         catch(Exception e){
             //아이디 중복시 오류검사....
+            res.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             response.setResponse("failed");
             response.setMessage("회원가입을 하는 도중 오류가 발생했습니다.");
             response.setData(e.toString());
@@ -91,6 +92,7 @@ public class MemberController {
             //기본적으로 응답으로 jwt토큰을 주긴 하지만 쿠키에 등록됨.
             return new Response("success", "로그인에 성공했습니다.", "Bearer "+token);
         } catch (Exception e) {
+            res.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             return new Response("error", "로그인에 실패했습니다.", e.getMessage());
         }
     }
