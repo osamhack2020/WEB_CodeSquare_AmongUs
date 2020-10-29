@@ -66,6 +66,12 @@ class MainController {
     }
     @GetMapping("/authorized")
     public String helloworld2() {   
-        return "Only user!!!";
+        try {
+            openStackApiService.signinProcess("testtest", "testtest");
+            return "Only user!!!";
+        } catch (Exception e) {
+            return e.getMessage();
+        }
+        
     }
 }
