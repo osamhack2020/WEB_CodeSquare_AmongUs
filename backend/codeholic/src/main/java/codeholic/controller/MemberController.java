@@ -167,14 +167,11 @@ public class MemberController {
             refreshJwt = refreshToken.getValue();
             if(refreshJwt == null)
                 throw new Exception();
-            String refreshUname = redisUtil.getData(refreshJwt);
-            if(refreshUname.equals(jwtUtil.getUsername(refreshJwt))){
-                Member member = new Member();
-                member.setUsername(refreshUname);
-                String newToken =jwtUtil.generateToken(member);
-                response.setMessage("accessToken 생성 성공");
-                response.setData("Bearer "+newToken);
-            }
+            Member member = new Member();
+            member.setUsername(jwtUtil.getUsername(refreshJwt));
+            String newToken =jwtUtil.generateToken(member);
+            response.setMessage("accessToken 생성 성공");
+            response.setData("Bearer "+newToken);
         }catch(Exception e){
             response.setMessage("accessToken 생성 실패");
             response.setResponse("fail");
