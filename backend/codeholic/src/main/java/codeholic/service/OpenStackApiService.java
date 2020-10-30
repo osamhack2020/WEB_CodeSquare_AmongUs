@@ -58,7 +58,7 @@ public class OpenStackApiService {
     @Transactional
     public String signupProcess(String id, String password) throws IOException {
         String ADMIN_ID = "admin";
-        String ADMIN_PASSWORD = "1234";
+        String ADMIN_PASSWORD = "password";
     
         try{
             // 관리자 계정으로 Authentication post해서 관리자 토큰받기
