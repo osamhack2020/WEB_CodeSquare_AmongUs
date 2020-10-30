@@ -225,7 +225,8 @@ export const QnaPostViewer: React.FC<QnaPostViewerProps> = ({
         `}
       >
         <Vote
-          votes={32}
+          votes={post.recommend}
+          // TODO
           css={css`
             margin-bottom: 20px;
           `}
