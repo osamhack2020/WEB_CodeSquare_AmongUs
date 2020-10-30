@@ -21,4 +21,4 @@ spring:
     port: 6379
 openstackDomain: "http://3.236.100.160"
 countPerPage: 5
-frontend: "http://localhost:3000"
+frontend: frontend

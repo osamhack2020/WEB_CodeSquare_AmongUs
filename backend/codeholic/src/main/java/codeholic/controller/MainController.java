@@ -19,7 +19,7 @@ import codeholic.service.OpenStackApiService;
 import codeholic.service.TagService;
 
 @RestController
-@RequestMapping
+@RequestMapping("/main")
 @CrossOrigin(origins = "*")
 class MainController {
 
