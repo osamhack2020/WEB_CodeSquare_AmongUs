@@ -14,5 +14,8 @@ apiClient.interceptors.response.use((response) => {
   }
   return response;
 });
+if (process.env.NODE_ENV === "production") {
+  apiClient.defaults.baseURL = "https://api.codesquare.space";
+}
 
 export default apiClient;
