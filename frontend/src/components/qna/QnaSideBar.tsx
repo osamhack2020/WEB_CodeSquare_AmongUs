@@ -18,7 +18,7 @@ const Link = styled.div`
 export const QnaSideBar: React.FC = (props) => (
   <div
     css={css`
-      max-width: 200px;
+      width: 130px;
     `}
     {...props}
   >
@@ -34,15 +34,15 @@ export const QnaSideBar: React.FC = (props) => (
     >
       <div
         css={css`
-          font-size: 12px;
           font-style: normal;
-          font-weight: 400;
+          font-weight: normal;
+          font-size: 12px;
           line-height: 17px;
           letter-spacing: -0.02em;
-          text-align: left;
+
+          color: #6f6f6f;
 
           padding-bottom: 15px;
-          color: #6f6f6f;
         `}
       >
         인기 태그

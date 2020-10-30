@@ -68,11 +68,12 @@ export const QnaPostItem: React.FC<
           </WrapperLink>
           <div
             css={css`
-              font-size: 14px;
               font-style: normal;
-              font-weight: 400;
+              font-weight: normal;
+              font-size: 14px;
               line-height: 20px;
               letter-spacing: -0.02em;
+              color: #737373;
               text-align: left;
               text-overflow: ellipsis;
               word-break: break-word;
@@ -104,6 +105,7 @@ export const QnaPostItem: React.FC<
             </QnaTagList>
             <div
               css={css`
+                flex-shrink: 0;
                 align-self: flex-end;
                 font-style: normal;
                 font-weight: normal;

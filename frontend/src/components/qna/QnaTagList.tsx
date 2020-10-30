@@ -4,8 +4,9 @@ import { css, jsx } from "@emotion/core";
 export const QnaTagList: React.FC = ({ children, ...props }) => (
   <div
     css={css`
-      display: flex;
+      /* display: flex; */
       div {
+        display: inline-block;
         background: #e6e6e6;
         border-radius: 4px;
         font-style: normal;
