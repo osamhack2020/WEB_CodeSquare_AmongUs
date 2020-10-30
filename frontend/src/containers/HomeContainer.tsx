@@ -649,7 +649,6 @@ export const HomeContainer: React.FC = () => {
           지금 시작하기
         </ArrowButton>
       </div>
-      <Footer />
     </div>
   );
 };

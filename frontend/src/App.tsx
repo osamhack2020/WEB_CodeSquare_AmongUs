@@ -2,6 +2,7 @@
 import { css, jsx } from "@emotion/core";
 import { useSelector } from "react-redux";
 import { Redirect, Route, Switch } from "react-router-dom";
+import { Footer } from "./components/base/Footer";
 import { NotFound } from "./components/base/NotFound";
 import { LoginContainer } from "./containers/auth/LoginContainer";
 import { RegisterContainer } from "./containers/auth/RegisterContainer";
@@ -67,6 +68,7 @@ const App: React.FC = () => {
           </Route>
         </Switch>
       </div>
+      <Footer />
     </div>
   );
 };
