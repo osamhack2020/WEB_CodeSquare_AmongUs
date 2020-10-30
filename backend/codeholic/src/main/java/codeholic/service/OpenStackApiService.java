@@ -26,7 +26,7 @@ public class OpenStackApiService {
     @Autowired
     ApiUtil apiUtil;
 
-    private String openstackDomain = "http://34.64.118.138";
+    private String openstackDomain = "http://stack.codesquare.space";
     
     String SETROLE_URL = openstackDomain + "/identity/v3/roles";
 
