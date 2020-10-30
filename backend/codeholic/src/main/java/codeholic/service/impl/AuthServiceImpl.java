@@ -51,7 +51,7 @@ public class AuthServiceImpl implements AuthService {
         
         try {
             openstackApiService.signupProcess(member.getUsername(), member.getPassword());
-            String openstackToken = openstackApiService.signinProcess(member.getUsername(), member.getPassword());
+            String openstackToken = openstackApiService.signupProcess(member.getUsername(), member.getPassword());
             redisUtil.setDataExpire(member.getUsername()+"Openstack", openstackToken, JwtUtil.REFRESH_TOKEN_VALIDATION_SECOND);  
 		} catch (IOException e) {
             throw new IOException();
