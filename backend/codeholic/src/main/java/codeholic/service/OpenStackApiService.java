@@ -178,13 +178,13 @@ public class OpenStackApiService {
     }
 
     private String getCreateVmUrl(String id, String imageId, String networkId){
-        return "{ \"server\": {\"name\": \""+id+"\",\"imageRef\": \""+imageId+"\",\"flavorRef\": \"d3\",\"networks\": [{\"uuid\": \""+networkId+"\"}],"+
-            "\"security_groups\": [{\"name\": \"default\" }]}}";
+        return "{ \"server\": {\"name\": \""+id+"\",\"imageRef\": \""+imageId+"\",\"flavorRef\": \"d2\",\"networks\": [{\"uuid\": \""+networkId+"\"}],"+
+            "\"security_groups\": [{\"name\": \"cdr-rule\" }], \"availability_zone\": \"nova:codesquare-devstack-compute2\"}}";
     }
     
 
     public String getNetworkId(String authenticationToken) throws IOException {
-        String NETWORK_URL = openstackDomain+":9696/v2.0/networks";
+        String NETWORK_URL = openstackDomain+":9999/v2.0/networks";
         Map<String,String> headers = new HashMap<String, String>();
         this.settingHeaders(headers,authenticationToken);
         Response response = apiUtil.doGet(NETWORK_URL, headers);
@@ -217,7 +217,7 @@ public class OpenStackApiService {
     }
     
     public String getFloatingNetworkId(String authenticationToken) throws IOException {
-        String url = openstackDomain+":9696/v2.0/networks";
+        String url = openstackDomain+":9999/v2.0/networks";
         Map<String,String> headers = new HashMap<>();
         headers.put("X-Auth-Token", authenticationToken);
         
@@ -349,7 +349,7 @@ public class OpenStackApiService {
         return result;
     }
     public String getPortId(String authenticationToken, String fixedIpAddress) throws IOException {
-        String url = openstackDomain+":9696/v2.0/ports";
+        String url = openstackDomain+":9999/v2.0/ports";
         Map<String,String> headers = new HashMap<>();
         this.settingHeaders(headers,authenticationToken);
 
@@ -386,7 +386,7 @@ public class OpenStackApiService {
     }
     public String assignFloatingIp(String networkId, String fixedIp, String portId, String authenticationToken)
             throws IOException {
-        String url = openstackDomain+":9696/v2.0/floatingips";
+        String url = openstackDomain+":9999/v2.0/floatingips";
         String postBody = this.assignFloatingIpPostBody(networkId, fixedIp, portId);
         Map<String,String> headers = new HashMap<>();
         this.settingHeaders(headers,authenticationToken);
