@@ -30,9 +30,13 @@ const store = createStore(
 (function () {
   const token = localStorage.getItem("accessToken");
   if (token) {
-    const { username } = decode(token);
-    apiClient.defaults.headers.common["Authorization"] = token;
-    store.dispatch(core.actions.setUser({ username }));
+    try {
+      const { username } = decode(token);
+      apiClient.defaults.headers.common["Authorization"] = token;
+      store.dispatch(core.actions.setUser({ username }));
+    } catch {
+      localStorage.removeItem("accessToken");
+    }
   }
 })();
 

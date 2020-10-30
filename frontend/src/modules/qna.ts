@@ -38,6 +38,9 @@ const qna = createSlice({
         state.replies?.splice(idx, 1);
       }
     },
+    writeReply(state, action: PayloadAction<QnaPost>) {
+      state.replies?.push(action.payload);
+    },
   },
 });
 

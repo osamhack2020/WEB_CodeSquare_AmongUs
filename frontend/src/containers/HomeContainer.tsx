@@ -1,12 +1,7 @@
 /** @jsx jsx */
 import { css, jsx } from "@emotion/core";
-import { useCallback } from "react";
-import { useHistory } from "react-router-dom";
 import format from "date-fns/format";
-import { Footer } from "../components/base/Footer";
-import { ArrowIcon } from "../components/common/Icon";
-import { OutlineButton } from "../components/common/OutlineButton";
-import { WrapperLink } from "../components/common/WrapperLink";
+import { ArrowButton } from "../components/common/ArrowButton";
 
 const BranchSvg: React.FC = (props) => (
   <svg
@@ -138,51 +133,7 @@ const Card: React.FC<{
   </div>
 );
 
-const ArrowButton: React.FC<{ to: string; color?: string }> = ({
-  to,
-  color,
-  children,
-  ...props
-}) => (
-  <OutlineButton
-    css={css`
-      color: ${color ? color : "#000000"};
-      font-size: 16px;
-      font-style: normal;
-      font-weight: 700;
-      line-height: 24px;
-      letter-spacing: -0.04em;
-      text-align: left;
-
-      display: flex;
-      width: 181px;
-      padding: 12px 17px;
-      border: 1px solid ${color ? color : "#000000"};
-      box-sizing: border-box;
-      border-radius: 0px;
-    `}
-    {...props}
-  >
-    <WrapperLink
-      to={to}
-      css={css`
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        width: 100%;
-      `}
-    >
-      {children}
-      <ArrowIcon color={color} />
-    </WrapperLink>
-  </OutlineButton>
-);
-
 export const HomeContainer: React.FC = () => {
-  const history = useHistory();
-  const onClick = useCallback(() => {
-    history.push("/register");
-  }, [history]);
   return (
     <div
       css={css`
@@ -649,7 +600,6 @@ export const HomeContainer: React.FC = () => {
           지금 시작하기
         </ArrowButton>
       </div>
-      <Footer />
     </div>
   );
 };
