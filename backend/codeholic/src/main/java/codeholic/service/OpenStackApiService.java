@@ -26,8 +26,7 @@ public class OpenStackApiService {
     @Autowired
     ApiUtil apiUtil;
 
-    @Value("${openstackDomain}")
-    private String openstackDomain;
+    private String openstackDomain = "http://34.64.118.138";
     
     String SETROLE_URL = openstackDomain + "/identity/v3/roles";
 
@@ -58,7 +57,7 @@ public class OpenStackApiService {
     @Transactional
     public String signupProcess(String id, String password) throws IOException {
         String ADMIN_ID = "admin";
-        String ADMIN_PASSWORD = "1234";
+        String ADMIN_PASSWORD = "password";
     
         try{
             // 관리자 계정으로 Authentication post해서 관리자 토큰받기
@@ -78,7 +77,7 @@ public class OpenStackApiService {
     }
 
     public String signinProcess(String id, String password) {
-        String authenticationToken = this.authentication(id, password, "demo");
+        String authenticationToken = this.authentication(id, password, "codesquare");
         // 유저 계정으로 Authentication post해서 유저 토큰 받기
         // 이건 요청헤더에 넣어야 할듯
         return authenticationToken;
@@ -126,7 +125,7 @@ public class OpenStackApiService {
                             .getAsJsonArray("projects").iterator();
         while(iterator.hasNext()){
             JsonElement next = iterator.next();
-            if(next.getAsJsonObject().get("name").getAsString().equals("demo"))
+            if(next.getAsJsonObject().get("name").getAsString().equals("codesquare"))
                 result = next.getAsJsonObject().get("id").getAsString();
         }
         return result;

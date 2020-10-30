@@ -2,7 +2,6 @@ package codeholic.controller;
 
 import java.io.IOException;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.slf4j.Logger;
@@ -11,30 +10,24 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
 
-import codeholic.domain.Response;
 import codeholic.domain.SocketMessage;
 import codeholic.domain.VmStatus;
 import codeholic.service.JwtUtil;
 import codeholic.service.OpenStackApiService;
 import codeholic.service.RedisUtil;
 
-@RestController
+// https://velog.io/@skyepodium/vue-spring-boot-stomp-%EC%9B%B9%EC%86%8C%EC%BC%93
+@Controller
 @RequestMapping("vm")
 @CrossOrigin(origins = "*")
-public class VmController {
-    // TODO: 시간표시
-    
+public class SockerController {
     @Value("${openstackDomain}")
     private String openstackDomain;
     
-    @Autowired
-    private JwtUtil jwtUtil;
-
     // 레디스에 토큰을 idOpenstack 으로 저장
     @Autowired
     OpenStackApiService openStackApiService;
@@ -43,34 +36,9 @@ public class VmController {
     RedisUtil redisUtil;
     Logger logger = LoggerFactory.getLogger(VmController.class);
 
-    // TODO: idOpenstack의 유효시간이 지나면 어떡할 것인가? - 다시 signin 해서 받아야지 뭐...
 
-    // 이미 만든 사용자라면... 그냥 도메인에 url을 추가하면 되지 않을까?
-    // vm 삭제하기
-    @GetMapping("/create")
-    public Response createVm(HttpServletRequest httpServletRequest,HttpServletResponse res) {
-
-        Response response = new Response();
-        final String accessJwtHeader = httpServletRequest.getHeader("Authorization");
-
-        // 이전에 만든적 있다면 빠꾸하는 로직이 필요하다...
-        try {
-            if (accessJwtHeader == null)
-                throw new Exception();
-            String username = jwtUtil.getUsername(accessJwtHeader.substring(7));
-            String authenticationToken = redisUtil.getData(username + "Openstack");
-            openStackApiService.createVm(username, authenticationToken);
-            response.setMessage("vm 생성중입니다");
-        } catch (Exception e) {
-            res.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-            response.setResponse("fail");
-            response.setMessage("vm 생성실패");
-        }        
-        return response;
-    }
-    
-    @MessageMapping("/check")
-    @SendTo("/topic/check")
+    @MessageMapping("/receive")
+    @SendTo("/send")
     public SocketMessage broadCast(SocketMessage message,HttpServletResponse res) {
 
         SocketMessage result = new SocketMessage();
