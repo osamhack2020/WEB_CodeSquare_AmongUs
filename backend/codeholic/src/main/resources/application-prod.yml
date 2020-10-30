@@ -1,0 +1,26 @@
+server:
+    port : 9191
+spring:
+  profiles:
+    active: prod
+  datasource:
+    url: jdbc:mariadb://mariadb:3306/codespace
+    driver-class-name: org.mariadb.jdbc.Driver
+    username: root
+    password: codespace
+  jpa:
+    open-in-view: false
+    generate-ddl: true
+    show-sql: true
+    hibernate:
+      ddl-auto: update
+  jwt:
+    secret: codeholiccodeholiccodeholiccodeholiccodeholiccodeholiccodeholic
+  cache:
+    type: redis
+  redis:
+    host: redis
+    port: 6379
+openstackDomain: "http://3.236.100.160"
+countPerPage: 5
+frontend: "http://frontend:3000"
