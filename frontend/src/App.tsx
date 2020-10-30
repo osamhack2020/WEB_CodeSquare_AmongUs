@@ -34,7 +34,11 @@ const App: React.FC = () => {
       >
         <Switch>
           <Route exact path="/">
-            {user ? <Redirect to={`/${user.username}`} /> : <HomeContainer />}
+            {user ? (
+              <Redirect to={`/user/${user.username}`} />
+            ) : (
+              <HomeContainer />
+            )}
           </Route>
           <Route path="/vm">
             <VmHomeContainer />

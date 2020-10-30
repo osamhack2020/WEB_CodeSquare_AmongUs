@@ -14,7 +14,7 @@ export const LoginContainer: React.FC = (props) => {
     async ({ username, password }: LoginFormInput) => {
       await login(username, password);
       dispatch(core.actions.setUser({ username }));
-      history.push(`/${username}`);
+      history.push(`/user/${username}`);
     },
     [dispatch, history],
   );
