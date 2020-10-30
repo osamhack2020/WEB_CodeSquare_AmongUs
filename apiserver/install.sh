@@ -39,4 +39,4 @@ else
 fi
 
 nohup npm start&
-nohup ./inotify-db.sh
+nohup ./inotify-nginx.sh
