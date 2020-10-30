@@ -1,13 +1,15 @@
 #!/bin/bash
 
 idx=0
-ext_ip=$(curl icanhazip.com)
 
 rm -f ./code-server.conf
 echo "server {
-listen 8989;
-listen [::]:8989;
-server_name $ext_ip;" >> code-server.conf
+listen 443;
+listen [::]:443;
+server_name ide.codesquare.space;
+ssl on;
+ssl_certificate /etc/nginx/codesquare.space.crt;
+ssl_certificate_key /etc/nginx/codesquare.space.key;" >> code-server.conf
 
 while [ $(cat db.json | jq '.urlinfo' | jq '.['"$idx"']' | jq '.name') != "null" ]; do
 	name=$(cat db.json | jq '.urlinfo' | jq '.['"$idx"']' | jq '.name')
