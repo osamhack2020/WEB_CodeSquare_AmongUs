@@ -174,19 +174,19 @@ export const QnaPostViewer: React.FC<QnaPostViewerProps> = ({
       (state) => state.qna.post?.username,
     ) === user?.username;
   const postType: PostType = post.answer ? "replies" : "board";
-  const { loading, data: comments } = useComments(postType, post.id);
+  const { loading, data: comments, refetch } = useComments(postType, post.id);
   const onSubmit = useCallback(
     async (text: string) => {
       await writeComment(postType, post.id, text);
+      await refetch();
     },
-    [post.id, postType],
+    [post.id, postType, refetch],
   );
   const history = useHistory();
   const dispatch = useDispatch();
   const onAcceptClick = useCallback(async () => {
     await accept(post.id);
-    dispatch(qna.actions.acceptReply(post.id));
-  }, [post.id, dispatch]);
+  }, [post.id]);
   const onEditClick = useCallback(() => {
     if (post.answer) {
       history.push(`/qna/edit?id=${post.id}&type=replies`);

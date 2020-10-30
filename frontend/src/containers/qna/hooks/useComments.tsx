@@ -21,5 +21,9 @@ export default function useComments(type: PostType, postId: number) {
   }, []);
   /* eslint-enable react-hooks/exhaustive-deps */
 
-  return { data, loading };
+  const refetch = useCallback(async () => {
+    await load();
+  }, [load]);
+
+  return { data, loading, refetch };
 }
