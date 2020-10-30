@@ -15,7 +15,9 @@ apiClient.interceptors.response.use((response) => {
   return response;
 });
 if (process.env.NODE_ENV === "production") {
-  apiClient.defaults.baseURL = "https://api.codesquare.space";
+  // 빌드 시 설정된 REACT_APP_BASE_URL 환경 변수 값으로 변경됩니다.
+  // ex) apiClient.defaults.baseURL = "https://api.codesquare.space/";
+  apiClient.defaults.baseURL = process.env.REACT_APP_BASE_URL || "/";
 }
 
 export default apiClient;
