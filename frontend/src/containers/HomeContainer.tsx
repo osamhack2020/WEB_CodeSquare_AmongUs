@@ -539,25 +539,25 @@ export const HomeContainer: React.FC = () => {
               src="content-1.png"
               title="Python 3.10.0a1 Documentation"
               source="Python Software Foundation"
-              created_at="2020.10.16"
+              created_at="2020-10-16"
             />
             <Card
               src="content-2.png"
               title="WebXR Device API를 이용한 웹 AR 구현, 그 한계와 대안"
               source="NAVER D2 Hello World"
-              created_at="2020.10.16"
+              created_at="2020-10-16"
             />
             <Card
               src="content-3.png"
               title="2020년과 이후 JavaScript의 동향 - WebAssembly"
               source="NAVER D2 Hello World"
-              created_at="2020.09.02"
+              created_at="2020-09-02"
             />
             <Card
               src="content-4.png"
               title="TypeScript 환경에서 Redux를 프로처럼 사용하기"
               source="velopert.log"
-              created_at="2020.10.16"
+              created_at="2020-10-16"
             />
           </div>
         </div>
