@@ -48,7 +48,7 @@ public class AuthServiceImpl implements AuthService {
         member.setSalt(new Salt(salt));
         member.setPassword(saltUtil.encodePassword(salt,password));
         
-        /*
+        
         try {
             openstackApiService.signupProcess(member.getUsername(), member.getPassword());
             String openstackToken = openstackApiService.signinProcess(member.getUsername(), member.getPassword());
@@ -56,7 +56,7 @@ public class AuthServiceImpl implements AuthService {
 		} catch (IOException e) {
             throw new IOException();
         }
-        */
+        
         
         memberRepository.save(member);
     }
@@ -77,10 +77,10 @@ public class AuthServiceImpl implements AuthService {
         if(!member.getPassword().equals(passwd))
             throw new Exception ("비밀번호가 틀립니다.");
 
-        /*
+        
         String openstackToken = openstackApiService.signinProcess(id, passwd);
         redisUtil.setDataExpire(id+"Openstack", openstackToken, JwtUtil.REFRESH_TOKEN_VALIDATION_SECOND);   
-        */
+        
         return member;
     }
     @Override
