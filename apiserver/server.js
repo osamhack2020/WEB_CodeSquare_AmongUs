@@ -32,6 +32,16 @@ server.delete('/urlinfo/:name', (req, res) => {
 	if(retval.length === 0) {
 		return res.status(400).json({err: 'Invalid name'});
 	}
+
+	const { exec } = require('child_process');
+	exec('rm -f /etc/nginx/user-vm/'+req.params.name+'.conf', (err, stdout, stderr) => {
+		if(err) {
+			console.error(err);
+		} else {
+			console.log('stdout : '+stdout);
+			console.log('stderr : '+stderr);
+		}
+	});
 	return res.status(204).send();
 
 });
@@ -39,6 +49,8 @@ server.delete('/urlinfo/:name', (req, res) => {
 server.post('/urlinfo', (req, res) => {
 	const name = req.body['name'] || '';
 	const addr = req.body['addr'] || '';
+
+	console.log(name);
 
 	if(!name.length){
 		return res.status(400).json({err: 'Incorrect name'});
@@ -60,6 +72,21 @@ server.post('/urlinfo', (req, res) => {
                 addr: addr
         };
         db.get('urlinfo').push(newInfo).write();
+
+	let confln1 = '\"location /';
+	let confln2 = '/ \{\n\tproxy_pass http://';
+	let confln3 = ':8080/;\n\tproxy_set_header Upgrade \\$http_upgrade;\n\tproxy_set_header Connection upgrade;\n\t';
+	let confln4 = 'proxy_set_header Accept-Encoding gzip;\n\}\"';
+        const { exec } = require('child_process');
+        exec('echo '+confln1+name+confln2+addr+confln3+confln4+' >> /etc/nginx/user-vm/'+name+'.conf', (err, stdout, stderr) => {
+                if (err) {
+                        console.error(err);
+                } else {
+                        console.log('stdout : '+stdout);
+                        console.log('stderr : '+stderr);
+                }
+        });
+
         return res.status(201).json(newInfo);
 });
 
