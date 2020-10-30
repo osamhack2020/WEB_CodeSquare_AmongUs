@@ -1,9 +1,6 @@
 /** @jsx jsx */
 import { css, jsx } from "@emotion/core";
-import { useCallback } from "react";
-import { useHistory } from "react-router-dom";
 import format from "date-fns/format";
-import { Footer } from "../components/base/Footer";
 import { ArrowIcon } from "../components/common/Icon";
 import { OutlineButton } from "../components/common/OutlineButton";
 import { WrapperLink } from "../components/common/WrapperLink";
@@ -179,10 +176,6 @@ const ArrowButton: React.FC<{ to: string; color?: string }> = ({
 );
 
 export const HomeContainer: React.FC = () => {
-  const history = useHistory();
-  const onClick = useCallback(() => {
-    history.push("/register");
-  }, [history]);
   return (
     <div
       css={css`
