@@ -101,6 +101,7 @@ public class SocketController {
             socketMessage.setStatus("loading");
         }catch(Exception e){
             response.setResponse("fail");
+            socketMessage.setStatus("error");
             res.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             response.setMessage("vm 생성 실패");
         }
