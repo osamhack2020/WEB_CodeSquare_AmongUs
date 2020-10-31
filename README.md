@@ -67,6 +67,7 @@
 - OpenStack Zun (dockerized containers) + Virtual-Kubelet
 - OpenStack Keystone
 - NGINX (reverse proxy)
+- node.js
 - Google Cloud DNS
 
 ### Git
@@ -95,8 +96,8 @@ Among Us팀은 "우리 군에 오픈소스 문화를 이끌어갈 개발자가 �
 - [Chanyoung Oh](https://github.com/shydah): 팀장, 구조 설계 및 디자인, 문서화 작업 등
 - [CirnoV](https://github.com/CirnoV): 프론트엔드 개발 담당
 - [namkyu1999](https://github.com/namkyu1999): 백엔드 서버 개발 담당
-- [Snowapril](https://github.com/Snowapril): OpenStack 인프라 담당
-- [lijm1358](https://github.com/lijm1358): Cloud, VM 담당
+- [Snowapril](https://github.com/Snowapril): OpenStack Cloud 담당
+- [lijm1358](https://github.com/lijm1358): 인프라, VM 담당
 
 ## 저작권 및 사용 정보 (Copyleft / End User License)
 - [MIT](https://github.com/osamhack2020/WEB_CodeSquare_AmongUs/blob/master/README.md)
