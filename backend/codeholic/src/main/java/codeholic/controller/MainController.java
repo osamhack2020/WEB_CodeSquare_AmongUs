@@ -6,6 +6,7 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.tomcat.jni.Time;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,8 +15,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 import codeholic.domain.Board;
 import codeholic.domain.Tag;
+import codeholic.domain.VmStatus;
 import codeholic.service.BoardService;
+import codeholic.service.JwtUtil;
 import codeholic.service.OpenStackApiService;
+import codeholic.service.RedisUtil;
 import codeholic.service.TagService;
 
 @RestController
@@ -33,12 +37,39 @@ class MainController {
     @Autowired
     TagService tagService;
 
-    
-    @GetMapping("/")
-    public String helloworld1(final HttpServletRequest req) {
-        return "helloworld";
-    }
+    @Autowired
+    JwtUtil jwtUtil;
 
+    @Autowired
+    RedisUtil redisUtil;
+    /*
+    @GetMapping
+    public String helloworld1(final HttpServletRequest req) throws IOException {
+        openStackApiService.signupProcess("test12", "test12");
+        String user = openStackApiService.signinProcess("test12", "test12");
+        String username = "test11";
+        try {
+            String authenticationToken = user;
+            //openStackApiService.createVm(username, authenticationToken);
+            String instanceId = openStackApiService.getUserInstanceId(username, authenticationToken);
+            
+            VmStatus st = openStackApiService.getInstanceStatus(authenticationToken, instanceId);
+            
+            String floatingIp = st.getFloatingIp()+"";
+            if(st.getStatus().equals("active")&&floatingIp.equals("0")){
+                String fixedIpAddress =openStackApiService.getFixedIpAddress(authenticationToken,instanceId);
+                String portId = openStackApiService.getPortId(authenticationToken,fixedIpAddress);
+                String floatingNetworkId =openStackApiService.getFloatingNetworkId(authenticationToken);
+                floatingIp =  openStackApiService.assignFloatingIp(floatingNetworkId,fixedIpAddress, portId, authenticationToken);
+                return openStackApiService.getCodeServer(authenticationToken, floatingIp, username);
+            }
+            
+            return "loading";
+        } catch (Exception e) {
+            return "Nope";
+        }       
+    }
+    */
 
    @GetMapping("/test")
     public String test1(HttpServletResponse res) throws IOException {
