@@ -1,66 +1,132 @@
 import { css } from "@emotion/core";
 
 export const prismTheme = css`
-  /* atom one light theme */
-  code,
+  /**
+ * https://github.com/PrismJS/prism-themes/blob/master/themes/prism-ghcolors.css
+ * GHColors theme by Avi Aryan (http://aviaryan.in)
+ * Inspired by Github syntax coloring
+ */
+
   code[class*="language-"],
   pre[class*="language-"] {
-    color: #24292e;
+    color: #393a34;
+    font-family: "Consolas", "Bitstream Vera Sans Mono", "Courier New", Courier,
+      monospace;
+    direction: ltr;
+    text-align: left;
+    white-space: pre;
+    word-spacing: normal;
+    word-break: normal;
+    font-size: 0.9em;
+    line-height: 1.2em;
+
+    -moz-tab-size: 4;
+    -o-tab-size: 4;
+    tab-size: 4;
+
+    -webkit-hyphens: none;
+    -moz-hyphens: none;
+    -ms-hyphens: none;
+    hyphens: none;
   }
-  pre {
-    box-shadow: 0px 0px 2px #00000005;
-    background: #fbfcfd;
-    color: #24292e;
-    /* background: white; */
+
+  pre > code[class*="language-"] {
+    font-size: 1em;
   }
-  .token.builtin {
-    color: #0184bc;
+
+  pre[class*="language-"]::-moz-selection,
+  pre[class*="language-"] ::-moz-selection,
+  code[class*="language-"]::-moz-selection,
+  code[class*="language-"] ::-moz-selection {
+    background: #b3d4fc;
   }
-  .token.function {
-    color: #005cc5;
+
+  pre[class*="language-"]::selection,
+  pre[class*="language-"] ::selection,
+  code[class*="language-"]::selection,
+  code[class*="language-"] ::selection {
+    background: #b3d4fc;
   }
+
+  /* Code blocks */
+  pre[class*="language-"] {
+    padding: 1em;
+    margin: 0.5em 0;
+    overflow: auto;
+    border: 1px solid #dddddd;
+    background-color: white;
+  }
+
+  /* Inline code */
+  :not(pre) > code[class*="language-"] {
+    padding: 0.2em;
+    padding-top: 1px;
+    padding-bottom: 1px;
+    background: #f8f8f8;
+    border: 1px solid #dddddd;
+  }
+
   .token.comment,
   .token.prolog,
   .token.doctype,
   .token.cdata {
-    color: #969896;
+    color: #999988;
+    font-style: italic;
   }
-  .token.punctuation {
-    color: #24292e;
+
+  .token.namespace {
+    opacity: 0.7;
   }
-  .token.atrule,
+
+  .token.string,
   .token.attr-value {
-    color: #183691;
+    color: #e3116c;
   }
-  .token.property,
-  .token.tag {
-    color: #63a35c;
-  }
-  .token.boolean,
-  .token.number {
-    color: #986801;
-  }
-  .token.selector,
-  .token.attr-name,
-  .token.attr-value .punctuation:first-of-type,
-  .token.keyword,
-  .token.regex,
-  .token.important {
-    color: #a626a4;
-  }
+
+  .token.punctuation,
   .token.operator {
-    color: #0184bc;
+    color: #393a34; /* no highlight */
   }
+
   .token.entity,
   .token.url,
-  .language-css,
-  .token.string {
-    color: #50a14f;
+  .token.symbol,
+  .token.number,
+  .token.boolean,
+  .token.variable,
+  .token.constant,
+  .token.property,
+  .token.regex,
+  .token.inserted {
+    color: #36acaa;
   }
-  .token.entity {
-    cursor: help;
+
+  .token.atrule,
+  .token.keyword,
+  .token.attr-name,
+  .language-autohotkey .token.selector {
+    color: #00a4db;
   }
-  .namespace {
-    opacity: 0.7;
+
+  .token.function,
+  .token.deleted,
+  .language-autohotkey .token.tag {
+    color: #9a050f;
+  }
+
+  .token.tag,
+  .token.selector,
+  .language-autohotkey .token.keyword {
+    color: #00009f;
+  }
+
+  .token.important,
+  .token.function,
+  .token.bold {
+    font-weight: bold;
+  }
+
+  .token.italic {
+    font-style: italic;
   }
 `;
