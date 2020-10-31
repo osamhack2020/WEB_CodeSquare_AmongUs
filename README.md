@@ -11,6 +11,14 @@
 
 코드스퀘어(CodeSquare)는 군 복무 중인 개발자를 위한 국방망용 오픈소스 통합 개발 플랫폼입니다.
 
+## 기능 설계
+- 화면설계: https://www.figma.com/file/dZctafF9pSgbQbYhQYhP7O/Wireframe?node-id=4%3A98
+- 디자인: https://www.figma.com/file/7xEZdSH228mjjPT0HgKZjC/Design?node-id=0%3A1
+
+## 컴퓨터 구성 / 필수 조건 안내 (Prerequisites)
+- ECMAScript 6 지원 브라우저 사용
+- Google Chrome 77 이상을 권장합니다.
+
 ## 기술 스택 (Technique Used)
 ### Server(back-end)
 - Java Spring Boot
