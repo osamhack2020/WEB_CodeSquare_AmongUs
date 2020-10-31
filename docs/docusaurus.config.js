@@ -24,7 +24,7 @@ module.exports = {
         {
           type: 'doc',
           position: 'left',
-          docId: 'api/backend/user',
+          docId: 'api/backend/user/user-api-intro',
           label: 'API',
         },
         {
