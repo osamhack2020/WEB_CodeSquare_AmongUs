@@ -22,7 +22,7 @@ export const ArrowButton: React.FC<{ to: string; color?: string }> = ({
 
       display: flex;
       width: 181px;
-      padding: 12px 17px;
+      padding: 0;
       border: 1px solid ${color ? color : "#000000"};
       box-sizing: border-box;
       border-radius: 0px;
@@ -36,6 +36,7 @@ export const ArrowButton: React.FC<{ to: string; color?: string }> = ({
         align-items: center;
         justify-content: space-between;
         width: 100%;
+        padding: 12px 17px;
       `}
     >
       {children}
