@@ -423,16 +423,15 @@ public class OpenStackApiService {
         String responseBody = response.body().string();
         return responseBody;
     }
-    public int statuscode(String url, String authenticationToken){
+    public int statuscode(String url){
         Map<String,String> headers = new HashMap<>();
-        this.settingHeaders(headers,authenticationToken);
         Response response = apiUtil.doGet(url, headers);
         int result = response.code();
-        if (result>=500){
-            return 0;
+        if (result<=300){
+            return 1;
         }
         else{
-            return 1;
+            return 0;
         }
     }
     public void deleteVm(String authenticationToken, String instanceId) throws IOException {
