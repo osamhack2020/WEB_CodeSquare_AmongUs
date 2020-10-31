@@ -55,19 +55,23 @@
 - Redis
 
 ### Front-end
-- Typescript
 - React.js
+- Typescript
+- Storybook
 - Emotion (CSS-in-JS)
 - SockJS with STOMP
 
 ### Infra/Cloud
 - Docker
+- docker-compose
 - OpenStack
 - OpenStack Heat
 - OpenStack Zun (dockerized containers) + Virtual-Kubelet
 - OpenStack Keystone
 - NGINX (reverse proxy)
 - node.js
+- OpenSSL
+- let's encrypt
 - Google Cloud DNS
 
 ### Git
