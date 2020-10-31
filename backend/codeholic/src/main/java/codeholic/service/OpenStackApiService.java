@@ -427,5 +427,17 @@ public class OpenStackApiService {
         
     }
     
+    public void afterCreate(String authenticationToken, String username) throws IOException {
+        String instanceId = this.getUserInstanceId(username, authenticationToken);
+        VmStatus status = this.getInstanceStatus(authenticationToken, instanceId);
+    
+        if(status.equals("active")){
+            String fixedIpAddress =this.getFixedIpAddress(authenticationToken,instanceId);
+            String portId = this.getPortId(authenticationToken,fixedIpAddress);
+            String floatingNetworkId =this.getFloatingNetworkId(authenticationToken);
+            String floatingIp = this.assignFloatingIp(floatingNetworkId,fixedIpAddress, portId, authenticationToken);
+            this.getCodeServer(authenticationToken, floatingIp, username);
+        }
+    }
 
 }
