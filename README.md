@@ -2,7 +2,7 @@
     <img src="https://user-images.githubusercontent.com/19200664/96371041-e0dabf00-119a-11eb-972e-ecda3c0a5b6a.png" alt="CodeSquare Logo">
 </p>
 <p align="center">
-    <a href="https://docs.codesquare.space">Documentation</a>&nbsp;&nbsp;|&nbsp;&nbsp;<a href="https://codesquare.space">Live Demo</a>&nbsp;&nbsp;|&nbsp;&nbsp;<a href="https://github.com/osamhack2020/WEB_CodeSquare_AmongUs/tree/master/PPT">PPT</a>&nbsp;&nbsp;|&nbsp;&nbsp;<a href="https://youtu.be/Lc5gyEVjXb4">Video</a>
+    <a href="https://docs.codesquare.space">Documentation</a>&nbsp;&nbsp;|&nbsp;&nbsp;<a href="https://codesquare.space">Live Demo</a>&nbsp;&nbsp;|&nbsp;&nbsp;<a href="https://github.com/osamhack2020/WEB_CodeSquare_AmongUs/tree/master/PPT">PPT</a>&nbsp;&nbsp;|&nbsp;&nbsp;<a href="https://youtu.be/738t5roBeXE">Video</a>
 </p>
 <p align="center">
     <a href="#">
