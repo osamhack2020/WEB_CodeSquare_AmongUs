@@ -69,12 +69,18 @@
 - GitHub Actions
 - GitHub Pages
 
-## 팀 정보
-- [Chanyoung Oh](https://github.com/shydah)
-- [Snowapril](https://github.com/Snowapril)
-- [lijm1358](https://github.com/lijm1358)
-- [CirnoV](https://github.com/CirnoV)
-- [namkyu1999](https://github.com/namkyu1999)
+## 설치 및 프로젝트 사용법 (Installation & Getting Started)
+
+
+## Among Us 팀 정보
+
+Among Us팀은 "우리 군에 오픈소스 문화를 이끌어갈 개발자가 숨어 있다"라는 의미에서 지어진 팀입니다. 군 복무중인 개발자 장병들에게 더 편리한 개발 환경을 제공하고, 군에 오픈소스 문화가 자리잡을 수 있는 미래를 꿈꾸고 있습니다.
+
+- [Chanyoung Oh](https://github.com/shydah): 팀장, 구조 설계 및 디자인, 문서화 작업 등
+- [CirnoV](https://github.com/CirnoV): 백엔드 서버 개발 담당
+- [namkyu1999](https://github.com/namkyu1999): 프론트엔드 개발 담당
+- [Snowapril](https://github.com/Snowapril): OpenStack 인프라 담당
+- [lijm1358](https://github.com/lijm1358): Cloud, VM 담당
 
 ## 저작권 및 사용 정보 (Copyleft / End User License)
 - [MIT](https://github.com/osamhack2020/WEB_CodeSquare_AmongUs/blob/master/README.md)
