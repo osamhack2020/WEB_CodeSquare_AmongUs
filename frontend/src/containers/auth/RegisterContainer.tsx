@@ -20,7 +20,8 @@ export const RegisterContainer: React.FC = (props) => {
     async (data: RegisterFormInput) => {
       await register(data);
       dispatch(core.actions.setUser({ username: data.username }));
-      history.push(`/user/${data.username}`);
+      history.push(`/vm`);
+      // history.push(`/user/${data.username}`);
     },
     [dispatch, history],
   );

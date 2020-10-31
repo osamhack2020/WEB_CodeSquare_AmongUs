@@ -1,6 +1,8 @@
 /** @jsx jsx */
 import { css, jsx } from "@emotion/core";
 import { ArrowButton } from "../components/common/ArrowButton";
+import { ArrowIcon } from "../components/common/Icon";
+import { OutlineButton } from "../components/common/OutlineButton";
 import { Card } from "../components/magazine/Card";
 
 const BranchSvg: React.FC = (props) => (
@@ -356,9 +358,40 @@ export const HomeContainer: React.FC = () => {
                 <div>오픈소스로 다른 전우들과 함께 개발할 수도 있고,</div>
                 <div>비공개 저장소로 Git의 장점만 누릴 수도 있죠.</div>
               </div>
-              <ArrowButton to="/" color="#ffffff">
-                저장소 바로가기
-              </ArrowButton>
+              <OutlineButton
+                css={css`
+                  color: #ffffff;
+                  font-size: 16px;
+                  font-style: normal;
+                  font-weight: 700;
+                  line-height: 24px;
+                  letter-spacing: -0.04em;
+                  text-align: left;
+
+                  display: flex;
+                  width: 181px;
+                  padding: 0;
+                  border: 1px solid #ffffff;
+                  box-sizing: border-box;
+                  border-radius: 0px;
+                `}
+              >
+                <a
+                  href="https://git.codesquare.space/"
+                  css={css`
+                    display: flex;
+                    align-items: center;
+                    justify-content: space-between;
+                    width: 100%;
+                    padding: 12px 17px;
+                    color: inherit;
+                    text-decoration: none;
+                  `}
+                >
+                  저장소 바로가기
+                  <ArrowIcon color="#ffffff" />
+                </a>
+              </OutlineButton>
             </div>
           </div>
         </div>

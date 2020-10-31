@@ -55,7 +55,7 @@ const PostHeader: React.FC<PostHeaderProps> = ({
       `}
       {...props}
     >
-      <AvatarIcon alt={username} width={32} height={32} />
+      <AvatarIcon src="/profile.svg" alt={username} width={32} height={32} />
       <div
         css={css`
           display: flex;
@@ -133,7 +133,12 @@ const PostHeader: React.FC<PostHeaderProps> = ({
             font-weight: 600;
           `}
         >
-          <AvatarIcon width={16} height={16} alt={username} />
+          <AvatarIcon
+            src="/profile.svg"
+            width={16}
+            height={16}
+            alt={username}
+          />
           <div>{member_name}</div>
         </div>
         <VerticalDivider
@@ -187,7 +192,8 @@ export const QnaPostViewer: React.FC<QnaPostViewerProps> = ({
   const dispatch = useDispatch();
   const onAcceptClick = useCallback(async () => {
     await accept(post.id);
-  }, [post.id]);
+    dispatch(qna.actions.acceptReply(post.id));
+  }, [post.id, dispatch]);
   const onEditClick = useCallback(() => {
     if (post.answer) {
       history.push(`/qna/edit?id=${post.id}&type=replies`);

@@ -50,8 +50,7 @@ const qna = createSlice({
       );
       if (reply) {
         reply.voted = action.payload.voteType === "upvote" ? 1 : -1;
-        reply.recommend =
-          reply.recommend + action.payload.voteType === "upvote" ? 1 : -1;
+        reply.recommend = 1;
       }
     },
   },

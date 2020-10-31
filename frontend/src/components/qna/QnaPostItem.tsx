@@ -37,12 +37,13 @@ export const QnaPostItem: React.FC<
     <QnaPostBlock {...props}>
       <QnaPostWrapper>
         <AvatarIcon
+          src="/profile.svg"
           alt={`@${post.username}`}
           css={css`
             margin-top: 4px;
           `}
-          width="49px"
-          height="49px"
+          width={49}
+          height={49}
         />
         <QnaPostContent>
           <WrapperLink to={`/qna/${post.id}`}>

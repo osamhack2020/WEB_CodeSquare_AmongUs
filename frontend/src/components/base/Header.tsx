@@ -118,7 +118,12 @@ export const Header: React.FC<HeaderProps> = ({ user, onLogout, ...props }) => {
               >
                 로그아웃
               </TextButton>
-              <AvatarIcon width={32} height={32} alt={user.username} />
+              <AvatarIcon
+                src="/profile.svg"
+                width={32}
+                height={32}
+                alt={user.username}
+              />
             </ButtonBlock>
           ) : (
             <ButtonBlock>

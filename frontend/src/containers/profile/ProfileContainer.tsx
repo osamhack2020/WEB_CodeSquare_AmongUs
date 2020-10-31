@@ -17,6 +17,7 @@ export const ProfileContainer: React.FC = () => {
     >
       <div>
         <AvatarIcon
+          src="/profile.svg"
           width={165}
           height={165}
           alt=""

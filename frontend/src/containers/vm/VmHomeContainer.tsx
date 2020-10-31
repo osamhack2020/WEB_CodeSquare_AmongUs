@@ -25,7 +25,9 @@ export const VmHomeContainer: React.FC = () => {
     }
     setLoading(true);
     getVm()
-      .then((data) => dispatch(vmModule.actions.setVm(data)))
+      .then((data) =>
+        dispatch(vmModule.actions.setVm({ ...data, status: "loading" })),
+      )
       .catch(() => dispatch(vmModule.actions.setVm(null)))
       .finally(() => !cancel && setLoading(false));
 

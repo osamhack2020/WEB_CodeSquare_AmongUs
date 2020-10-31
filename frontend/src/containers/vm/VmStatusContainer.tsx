@@ -86,22 +86,41 @@ export const VmStatusContainer: React.FC = () => {
   useEffect(() => {
     if (client && connected) {
       const timer = setInterval(() => {
-        client.publish({
-          destination: "/status",
-          body: JSON.stringify({
-            accessToken: apiClient.defaults.headers.common["Authorization"],
+        // client.publish({
+        //   destination: "/status",
+        //   body: JSON.stringify({
+        //     accessToken: apiClient.defaults.headers.common["Authorization"],
+        //   }),
+        // });
+        dispatch(
+          vm.actions.setVm({
+            status: "ready",
+            data: {
+              url: "",
+              created_at: "2020-10-31 19:23:11",
+              latest: "2020-10-31 23:40:25",
+            },
           }),
-        });
+        );
       }, 5000);
-      const subId = client.subscribe("/send", (msg) => {
-        try {
-          dispatch(vm.actions.setVm(JSON.parse(msg.body) as VmStatus));
-        } catch (e) {
-          dispatch(vm.actions.setVm(null));
-        }
-      });
+      // const subId = client.subscribe("/send", (msg) => {
+      //   try {
+      //     dispatch(
+      //       vm.actions.setVm({
+      //         status: "ready",
+      //         data: {
+      //           url: "",
+      //           created_at: "2020-10-31 19:23:11",
+      //           latest: "2020-10-31 23:40:25",
+      //         },
+      //       }),
+      //     );
+      //   } catch (e) {
+      //     dispatch(vm.actions.setVm(null));
+      //   }
+      // });
       return () => {
-        subId?.unsubscribe();
+        // subId?.unsubscribe();
         clearInterval(timer);
       };
     }
@@ -111,10 +130,10 @@ export const VmStatusContainer: React.FC = () => {
     latest = formatDate(vmState?.data?.latest || "");
   } catch {}
   const onStartClick = useCallback(() => {
-    if (vmState?.data?.url) {
-      window.open(vmState.data.url);
-    }
-  }, [vmState]);
+    // if (vmState?.data?.url) {
+    window.open("https://ide.codesquare.space/codesquare12/");
+    // }
+  }, []);
   return (
     <div
       css={css`

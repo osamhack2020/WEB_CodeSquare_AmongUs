@@ -16,6 +16,6 @@ const Template: Story<AvatarIconProps> = (args) => <AvatarIcon {...args} />;
 
 export const Default = Template.bind({});
 Default.args = {
-  width: "46px",
-  height: "46px",
+  width: 46,
+  height: 46,
 };

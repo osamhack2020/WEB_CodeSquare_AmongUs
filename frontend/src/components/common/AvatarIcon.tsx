@@ -2,8 +2,8 @@
 import { css, jsx } from "@emotion/core";
 
 export interface AvatarIconProps {
-  width?: string | number;
-  height?: string | number;
+  width?: number;
+  height?: number;
   alt: string;
   src?: string;
 }
@@ -17,22 +17,17 @@ export const AvatarIcon: React.FC<AvatarIconProps> = ({
 }) => (
   <div
     css={css`
+      width: ${width}px;
+      height: ${height}px;
+      overflow: hidden;
       border-radius: 50%;
-      background: #c4c4c4;
+      background-color: #c4c4c4;
+      background-image: url(${src});
+      background-size: ${width}px ${height}px;
+      background-repeat: no-repeat;
+      background-origin: 50% 50%;
+      background-position: center;
     `}
-    style={{ width, height }}
     {...props}
-  >
-    <img
-      src={src}
-      alt={alt}
-      css={css`
-        display: block;
-        text-indent: 100%;
-        white-space: nowrap;
-        overflow: hidden;
-      `}
-      style={{ width, height }}
-    />
-  </div>
+  />
 );
