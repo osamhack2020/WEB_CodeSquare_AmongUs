@@ -62,6 +62,15 @@ public class ApiUtil {
         }
         return response;
     }
+    public void doDelete(String url, Map<String,String> headers, String deleteBody) throws IOException {
+        final OkHttpClient client = new OkHttpClient();
+        Builder requestBuilder = new Request.Builder();
+        headers.forEach((k,v)-> requestBuilder.addHeader(k,v));
+        final Request request = requestBuilder.url(url)
+                .delete(RequestBody.create(deleteBody,MediaType.parse("application/json")))
+                .build();
+        client.newCall(request).execute();
+    }
     
 
 
