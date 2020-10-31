@@ -23,7 +23,7 @@ services:
     depends_on:
       - redis
   backend:
-    image: lak9348/codespace:1.6.1
+    image: lak9348/codespace:2.0.0
     #build: ./backend/codeholic/
     ports:
       - 9191:9191
