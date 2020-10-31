@@ -73,6 +73,7 @@
 - OpenSSL
 - let's encrypt
 - Google Cloud DNS
+- [code-server](https://github.com/cdr/code-server)
 
 ### Git
 - GitLab CE
