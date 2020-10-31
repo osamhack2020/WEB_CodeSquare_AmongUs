@@ -118,7 +118,11 @@ export const LogoVM: React.FC = (props) => (
   </svg>
 );
 
-export const VmMain: React.FC = () => {
+export interface VmMainProps {
+  to: string;
+}
+
+export const VmMain: React.FC<VmMainProps> = ({ to, ...props }) => {
   return (
     <div
       css={css`
@@ -127,6 +131,7 @@ export const VmMain: React.FC = () => {
         align-items: center;
         padding-top: 74px;
       `}
+      {...props}
     >
       <LogoVM
         css={css`
@@ -173,7 +178,7 @@ export const VmMain: React.FC = () => {
         <div>웹 IDE를 사용하기 위해서는 먼저 VM을 생성해야 합니다.</div>
         <div>아래 ‘VM 생성하기’ 버튼을 눌러주세요.</div>
       </div>
-      <ArrowButton to="/vm/loading">VM 생성하기</ArrowButton>
+      <ArrowButton to={to}>VM 생성하기</ArrowButton>
     </div>
   );
 };

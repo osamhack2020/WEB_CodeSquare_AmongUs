@@ -1,7 +1,5 @@
 /** @jsx jsx */
 import { css, jsx } from "@emotion/core";
-import format from "date-fns/format";
-import koLocale from "date-fns/locale/ko";
 import { OutlineButton } from "../common/OutlineButton";
 
 export interface VmSettingsProps {}
