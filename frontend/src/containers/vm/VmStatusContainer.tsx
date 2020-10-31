@@ -61,7 +61,7 @@ export const VmStatusContainer: React.FC = () => {
   const [connected, setConnected] = useState<boolean>(false);
   /* eslint-disable react-hooks/exhaustive-deps */
   useEffect(() => {
-    let sockJS = new SockJS("http://52.22.190.9:9191/vm");
+    let sockJS = new SockJS("https://api.codesquare.space/vm");
     let stompClient: CompatClient = Stomp.over(sockJS);
     if (process.env.NODE_ENV === "development") {
       stompClient.debug = (msg) => console.log(msg);
