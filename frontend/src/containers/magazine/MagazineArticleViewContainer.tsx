@@ -9,6 +9,7 @@ export const MagazineArticleViewContainer: React.FC = () => (
       display: flex;
       flex-direction: column;
       padding-top: 112px;
+      padding-bottom: 88px;
       max-width: 740px;
       margin: 0 auto;
       align-items: center;
@@ -59,7 +60,7 @@ export const MagazineArticleViewContainer: React.FC = () => (
       <div>2020.10.32</div>
     </div>
     <img
-      src="../magazine-1.png"
+      src="/magazine-1.png"
       alt="magazine"
       css={css`
         max-width: 740px;

@@ -45,8 +45,11 @@ const App: React.FC = () => {
           <Route path="/vm">
             <VmHomeContainer />
           </Route>
-          <Route path="/magazine/article">
+          <Route path="/magazine/article/:articleId">
             <MagazineArticleViewContainer />
+          </Route>
+          <Route path="/magazine/:unknown">
+            <Redirect to="/404" />
           </Route>
           <Route path="/magazine">
             <MagazineHomeContainer />

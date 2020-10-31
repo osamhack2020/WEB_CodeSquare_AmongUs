@@ -143,48 +143,56 @@ export const MagazineHomeContainer: React.FC = () => (
       `}
     >
       <Card
+        id="2"
         src="magazine-2.png"
         title="Static type의 맹점: TypeScript는 만병통치약이 아니다"
         source="Luavis Dev Story"
         created_at="2020-10-16"
       />
       <Card
+        id="3"
         src="magazine-3.png"
         title="WebXR Device API를 이용한 웹 AR 구현, 그 한계와 대안"
         source="NAVER D2 Hello World"
         created_at="2020-10-16"
       />
       <Card
+        id="4"
         src="magazine-4.png"
         title="2020년과 이후 JavaScript의 동향 - WebAssembly"
         source="NAVER D2 Hello World"
         created_at="2020-09-02"
       />
       <Card
+        id="5"
         src="magazine-5.png"
         title="TypeScript 환경에서 Redux를 프로처럼 사용하기"
         source="velopert.log"
         created_at="2020-10-16"
       />
       <Card
+        id="6"
         src="magazine-6.png"
         title={`원티드 - 요즘 "프론트엔드 개발" 어떻게 하지? 참관 후기`}
         source="velopert.log"
         created_at="2020-10-16"
       />
       <Card
+        id="7"
         src="magazine-7.png"
         title="G1: Garbage first garbage collector"
         source="Luavis Dev Story"
         created_at="2020-10-16"
       />
       <Card
+        id="8"
         src="magazine-8.png"
         title="좋은 스타트업을 고르는 기준"
         source="ddorong.log"
         created_at="2020-09-02"
       />
       <Card
+        id="9"
         src="magazine-9.png"
         title="2020년과 이후 JavaScript의 동향 - JavaScript(ECMAS..."
         source="NAVER D2 Hello World"

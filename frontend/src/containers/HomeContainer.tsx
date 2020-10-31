@@ -459,24 +459,28 @@ export const HomeContainer: React.FC = () => {
             `}
           >
             <Card
+              id="1"
               src="magazine-1.png"
               title="초보 개발자가 꼭 알아야 할 GitHub 협업 가이드"
               source="Luavis Dev Story"
               created_at="2020-10-16"
             />
             <Card
+              id="2"
               src="magazine-3.png"
               title="WebXR Device API를 이용한 웹 AR 구현, 그 한계와 대안"
               source="NAVER D2 Hello World"
               created_at="2020-10-16"
             />
             <Card
+              id="3"
               src="magazine-4.png"
               title="2020년과 이후 JavaScript의 동향 - WebAssembly"
               source="NAVER D2 Hello World"
               created_at="2020-09-02"
             />
             <Card
+              id="4"
               src="magazine-5.png"
               title="TypeScript 환경에서 Redux를 프로처럼 사용하기"
               source="velopert.log"
