@@ -6,5 +6,5 @@ import lombok.Data;
 public class SocketData {
     private String url=null;
     private String created_at=null;
-    private String lateset=null;
+    private String latest=null;
 }

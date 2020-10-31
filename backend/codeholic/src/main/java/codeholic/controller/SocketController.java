@@ -2,6 +2,7 @@ package codeholic.controller;
 
 import java.io.IOException;
 
+import javax.naming.spi.DirStateFactory.Result;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -42,7 +43,8 @@ public class SocketController {
     @Autowired
     RedisUtil redisUtil;
     Logger logger = LoggerFactory.getLogger(VmController.class);
-
+    
+    
     @GetMapping("/get")
     public Response getInfo(HttpServletRequest req, HttpServletResponse res) throws IOException {
         
@@ -54,57 +56,76 @@ public class SocketController {
             User user = authService.findByToken(accessJwtHeader);
             String username = user.getUsername();
             String authenticationToken = redisUtil.getData(username + "Openstack");
-            //현재 vm이 존재하냐
-            if(openStackApiService.getUserInstanceCount(username, authenticationToken)!=0){
-                //존재 함
-                String instanceId = openStackApiService.getUserInstanceId(username, authenticationToken);
-                VmStatus status = openStackApiService.getInstanceStatus(authenticationToken, instanceId);
-                if(status.getFloatingIp() != 0){
-                    //유동 아이피 할당 이미 됨
-                    result.getData().setUrl("https://ide.codesquare.space/"+username);
-                    response.setMessage("vm 생성 완료");
-                }else{
-                    //유동 아이피 할당이 안됨
-                    openStackApiService.afterCreate(authenticationToken, username);
-                    result.setStatus("loading");
-                    response.setMessage("vm 생성중");
-                }
-                result.getData().setCreated_at(status.getLaunch());
-                result.getData().setLateset(status.getTerminate());
-                
+            String instanceId = openStackApiService.getUserInstanceId(username, authenticationToken);
+            if (instanceId==null){
+                //인스턴스 없음
+                result.setData(null);
+                result.setStatus("error");
+                response.setMessage("vm 이 존재하지 않음");
             }else{
-                // vm 생성이 안됨
-                response.setResponse("error");
-                response.setMessage("vm이 생성되지 않았습니다");
+                VmStatus status = openStackApiService.getInstanceStatus(authenticationToken, instanceId);
+                result.getData().setCreated_at(status.getLaunch());
+                result.getData().setLatest(status.getTerminate());
+                result.setStatus("ready");
+                result.getData().setUrl("https://ide.codesquare.space/"+username);
+                response.setMessage("조회 성공");
             }
             response.setData(result);
-                
+            
+            return response;
         }catch(Exception e){
             response.setMessage("VM 조회 실패");
             res.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             response.setResponse("fail");
+            return response;
         }
-        return response;
     }
     @PostMapping("/create")
     public Response createVm(HttpServletRequest req, HttpServletResponse res){
         Response response = new Response();
-        SocketMessage socketMessage = new SocketMessage();
+        SocketMessage result = new SocketMessage();
         try{
             final String accessJwtHeader = req.getHeader("Authorization"); 
             User user = authService.findByToken(accessJwtHeader);
             String username = user.getUsername();
             String authenticationToken = redisUtil.getData(username + "Openstack");
+            if(authenticationToken == null)
+                throw new Exception();
             // 이미 있다면 삭제
             openStackApiService.createVm(username, authenticationToken);
-            response.setMessage("vm 생성중");
-            socketMessage.setStatus("loading");
+            while(true){
+                Thread.sleep(20000);
+                String instanceId = openStackApiService.getUserInstanceId(username, authenticationToken);
+                if(instanceId == null)
+                    continue;
+                Thread.sleep(10000);
+                VmStatus status = openStackApiService.getInstanceStatus(authenticationToken, instanceId);
+                
+                if(status == null) continue;
+                if(status.getFloatingIp()!=0){
+                    // 유동 아이피 존재
+                    result.getData().setUrl("https://ide.codesquare.space/"+username);
+                    response.setMessage("vm 생성 완료");
+                    result.getData().setCreated_at(status.getLaunch());
+                    result.getData().setLatest(status.getTerminate());
+                    response.setData(result);
+                    break;
+                }
+                else{
+                    // 유동 아이피 없음
+                    VmStatus st = openStackApiService.getInstanceStatus(authenticationToken, instanceId);
+                    if (st.getFloatingIp() == 0){
+                        openStackApiService.afterCreate(authenticationToken, username);
+                    }
+                }
+            }
         }catch(Exception e){
             response.setResponse("fail");
+            result.setStatus("error");
             res.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             response.setMessage("vm 생성 실패");
         }
-        response.setData(socketMessage);
+        response.setData(result);
         return response;
     }
     @DeleteMapping("/delete")
@@ -145,25 +166,12 @@ public class SocketController {
         try{
             User user = authService.findByToken(accessJwtHeader);
             String username = user.getUsername();
-            String authenticationToken = redisUtil.getData(username + "Openstack");
-            //현재 vm이 존재하냐
-            if(openStackApiService.getUserInstanceCount(username, authenticationToken)!=0){
-                //존재 함
-                String instanceId = openStackApiService.getUserInstanceId(username, authenticationToken);
-                VmStatus status = openStackApiService.getInstanceStatus(authenticationToken, instanceId);
-                if(status.getFloatingIp() != 0){
-                    // 유동 아이피 존재
-                    result.setStatus("ready");
-                    result.getData().setUrl("https://ide.codesquare.space/"+username);
-                }
-                else{
-                    // 유동 아이피 없음
-                    result.setStatus("loading");
-                    openStackApiService.afterCreate(authenticationToken, username);
-                }
-                result.getData().setCreated_at(status.getLaunch());
-                result.getData().setLateset(status.getTerminate());
-                return result;
+            int fin = openStackApiService.statuscode("https://ide.codesquare.space/"+username);
+            if(fin == 0){
+                result.setStatus("loading");
+            }else{
+                result.setStatus("ready");
+                result.getData().setUrl("https://ide.codesquare.space/"+username);
             }
         }catch(Exception e){
             result.setStatus("error");
