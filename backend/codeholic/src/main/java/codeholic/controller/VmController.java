@@ -1,24 +1,18 @@
 package codeholic.controller;
 
-import java.io.IOException;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.messaging.handler.annotation.MessageMapping;
-import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import codeholic.domain.Response;
-import codeholic.domain.SocketMessage;
-import codeholic.domain.VmStatus;
 import codeholic.service.JwtUtil;
 import codeholic.service.OpenStackApiService;
 import codeholic.service.RedisUtil;
@@ -27,10 +21,6 @@ import codeholic.service.RedisUtil;
 @RequestMapping("vm")
 @CrossOrigin(origins = "*")
 public class VmController {
-    // TODO: 시간표시
-    
-    @Value("${openstackDomain}")
-    private String openstackDomain;
     
     @Autowired
     private JwtUtil jwtUtil;
@@ -53,12 +43,15 @@ public class VmController {
         Response response = new Response();
         final String accessJwtHeader = httpServletRequest.getHeader("Authorization");
 
-        // 이전에 만든적 있다면 빠꾸하는 로직이 필요하다...
         try {
             if (accessJwtHeader == null)
                 throw new Exception();
             String username = jwtUtil.getUsername(accessJwtHeader.substring(7));
             String authenticationToken = redisUtil.getData(username + "Openstack");
+            if(openStackApiService.getUserInstanceCount(username, authenticationToken)!=0){
+                String tmp = openStackApiService.getUserInstanceId(username, authenticationToken);
+                openStackApiService.deleteVm(authenticationToken, tmp);
+            }
             openStackApiService.createVm(username, authenticationToken);
             response.setMessage("vm 생성중입니다");
         } catch (Exception e) {
@@ -68,54 +61,27 @@ public class VmController {
         }        
         return response;
     }
-    
-    @MessageMapping("/check")
-    @SendTo("/topic/check")
-    public SocketMessage broadCast(SocketMessage message,HttpServletResponse res) {
+    @DeleteMapping("/delete")
+    public Response deleteVm(HttpServletRequest httpServletRequest,HttpServletResponse res) {
 
-        SocketMessage result = new SocketMessage();
+        Response response = new Response();
+        final String accessJwtHeader = httpServletRequest.getHeader("Authorization");
 
-        // 메세지에 데이터 넣어서 보내줘야지 -> 이거 파싱
-        String username = message.getData();
-        String authenticationToken = redisUtil.getData(username + "Openstack");
-        // vm상태 체크해서 데이터 담아서 보내줘야지
-        int count;
+        // 이전에 만든적 있다면 빠꾸하는 로직이 필요하다...
+
         try {
-            // 0. vm이 존재 하기는 하냐?
-            count = openStackApiService.getUserInstanceCount(username, authenticationToken);
-            if(count == 0){
-                result.setStatus("fail");
-                result.setData("NoVm");
-                return result;
-            }
-            String instanceId= openStackApiService.getUserInstanceId(username, authenticationToken);
-            VmStatus status = openStackApiService.getInstanceStatus(authenticationToken, instanceId);
-        
-
-            if(status.equals("active")){
-                //유동 아이피 없음?
-                if(status.getFloatingIp() == 0){
-                    String fixedIpAddress =openStackApiService.getFixedIpAddress(authenticationToken,"55ae077d-a0d5-45f8-8408-0c1f2abf27fd");
-                    String portId = openStackApiService.getPortId(authenticationToken,fixedIpAddress);
-                    String floatingNetworkId =openStackApiService.getFloatingNetworkId(authenticationToken);
-                    String floatingIp = openStackApiService.assignFloatingIp(floatingNetworkId,fixedIpAddress, portId, authenticationToken);
-                    openStackApiService.getCodeServer(authenticationToken, floatingIp, username);
-                }
-                // 유동 아이피 할당 이후 success 메세지
-                String url = openstackDomain+":8989/"+username;
-                result.setStatus("success");
-                result.setData(url+"\\"+status.getStatus()+"\\"+status.getLaunch()+"\\"+status.getTerminate());
-                return result;
-                // 이때는 리퀘스트 못받게 해야하는데... 유동아이피 계속 바뀌면 안되자너
-            }
-        } catch (IOException e) {
-            result.setStatus("error");
-            result.setData(null);
-            return result;
-        }
-        result.setStatus("fail");
-        result.setData("loading");
-        res.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-        return result;
+            if (accessJwtHeader == null)
+                throw new Exception();
+            String username = jwtUtil.getUsername(accessJwtHeader.substring(7));
+            String authenticationToken = redisUtil.getData(username + "Openstack");
+            String instanceId = openStackApiService.getUserInstanceId(username, authenticationToken);
+            openStackApiService.deleteVm(authenticationToken, instanceId);
+            response.setMessage("vm 삭제 성공");
+        } catch (Exception e) {
+            res.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            response.setResponse("fail");
+            response.setMessage("vm 삭제 실패");
+        }        
+        return response;
     }
 }

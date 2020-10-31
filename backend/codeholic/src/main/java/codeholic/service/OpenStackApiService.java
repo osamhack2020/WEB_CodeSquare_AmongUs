@@ -8,6 +8,7 @@ import java.util.Map;
 import javax.transaction.Transactional;
 
 import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -197,7 +198,7 @@ public class OpenStackApiService {
                             .getAsJsonArray("networks").iterator();
         while(iterator.hasNext()){
             JsonElement next = iterator.next();
-            if(next.getAsJsonObject().get("name").getAsString().equals("private"))
+            if(next.getAsJsonObject().get("name").getAsString().equals("heat-net"))
                 result = next.getAsJsonObject().get("id").getAsString();
         }
         return result;
@@ -269,12 +270,20 @@ public class OpenStackApiService {
         Response response = apiUtil.doGet(url, headers);
         
         String responseBody = response.body().string();
-        int result = JsonParser
+        
+        Iterator<JsonElement> iterator = JsonParser
                             .parseString(responseBody)
                             .getAsJsonObject()
                             .getAsJsonArray("servers")
-                            .size();
-        return result;
+                            .iterator();
+        int cnt =0;
+        while(iterator.hasNext()){
+            JsonElement next = iterator.next();
+            if(next.getAsJsonObject().get("name").getAsString().equals(username))
+                cnt++;
+        }
+        return cnt;
+        
     }
     public String getFixedIpAddress(String authenticationToken, String instanceId) throws IOException {
         String url = openstackDomain+"/compute/v2.1/servers/"+instanceId;
@@ -291,11 +300,12 @@ public class OpenStackApiService {
                             .getAsJsonObject("server")
                             .get("addresses")
                             .getAsJsonObject()
-                            .getAsJsonArray("private")
+                            .getAsJsonArray("heat-net")
                             .iterator();
         while(iterator.hasNext()){
             JsonElement next = iterator.next();
-            if(next.getAsJsonObject().get("version").getAsString().equals("4"))
+            if(next.getAsJsonObject().get("version").getAsString().equals("4") && 
+                next.getAsJsonObject().get("OS-EXT-IPS:type").getAsString().equals("fixed"))
                 result = next.getAsJsonObject().get("addr").getAsString();
         }
         return result;
@@ -309,44 +319,43 @@ public class OpenStackApiService {
         Response response = apiUtil.doGet(url, headers);
         
         String responseBody = response.body().string();
-        String vmStatus = JsonParser
+        
+        JsonObject obj = JsonParser
                             .parseString(responseBody)
                             .getAsJsonObject()
-                            .getAsJsonObject("server")
+                            .getAsJsonObject("server");
+        String vmStatus = obj
                             .get("OS-EXT-STS:vm_state")
                             .getAsString();
-        String launch = JsonParser
-                            .parseString(responseBody)
-                            .getAsJsonObject()
-                            .getAsJsonObject("server")
-                            .get("OS-SRV-USG:launched_at")
-                            .getAsString();
-        String terminate = JsonParser
-                            .parseString(responseBody)
-                            .getAsJsonObject()
-                            .getAsJsonObject("server")
-                            .get("OS-SRV-USG:terminated_at")
-                            .getAsString(); 
-        Iterator<JsonElement> iterator = JsonParser
-                            .parseString(responseBody)
-                            .getAsJsonObject()
-                            .getAsJsonObject("server")
+        
+        JsonElement launchFlag = obj
+                            .get("OS-SRV-USG:launched_at");
+        
+        String launch = launchFlag.isJsonNull()? "" :launchFlag.getAsString();
+        JsonElement terminateFlag =obj
+                            .get("OS-SRV-USG:terminated_at");
+        String terminate = terminateFlag.isJsonNull()?"":terminateFlag.getAsString();
+        
+        Iterator<JsonElement> iterator = obj
                             .get("addresses")
                             .getAsJsonObject()
-                            .getAsJsonArray("private")
+                            .getAsJsonArray("heat-net")
                             .iterator();
+        
         int flag = 0;
         while(iterator.hasNext()){
             JsonElement next = iterator.next();
             if(next.getAsJsonObject().get("OS-EXT-IPS:type").getAsString().equals("floating"))
                 flag = 1;
         }
+        
         VmStatus result = new VmStatus();
         result.setFloatingIp(flag);
         result.setLaunch(launch);
         result.setStatus(vmStatus);
         result.setTerminate(terminate);
         return result;
+        
     }
     public String getPortId(String authenticationToken, String fixedIpAddress) throws IOException {
         String url = openstackDomain+":9999/v2.0/ports";
@@ -392,7 +401,13 @@ public class OpenStackApiService {
         this.settingHeaders(headers,authenticationToken);
         Response response = apiUtil.doPost(url, postBody, headers);
         String responseBody = response.body().string();
-        return responseBody;
+        String result = JsonParser
+                            .parseString(responseBody)
+                            .getAsJsonObject()
+                            .getAsJsonObject("floatingip")
+                            .get("floating_ip_address")
+                            .getAsString();
+        return result;
 
     }
     public String getCodeServer(String authenticationToken, String floatingAddr, String username) throws IOException {
@@ -404,4 +419,13 @@ public class OpenStackApiService {
         String responseBody = response.body().string();
         return responseBody;
     }
+    public void deleteVm(String authenticationToken, String instanceId) throws IOException {
+        String url = openstackDomain+"/compute/v2.1/servers/"+instanceId;
+        Map<String,String> headers = new HashMap<>();
+        this.settingHeaders(headers,authenticationToken);
+        apiUtil.doDelete(url, headers, "");
+        
+    }
+    
+
 }

@@ -25,8 +25,7 @@ import codeholic.service.RedisUtil;
 @RequestMapping("vm")
 @CrossOrigin(origins = "*")
 public class SockerController {
-    @Value("${openstackDomain}")
-    private String openstackDomain;
+    private String openstackDomain="http://stack.codesquare.space";
     
     // 레디스에 토큰을 idOpenstack 으로 저장
     @Autowired
@@ -36,7 +35,7 @@ public class SockerController {
     RedisUtil redisUtil;
     Logger logger = LoggerFactory.getLogger(VmController.class);
 
-
+    
     @MessageMapping("/receive")
     @SendTo("/send")
     public SocketMessage broadCast(SocketMessage message,HttpServletResponse res) {
@@ -70,7 +69,7 @@ public class SockerController {
                     openStackApiService.getCodeServer(authenticationToken, floatingIp, username);
                 }
                 // 유동 아이피 할당 이후 success 메세지
-                String url = openstackDomain+":8989/"+username;
+                String url = "https://ide.codesquare.space/"+username;
                 result.setStatus("success");
                 result.setData(url+"\\"+status.getStatus()+"\\"+status.getLaunch()+"\\"+status.getTerminate());
                 return result;
@@ -86,4 +85,5 @@ public class SockerController {
         res.setStatus(HttpServletResponse.SC_BAD_REQUEST);
         return result;
     }
+    
 }
