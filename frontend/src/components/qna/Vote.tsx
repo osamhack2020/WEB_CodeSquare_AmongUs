@@ -9,9 +9,10 @@ interface VoteSvgProps {
 const upvote = "M9 0l8.66 15H.34L9 0z";
 const downvote = "M9 15L.34 0h17.32L9 15z";
 
-const VoteIcon: React.FC<VoteSvgProps & React.HTMLProps<SVGElement>> = ({
+const VoteIcon: React.FC<VoteSvgProps & React.HTMLAttributes<SVGElement>> = ({
   type,
   enabled,
+  ...props
 }) => {
   let d = "";
   if (type === "downvote") {
@@ -29,6 +30,7 @@ const VoteIcon: React.FC<VoteSvgProps & React.HTMLProps<SVGElement>> = ({
       css={css`
         cursor: pointer;
       `}
+      {...props}
     >
       <path d={d} fill={enabled ? "#627bff" : "#c4c4c4"} />
     </svg>

@@ -7,13 +7,23 @@ export interface VmInformationProps {
   created_at: string;
 }
 
-export const VmInformation: React.FC<VmInformationProps> = ({ created_at }) => {
+export const VmInformation: React.FC<VmInformationProps> = ({
+  created_at,
+  ...props
+}) => {
+  let date = "확인되지 않음";
+  try {
+    date = format(new Date(created_at), "yyyy.MM.dd(E) HH:mm:ss", {
+      locale: koLocale,
+    });
+  } catch {}
   return (
     <div
       css={css`
         width: 100%;
         min-width: 170px;
       `}
+      {...props}
     >
       <div
         css={css`
@@ -74,11 +84,7 @@ export const VmInformation: React.FC<VmInformationProps> = ({ created_at }) => {
             }
           `}
         >
-          <div>
-            {format(new Date(created_at), "yyyy.MM.dd(E) HH:mm:ss", {
-              locale: koLocale,
-            })}
-          </div>
+          <div>{date}</div>
           <div>1 코어</div>
           <div>512 MB</div>
           <div>10 GB</div>

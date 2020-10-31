@@ -64,7 +64,6 @@ export const QnaPostContainer: React.FC = () => {
   const [text, setText] = useState("");
   const accepted = replies?.some((repl) => repl.accepted);
   const onSubmit = useCallback(async () => {
-    // TODO
     const reply = await writeReply(postId, text);
     dispatch(qna.actions.writeReply(reply));
   }, [postId, dispatch, text]);

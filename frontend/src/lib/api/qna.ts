@@ -171,10 +171,11 @@ export const getRecentPosts = async (
 };
 
 export const getComments = async (
-  type: PostType,
+  postType: PostType,
   postId: number,
 ): Promise<QnaComment[]> => {
-  const url = `/${type}comment/${postId}`;
+  const type = postType === "replies" ? "reply" : postType;
+  let url = `/${type}comment/${postId}`;
 
   const {
     data: { data: comments },
@@ -184,10 +185,11 @@ export const getComments = async (
 };
 
 export const writeComment = async (
-  type: PostType,
+  postType: PostType,
   postId: number,
   text: string,
 ): Promise<void> => {
+  const type = postType === "replies" ? "reply" : postType;
   const url = `/${type}comment/${postId}`;
 
   await apiClient.post(url, {
@@ -218,11 +220,12 @@ export const editPost = async (
   title?: string,
   tags?: string[],
 ) => {
-  const url = `/${type}/${postId}`;
+  const url = type === "board" ? `/${type}` : `/${type}/${postId}`;
   await apiClient.put<ApiBoardSpecificResponse>(url, {
     body: text,
     title,
     tag: tags?.join(" "),
+    board_id: type === "board" && postId,
   });
 };
 
@@ -247,4 +250,18 @@ export const writeReply = async (
 
 export const accept = async (postId: number) => {
   await apiClient.put(`/replies/adopted/${postId}`);
+};
+
+export const vote = async (
+  postType: PostType,
+  username: string,
+  postId: number,
+  vote: "upvote" | "downvote",
+) => {
+  const url = `/${postType}/recommend`;
+  await apiClient.put(url, {
+    username,
+    id: postId,
+    value: vote === "upvote" ? 1 : -1,
+  });
 };

@@ -20,6 +20,7 @@ import {
   deletePost,
   PostType,
   QnaPost,
+  vote,
   writeComment,
 } from "../../lib/api/qna";
 import { formatDate, numberWithCommas } from "../../lib/utils";
@@ -174,19 +175,19 @@ export const QnaPostViewer: React.FC<QnaPostViewerProps> = ({
       (state) => state.qna.post?.username,
     ) === user?.username;
   const postType: PostType = post.answer ? "replies" : "board";
-  const { loading, data: comments } = useComments(postType, post.id);
+  const { loading, data: comments, refetch } = useComments(postType, post.id);
   const onSubmit = useCallback(
     async (text: string) => {
       await writeComment(postType, post.id, text);
+      await refetch();
     },
-    [post.id, postType],
+    [post.id, postType, refetch],
   );
   const history = useHistory();
   const dispatch = useDispatch();
   const onAcceptClick = useCallback(async () => {
     await accept(post.id);
-    dispatch(qna.actions.acceptReply(post.id));
-  }, [post.id, dispatch]);
+  }, [post.id]);
   const onEditClick = useCallback(() => {
     if (post.answer) {
       history.push(`/qna/edit?id=${post.id}&type=replies`);
@@ -205,6 +206,28 @@ export const QnaPostViewer: React.FC<QnaPostViewerProps> = ({
   }, [dispatch, history, post.id, postType]);
   const [acceptButtonRef, setAcceptButtonRef] = useState<HTMLDivElement | null>(
     null,
+  );
+  const onVote = useCallback(
+    (voteType: "upvote" | "downvote") => async () => {
+      if (post.voted === 0) {
+        if (user) {
+          await vote(postType, user.username, post.id, voteType);
+          const val = voteType === "upvote" ? 1 : -1;
+          if (postType === "board") {
+            dispatch(
+              qna.actions.setPost({
+                ...post,
+                recommend: post.recommend + val,
+                voted: val,
+              }),
+            );
+          } else {
+            dispatch(qna.actions.voteReply({ id: post.id, voteType }));
+          }
+        }
+      }
+    },
+    [postType, user, dispatch, post],
   );
   return (
     <div
@@ -225,7 +248,11 @@ export const QnaPostViewer: React.FC<QnaPostViewerProps> = ({
         `}
       >
         <Vote
-          votes={32}
+          votes={post.recommend}
+          upvoted={post.voted > 0}
+          downvoted={post.voted < 0}
+          onUpvote={onVote("upvote")}
+          onDownvote={onVote("downvote")}
           css={css`
             margin-bottom: 20px;
           `}

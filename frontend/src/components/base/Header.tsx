@@ -77,8 +77,21 @@ export const Header: React.FC<HeaderProps> = ({ user, onLogout, ...props }) => {
           <div>
             <WrapperLink to="/qna">Q&A</WrapperLink>
           </div>
-          <div>Magazine</div>
-          <div>GitLab</div>
+          <div>
+            <WrapperLink to="/magazine">Magazine</WrapperLink>
+          </div>
+          <div>
+            <a
+              href="https://git.codesquare.space/"
+              css={css`
+                display: block;
+                color: inherit;
+                text-decoration: none;
+              `}
+            >
+              GitLab
+            </a>
+          </div>
         </div>
         <VerticalDivider
           height={10}
