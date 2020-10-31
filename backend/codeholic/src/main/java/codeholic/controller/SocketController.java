@@ -74,8 +74,8 @@ public class SocketController {
                 
             }else{
                 // vm 생성이 안됨
-                response.setResponse("error");
-                response.setMessage("vm이 생성되지 않았습니다");
+                response.setResponse("loading");
+                response.setMessage("vm이 생성중");
             }
             response.setData(result);
                 
@@ -166,7 +166,7 @@ public class SocketController {
                 return result;
             }
         }catch(Exception e){
-            result.setStatus("error");
+            result.setStatus("loading");
         }
         return result;
     }
