@@ -41,6 +41,19 @@ const qna = createSlice({
     writeReply(state, action: PayloadAction<QnaPost>) {
       state.replies?.push(action.payload);
     },
+    voteReply(
+      state,
+      action: PayloadAction<{ id: number; voteType: "upvote" | "downvote" }>,
+    ) {
+      const reply = state.replies?.find(
+        (reply) => reply.id === action.payload.id,
+      );
+      if (reply) {
+        reply.voted = action.payload.voteType === "upvote" ? 1 : -1;
+        reply.recommend =
+          reply.recommend + action.payload.voteType === "upvote" ? 1 : -1;
+      }
+    },
   },
 });
 

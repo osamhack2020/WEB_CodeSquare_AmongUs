@@ -251,3 +251,17 @@ export const writeReply = async (
 export const accept = async (postId: number) => {
   await apiClient.put(`/replies/adopted/${postId}`);
 };
+
+export const vote = async (
+  postType: PostType,
+  username: string,
+  postId: number,
+  vote: "upvote" | "downvote",
+) => {
+  const url = `/${postType}/recommend`;
+  await apiClient.put(url, {
+    username,
+    id: postId,
+    value: vote === "upvote" ? 1 : -1,
+  });
+};
