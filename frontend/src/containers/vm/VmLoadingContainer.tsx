@@ -10,7 +10,7 @@ export const VmLoadingContainer: React.FC = () => {
   useEffect(() => {
     const timer = setTimeout(() => {
       history.replace("/vm/status");
-    }, 2000);
+    }, 3000);
 
     return () => {
       clearTimeout(timer);

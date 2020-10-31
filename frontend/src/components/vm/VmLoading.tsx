@@ -1,5 +1,6 @@
 /** @jsx jsx */
 import { css, jsx } from "@emotion/core";
+import vmLoadingGif from "./vm-loading-1.gif";
 
 export const VmLoading: React.FC = () => (
   <div
@@ -8,6 +9,7 @@ export const VmLoading: React.FC = () => (
       flex-direction: column;
       height: 100%;
       justify-content: center;
+      align-items: center;
     `}
   >
     <div
@@ -16,7 +18,7 @@ export const VmLoading: React.FC = () => (
         height: 100px;
         background-size: 100px 100px;
         background-repeat: no-repeat;
-        background-image: url(vm-loading-1.gif);
+        background-image: url(${vmLoadingGif});
       `}
     />
     <div
