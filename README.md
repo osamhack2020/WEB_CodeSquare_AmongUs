@@ -35,8 +35,18 @@
 </table>
 
 ## 컴퓨터 구성 / 필수 조건 안내 (Prerequisites)
+### 일반 사용자 (End User)
 - ECMAScript 6 지원 브라우저 사용
 - Google Chrome 77 이상을 권장합니다.
+
+### 서버 최소 사양
+- Operating Systems
+    - Ubuntu (16.04/18.04/20.04)
+    - Debian (9/10)
+- Hardware Requirements
+    - OpenStack Controller Node: 1 core processor, 4GB RAM, and 5GB storage
+    - OpenStack Compute Node: 1 core processor, 2GB RAM, and 10GB storage
+    - GitLab: 4 cores processor, 4GB RAM
 
 ## 기술 스택 (Technique Used)
 ### Server(back-end)
@@ -71,6 +81,12 @@
 
 ## 설치 및 프로젝트 사용법 (Installation & Getting Started)
 
+```
+$ git clone https://github.com/osamhack2020/WEB_CodeSquare_AmongUs
+$ docker-compose up -d
+```
+
+CodeSquare는 WEB, Cloud, Infra 등 여러 분야가 융합된 프로젝트입니다. 프로젝트를 설치하기 위해서는 먼저 충분한 서버가 준비되어 있어야 하며, OpenStack 관련 설정도 진행되어야 합니다. 이를 위한 자세한 가이드라인은 [CodeSquare Docs](https://docs.codesquare.space)의 Getting Started 문서를 참고하시기 바랍니다.
 
 ## Among Us 팀 정보
 
