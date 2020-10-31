@@ -4,6 +4,6 @@ import lombok.Data;
 
 @Data
 public class SocketMessage {
-    private String status="success";
+    private String status="loading";
     private SocketData data = new SocketData(); 
 }
