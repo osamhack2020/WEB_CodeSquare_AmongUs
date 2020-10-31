@@ -26,9 +26,18 @@ module.exports = {
             'api/backend/user/sign-up',
             'api/backend/user/sign-in',
             'api/backend/user/sign-out',
+            'api/backend/user/user-detail',
             'api/backend/user/refresh-token',
           ],
+          QnA: [
+            'api/backend/qna/board',
+            'api/backend/qna/boardcomment',
+            'api/backend/qna/reply',
+            'api/backend/qna/replycomment',
+          ],
         },
+        'api/backend/magazine/magazine',
+        'api/backend/vm/vm',
       ]
     },
     {
