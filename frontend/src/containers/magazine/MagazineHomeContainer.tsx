@@ -134,7 +134,7 @@ export const MagazineHomeContainer: React.FC = () => (
 
     <div
       css={css`
-        & > div:not(:nth-child(4n)) {
+        & > div:not(:nth-of-type(4n)) {
           margin-right: 20px;
         }
         & > div {
