@@ -1,0 +1,56 @@
+@font-face {
+  font-display: swap;
+  font-family: "Noto Sans KR";
+  font-style: normal;
+  font-weight: 300;
+  src: local("Noto Sans KR"),
+    url(./fonts/NotoSansKR-Light.otf) format("opentype");
+}
+@font-face {
+  font-display: swap;
+  font-family: "Noto Sans KR";
+  font-style: normal;
+  font-weight: 400;
+  src: local("Noto Sans KR"),
+    url(./fonts/NotoSansKR-Regular.otf) format("opentype");
+}
+@font-face {
+  font-display: swap;
+  font-family: "Noto Sans KR";
+  font-style: normal;
+  font-weight: 500;
+  src: local("Noto Sans KR"),
+    url(./fonts/NotoSansKR-Medium.otf) format("opentype");
+}
+@font-face {
+  font-display: swap;
+  font-family: "Noto Sans KR";
+  font-style: normal;
+  font-weight: 700;
+  src: local("Noto Sans KR"),
+    url(./fonts/NotoSansKR-Bold.otf) format("opentype");
+}
+@font-face {
+  font-display: swap;
+  font-family: "Nanum Gothic Coding";
+  font-style: normal;
+  font-weight: 400;
+  src: local("Nanum Gothic Coding"),
+    url(./fonts/NanumGothicCoding.ttf) format("truetype");
+}
+@font-face {
+  font-display: swap;
+  font-family: "Nanum Gothic Coding";
+  font-style: normal;
+  font-weight: 700;
+  src: local("Nanum Gothic Coding"),
+    url(./fonts/NanumGothicCoding-Bold.ttf) format("truetype");
+}
+@font-face {
+  font-display: swap;
+  font-family: "IBM Plex Sans";
+  font-style: normal;
+  font-weight: 500;
+  src: local("IBM Plex Sans"),
+    url(./fonts/IBMPlexSans-Medium.ttf) format("truetype");
+}
