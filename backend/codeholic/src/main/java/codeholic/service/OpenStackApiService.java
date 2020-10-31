@@ -326,7 +326,6 @@ public class OpenStackApiService {
         Response response = apiUtil.doGet(url, headers);
         
         String responseBody = response.body().string();
-        
         JsonObject obj = JsonParser
                             .parseString(responseBody)
                             .getAsJsonObject()
@@ -343,18 +342,16 @@ public class OpenStackApiService {
                             .get("OS-SRV-USG:terminated_at");
         String terminate = terminateFlag.isJsonNull()?"":terminateFlag.getAsString();
         
-        JsonArray tmp = obj
+        Iterator<JsonElement> iterator = obj
                             .get("addresses")
                             .getAsJsonObject()
-                            .getAsJsonArray("heat-net");
+                            .getAsJsonArray("heat-net").iterator();
         int flag = 0;
-        if(!tmp.isJsonNull()){
-            Iterator<JsonElement> iterator = tmp.iterator();
-            while(iterator.hasNext()){
-                JsonElement next = iterator.next();
-                if(next.getAsJsonObject().get("OS-EXT-IPS:type").getAsString().equals("floating"))
-                    flag = 1;
-            }
+        
+        while(iterator.hasNext()){
+            JsonElement next = iterator.next();
+            if(next.getAsJsonObject().get("OS-EXT-IPS:type").getAsString().equals("floating"))
+                flag = 1;
         }
         VmStatus result = new VmStatus();
         result.setFloatingIp(flag);
@@ -425,6 +422,18 @@ public class OpenStackApiService {
         Response response = apiUtil.doPost(url, postBody, headers);
         String responseBody = response.body().string();
         return responseBody;
+    }
+    public int statuscode(String url, String authenticationToken){
+        Map<String,String> headers = new HashMap<>();
+        this.settingHeaders(headers,authenticationToken);
+        Response response = apiUtil.doGet(url, headers);
+        int result = response.code();
+        if (result>=500){
+            return 0;
+        }
+        else{
+            return 1;
+        }
     }
     public void deleteVm(String authenticationToken, String instanceId) throws IOException {
         String url = openstackDomain+"/compute/v2.1/servers/"+instanceId;
