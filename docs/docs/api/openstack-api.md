@@ -265,7 +265,7 @@ curl -X GET \
 6: CRASHED
 7: SUSPENDED
 ```
-**Instance bootin info**
+**Instance booting info**
 "OS-SRV-USG:launched_at": "2020-10-16T06:26:08.000000"    
 "OS-SRV-USG:terminated_at": null    
 날짜 및 시간 포맷은 ISO8601    
