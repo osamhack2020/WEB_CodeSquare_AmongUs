@@ -90,5 +90,5 @@
     "prettier": "2.1.2",
     "react-is": "^16.13.1"
   },
-  "proxy": "http://localhost:8520"
+  "proxy": "https://api.codesquare.space/"
 }

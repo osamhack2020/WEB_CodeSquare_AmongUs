@@ -3,8 +3,7 @@ import axios from "axios";
 const host =
   process.env.NODE_ENV === "development"
     ? "/"
-    : // 빌드 시 설정된 REACT_APP_API_HOST 환경 변수 값으로 변경됩니다.
-      process.env.REACT_APP_API_HOST || "/";
+    : "https://api.codesquare.space" || "/";
 const apiClient = axios.create({
   baseURL: host,
   withCredentials: true,
