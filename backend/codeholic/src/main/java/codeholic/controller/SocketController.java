@@ -71,6 +71,7 @@ public class SocketController {
                 response.setMessage("조회 성공");
             }
             response.setData(result);
+            
             return response;
         }catch(Exception e){
             response.setMessage("VM 조회 실패");
