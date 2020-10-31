@@ -2,23 +2,24 @@ import { css } from "@emotion/core";
 
 export const prismTheme = css`
   /**
- * https://github.com/PrismJS/prism-themes/blob/master/themes/prism-ghcolors.css
- * GHColors theme by Avi Aryan (http://aviaryan.in)
- * Inspired by Github syntax coloring
+ * https://github.com/PrismJS/prism-themes/blob/master/themes/prism-atom-dark.css
+ * atom-dark theme for 'prism.js'
+ * Based on Atom's 'atom-dark' theme: https://github.com/atom/atom-dark-syntax
+ * @author Joe Gibson (@gibsjose)
  */
 
   code[class*="language-"],
   pre[class*="language-"] {
-    color: #393a34;
-    font-family: "Consolas", "Bitstream Vera Sans Mono", "Courier New", Courier,
+    color: #c5c8c6;
+    text-shadow: 0 1px rgba(0, 0, 0, 0.3);
+    font-family: Inconsolata, Monaco, Consolas, "Courier New", Courier,
       monospace;
     direction: ltr;
     text-align: left;
     white-space: pre;
     word-spacing: normal;
     word-break: normal;
-    font-size: 0.9em;
-    line-height: 1.2em;
+    line-height: 1.5;
 
     -moz-tab-size: 4;
     -o-tab-size: 4;
@@ -30,98 +31,114 @@ export const prismTheme = css`
     hyphens: none;
   }
 
-  pre > code[class*="language-"] {
-    font-size: 1em;
-  }
-
-  pre[class*="language-"]::-moz-selection,
-  pre[class*="language-"] ::-moz-selection,
-  code[class*="language-"]::-moz-selection,
-  code[class*="language-"] ::-moz-selection {
-    background: #b3d4fc;
-  }
-
-  pre[class*="language-"]::selection,
-  pre[class*="language-"] ::selection,
-  code[class*="language-"]::selection,
-  code[class*="language-"] ::selection {
-    background: #b3d4fc;
-  }
-
   /* Code blocks */
   pre[class*="language-"] {
     padding: 1em;
     margin: 0.5em 0;
     overflow: auto;
-    border: 1px solid #dddddd;
-    background-color: white;
+    border-radius: 0.3em;
+  }
+
+  :not(pre) > code[class*="language-"],
+  pre[class*="language-"] {
+    background: #1d1f21;
   }
 
   /* Inline code */
   :not(pre) > code[class*="language-"] {
-    padding: 0.2em;
-    padding-top: 1px;
-    padding-bottom: 1px;
-    background: #f8f8f8;
-    border: 1px solid #dddddd;
+    padding: 0.1em;
+    border-radius: 0.3em;
   }
 
   .token.comment,
   .token.prolog,
   .token.doctype,
   .token.cdata {
-    color: #999988;
-    font-style: italic;
+    color: #7c7c7c;
   }
 
-  .token.namespace {
+  .token.punctuation {
+    color: #c5c8c6;
+  }
+
+  .namespace {
     opacity: 0.7;
   }
 
-  .token.string,
-  .token.attr-value {
-    color: #e3116c;
-  }
-
-  .token.punctuation,
-  .token.operator {
-    color: #393a34; /* no highlight */
-  }
-
-  .token.entity,
-  .token.url,
-  .token.symbol,
-  .token.number,
-  .token.boolean,
-  .token.variable,
-  .token.constant,
   .token.property,
-  .token.regex,
+  .token.keyword,
+  .token.tag {
+    color: #96cbfe;
+  }
+
+  .token.class-name {
+    color: #ffffb6;
+    text-decoration: underline;
+  }
+
+  .token.boolean,
+  .token.constant {
+    color: #99cc99;
+  }
+
+  .token.symbol,
+  .token.deleted {
+    color: #f92672;
+  }
+
+  .token.number {
+    color: #ff73fd;
+  }
+
+  .token.selector,
+  .token.attr-name,
+  .token.string,
+  .token.char,
+  .token.builtin,
   .token.inserted {
-    color: #36acaa;
+    color: #a8ff60;
+  }
+
+  .token.variable {
+    color: #c6c5fe;
+  }
+
+  .token.operator {
+    color: #ededed;
+  }
+
+  .token.entity {
+    color: #ffffb6;
+    cursor: help;
+  }
+
+  .token.url {
+    color: #96cbfe;
+  }
+
+  .language-css .token.string,
+  .style .token.string {
+    color: #87c38a;
   }
 
   .token.atrule,
-  .token.keyword,
-  .token.attr-name,
-  .language-autohotkey .token.selector {
-    color: #00a4db;
+  .token.attr-value {
+    color: #f9ee98;
   }
 
-  .token.function,
-  .token.deleted,
-  .language-autohotkey .token.tag {
-    color: #9a050f;
+  .token.function {
+    color: #dad085;
   }
 
-  .token.tag,
-  .token.selector,
-  .language-autohotkey .token.keyword {
-    color: #00009f;
+  .token.regex {
+    color: #e9c062;
+  }
+
+  .token.important {
+    color: #fd971f;
   }
 
   .token.important,
-  .token.function,
   .token.bold {
     font-weight: bold;
   }

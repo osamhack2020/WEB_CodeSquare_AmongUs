@@ -8,6 +8,7 @@ import { LoginContainer } from "./containers/auth/LoginContainer";
 import { RegisterContainer } from "./containers/auth/RegisterContainer";
 import { HeaderContainer } from "./containers/base/HeaderContainer";
 import { HomeContainer } from "./containers/HomeContainer";
+import { MagazineArticleViewContainer } from "./containers/magazine/MagazineArticleViewContainer";
 import { MagazineHomeContainer } from "./containers/magazine/MagazineHomeContainer";
 import { ProfileContainer } from "./containers/profile/ProfileContainer";
 import { QnaEditContainer } from "./containers/qna/QnaEditContainer";
@@ -43,6 +44,9 @@ const App: React.FC = () => {
           </Route>
           <Route path="/vm">
             <VmHomeContainer />
+          </Route>
+          <Route path="/magazine/article">
+            <MagazineArticleViewContainer />
           </Route>
           <Route path="/magazine">
             <MagazineHomeContainer />

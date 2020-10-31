@@ -55,12 +55,13 @@ export const MarkdownRender: React.FC<MarkdownRenderProps> = ({
         }
 
         p > code {
-          background: #f7f7f7;
+          background: #1d1f21;
+          color: #c5c8c6;
           padding: 3px 6px;
         }
 
         pre {
-          background: #f7f7f7;
+          background: #1d1f21;
           padding: 13px 15px;
           border-radius: 6px;
           font-family: "Nanum Gothic Coding", source-code-pro, Menlo, Monaco,
@@ -76,6 +77,47 @@ export const MarkdownRender: React.FC<MarkdownRenderProps> = ({
         h2 {
           padding-bottom: 0;
           border-bottom: 0;
+        }
+
+        h1 {
+          font-size: 28px;
+          font-style: normal;
+          font-weight: 700;
+          line-height: 41px;
+          letter-spacing: -0.02em;
+
+          color: #323232;
+          margin-bottom: 32px;
+        }
+        h2 {
+          font-style: normal;
+          font-weight: bold;
+          font-size: 21px;
+          line-height: 30px;
+          letter-spacing: -0.02em;
+
+          color: #323232;
+          margin-bottom: 28px;
+        }
+        h3 {
+          font-style: normal;
+          font-weight: bold;
+          font-size: 18px;
+          line-height: 26px;
+          letter-spacing: -0.02em;
+
+          color: #323232;
+          margin-bottom: 24px;
+        }
+        p {
+          font-style: normal;
+          font-weight: normal;
+          font-size: 16px;
+          line-height: 180%;
+          letter-spacing: -0.02em;
+
+          color: #525252;
+          margin-bottom: 24px;
         }
       `}
     >
