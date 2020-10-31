@@ -11,10 +11,11 @@ import { VmInformation } from "../../components/vm/VmInformation";
 import { VmSettings } from "../../components/vm/VmSettings";
 import { RootState } from "../../modules";
 import { User } from "../../modules/core";
+import apiClient from "../../lib/api/apiClient";
+import { VmStatus } from "../../modules/vm";
+import { formatDate } from "../../lib/utils";
 
-type VmStatus = "ready" | "loading" | "pause" | "error";
-
-const StatusIcon: React.FC<{ status: VmStatus }> = ({ status }) => {
+const StatusIcon: React.FC<{ status?: string }> = ({ status }) => {
   let color = "#627bff";
   if (status === "loading") {
     color = "#ff9b21";
@@ -34,15 +35,20 @@ const StatusIcon: React.FC<{ status: VmStatus }> = ({ status }) => {
   );
 };
 
-export interface VmStatusContainerProps {
-  status?: VmStatus;
-}
-
-export const VmStatusContainer: React.FC<VmStatusContainerProps> = ({
-  status = "ready",
-}) => {
+export const VmStatusContainer: React.FC = () => {
   const history = useHistory();
+  const vm = useSelector<RootState, VmStatus | null>((state) => state.vm.vm);
+  useEffect(() => {
+    if (!vm) {
+      history.replace("/vm");
+    }
+  }, [vm, history]);
   const user = useSelector<RootState, User | null>((state) => state.core.user);
+  useEffect(() => {
+    if (!user) {
+      history.replace("/");
+    }
+  }, [user, history]);
   useEffect(() => {
     if (!user) {
       history.replace("/");
@@ -76,13 +82,25 @@ export const VmStatusContainer: React.FC<VmStatusContainerProps> = ({
   }, [client, setConnected]);
   useEffect(() => {
     if (client && connected) {
-      client.publish({ destination: "/receive" });
+      const timer = setInterval(() => {
+        client.publish({
+          destination: "/status",
+          body: JSON.stringify({
+            accessToken: apiClient.defaults.headers.common["Authorization"],
+          }),
+        });
+      }, 5000);
       const subId = client.subscribe("/send", (msg) => console.log(msg));
       return () => {
         subId?.unsubscribe();
+        clearInterval(timer);
       };
     }
   }, [client, connected]);
+  let latest = "확인되지 않음";
+  try {
+    latest = formatDate(vm?.data.latest || "");
+  } catch {}
   return (
     <div
       css={css`
@@ -107,16 +125,16 @@ export const VmStatusContainer: React.FC<VmStatusContainerProps> = ({
           display: flex;
         `}
       >
-        <StatusIcon status={status} />
+        <StatusIcon status={vm?.status} />
         <div
           css={css`
             margin-left: 5px;
           `}
         >
-          {status === "ready" && "켜져 있음"}
-          {status === "loading" && "켜는 중"}
-          {status === "pause" && "일시 정지"}
-          {status === "error" && "오류"}
+          {vm?.status === "ready" && "켜져 있음"}
+          {vm?.status === "loading" && "켜는 중"}
+          {vm?.status === "pause" && "일시 정지"}
+          {vm?.status === "error" && "오류"}
         </div>
       </div>
       <div
@@ -161,7 +179,7 @@ export const VmStatusContainer: React.FC<VmStatusContainerProps> = ({
               color: #7c7c7c;
             `}
           >
-            마지막 접속 {"30분 전"}
+            마지막 접속: {latest}
           </div>
         </div>
         <div
@@ -207,7 +225,7 @@ export const VmStatusContainer: React.FC<VmStatusContainerProps> = ({
         </div>
       </div>
       <VmInformation
-        created_at="2020-09-15"
+        created_at={vm?.data.created_at || ""}
         css={css`
           padding-bottom: 47px;
         `}

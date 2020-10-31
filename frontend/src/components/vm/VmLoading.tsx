@@ -2,7 +2,11 @@
 import { css, jsx } from "@emotion/core";
 import vmLoadingGif from "./vm-loading-1.gif";
 
-export const VmLoading: React.FC = () => (
+export interface VmLoadingProps {
+  message: string;
+}
+
+export const VmLoading: React.FC<VmLoadingProps> = ({ message }) => (
   <div
     css={css`
       display: flex;
@@ -48,7 +52,7 @@ export const VmLoading: React.FC = () => (
         color: #878686;
       `}
     >
-      VM을 생성하는 중입니다.
+      {message}
     </div>
   </div>
 );
