@@ -29,13 +29,26 @@
 - Typescript
 - React.js
 - Emotion (CSS-in-JS)
+- SockJS with STOMP
 
 ### Infra/Cloud
 - Docker
 - OpenStack
 - OpenStack Heat
-- OpenStack Zun
-- OpenStack Keystone (for SAML SSO)
+- OpenStack Zun (dockerized containers) + Virtual-Kubelet
+- OpenStack Keystone
+- NGINX (reverse proxy)
+- Google Cloud DNS
+
+### Git
+- GitLab CE
+- Docker
+
+### Documentation
+- Docusaurus
+- React.js
+- GitHub Actions
+- GitHub Pages
 
 ## 팀 정보
 - [Chanyoung Oh](https://github.com/shydah)
