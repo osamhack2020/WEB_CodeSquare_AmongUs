@@ -23,17 +23,12 @@ module.exports = {
       items: [
         {
           User: [
-            'api/backend/user/user-api-intro',
             'api/backend/user/sign-up',
             'api/backend/user/sign-in',
             'api/backend/user/sign-out',
-            'api/backend/user/detail',
             'api/backend/user/refresh-token',
-            'api/backend/user/authorized'
           ],
         },
-        'api/backend/qna', 
-        'api/backend/vm', 'api/backend/magazine'
       ]
     },
     {
