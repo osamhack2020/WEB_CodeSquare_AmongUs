@@ -3,10 +3,10 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 export interface VmStatus {
   status: string;
   data: {
-    url: string;
-    created_at: string;
-    latest: string;
-  };
+    url: string | null;
+    created_at: string | null;
+    latest: string | null;
+  } | null;
 }
 
 export interface VmState {

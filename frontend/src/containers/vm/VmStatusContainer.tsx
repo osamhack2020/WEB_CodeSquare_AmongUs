@@ -1,7 +1,7 @@
 /** @jsx jsx */
 import { css, jsx } from "@emotion/core";
-import { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
+import { useCallback, useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router-dom";
 import SockJS from "sockjs-client";
 import { Stomp, CompatClient } from "@stomp/stompjs";
@@ -12,7 +12,7 @@ import { VmSettings } from "../../components/vm/VmSettings";
 import { RootState } from "../../modules";
 import { User } from "../../modules/core";
 import apiClient from "../../lib/api/apiClient";
-import { VmStatus } from "../../modules/vm";
+import vm, { VmStatus } from "../../modules/vm";
 import { formatDate } from "../../lib/utils";
 
 const StatusIcon: React.FC<{ status?: string }> = ({ status }) => {
@@ -36,13 +36,16 @@ const StatusIcon: React.FC<{ status?: string }> = ({ status }) => {
 };
 
 export const VmStatusContainer: React.FC = () => {
+  const dispatch = useDispatch();
   const history = useHistory();
-  const vm = useSelector<RootState, VmStatus | null>((state) => state.vm.vm);
+  const vmState = useSelector<RootState, VmStatus | null>(
+    (state) => state.vm.vm,
+  );
   useEffect(() => {
-    if (!vm) {
+    if (!vmState) {
       history.replace("/vm");
     }
-  }, [vm, history]);
+  }, [vmState, history]);
   const user = useSelector<RootState, User | null>((state) => state.core.user);
   useEffect(() => {
     if (!user) {
@@ -90,17 +93,28 @@ export const VmStatusContainer: React.FC = () => {
           }),
         });
       }, 5000);
-      const subId = client.subscribe("/send", (msg) => console.log(msg));
+      const subId = client.subscribe("/send", (msg) => {
+        try {
+          dispatch(vm.actions.setVm(JSON.parse(msg.body) as VmStatus));
+        } catch (e) {
+          dispatch(vm.actions.setVm(null));
+        }
+      });
       return () => {
         subId?.unsubscribe();
         clearInterval(timer);
       };
     }
-  }, [client, connected]);
+  }, [client, connected, dispatch]);
   let latest = "확인되지 않음";
   try {
-    latest = formatDate(vm?.data.latest || "");
+    latest = formatDate(vmState?.data?.latest || "");
   } catch {}
+  const onStartClick = useCallback(() => {
+    if (vmState?.data?.url) {
+      window.open(vmState.data.url);
+    }
+  }, [vmState]);
   return (
     <div
       css={css`
@@ -125,16 +139,16 @@ export const VmStatusContainer: React.FC = () => {
           display: flex;
         `}
       >
-        <StatusIcon status={vm?.status} />
+        <StatusIcon status={vmState?.status} />
         <div
           css={css`
             margin-left: 5px;
           `}
         >
-          {vm?.status === "ready" && "켜져 있음"}
-          {vm?.status === "loading" && "켜는 중"}
-          {vm?.status === "pause" && "일시 정지"}
-          {vm?.status === "error" && "오류"}
+          {vmState?.status === "ready" && "켜져 있음"}
+          {vmState?.status === "loading" && "켜는 중"}
+          {vmState?.status === "pause" && "일시 정지"}
+          {vmState?.status === "error" && "오류"}
         </div>
       </div>
       <div
@@ -193,6 +207,8 @@ export const VmStatusContainer: React.FC = () => {
           `}
         >
           <Button
+            disabled={vmState?.status !== "ready"}
+            onClick={onStartClick}
             css={css`
               font-size: 14px;
               font-style: normal;
@@ -225,7 +241,7 @@ export const VmStatusContainer: React.FC = () => {
         </div>
       </div>
       <VmInformation
-        created_at={vm?.data.created_at || ""}
+        created_at={vmState?.data?.created_at || ""}
         css={css`
           padding-bottom: 47px;
         `}
