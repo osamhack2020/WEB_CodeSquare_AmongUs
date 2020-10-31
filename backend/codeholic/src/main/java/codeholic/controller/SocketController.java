@@ -70,7 +70,7 @@ public class SocketController {
                     response.setMessage("vm 생성중");
                 }
                 result.getData().setCreated_at(status.getLaunch());
-                result.getData().setLateset(status.getTerminate());
+                result.getData().setLatest(status.getTerminate());
                 
             }else{
                 // vm 생성이 안됨
@@ -162,7 +162,7 @@ public class SocketController {
                     openStackApiService.afterCreate(authenticationToken, username);
                 }
                 result.getData().setCreated_at(status.getLaunch());
-                result.getData().setLateset(status.getTerminate());
+                result.getData().setLatest(status.getTerminate());
                 return result;
             }
         }catch(Exception e){
