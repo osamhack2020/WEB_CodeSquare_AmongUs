@@ -7,13 +7,17 @@ export interface VmInformationProps {
   created_at: string;
 }
 
-export const VmInformation: React.FC<VmInformationProps> = ({ created_at }) => {
+export const VmInformation: React.FC<VmInformationProps> = ({
+  created_at,
+  ...props
+}) => {
   return (
     <div
       css={css`
         width: 100%;
         min-width: 170px;
       `}
+      {...props}
     >
       <div
         css={css`
