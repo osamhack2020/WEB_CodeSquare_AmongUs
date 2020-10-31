@@ -1,5 +1,6 @@
 /** @jsx jsx */
 import { css, jsx } from "@emotion/core";
+import { WrapperLink } from "../../components/common/WrapperLink";
 import { Card } from "../../components/magazine/Card";
 import { formatDate } from "../../lib/utils";
 
@@ -43,7 +44,8 @@ export const MagazineHomeContainer: React.FC = () => (
         >
           FEATURED
         </div>
-        <div
+        <WrapperLink
+          to="/magazine/article/1"
           css={css`
             font-style: normal;
             font-weight: bold;
@@ -61,7 +63,7 @@ export const MagazineHomeContainer: React.FC = () => (
           `}
         >
           초보 개발자가 꼭 알아야 할 GitHub 협업 가이드
-        </div>
+        </WrapperLink>
         <div
           css={css`
             font-style: normal;
