@@ -38,6 +38,9 @@ const GlobalStyles = css`
     margin-top: 0;
     margin-bottom: 0.5rem;
   }
+  a {
+    text-decoration: none;
+  }
 `;
 
 export default GlobalStyles;

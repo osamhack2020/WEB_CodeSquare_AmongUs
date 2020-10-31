@@ -2,13 +2,10 @@ import { RegisterFormInput } from "../../components/auth/RegisterForm";
 // import decode from "jwt-decode";
 import apiClient from "./apiClient";
 
-export interface LoginResponse {
-  /** 로그인 성공 시 'success' */
+export interface ApiResponse<T> {
   response: string;
-  /** 로그인 메시지 */
   message: string;
-  /** accessToken */
-  data: string;
+  data: T;
 }
 
 export const register = async ({
@@ -19,7 +16,7 @@ export const register = async ({
   member_rank,
   dog_tags,
 }: RegisterFormInput) => {
-  const response = await apiClient.post<LoginResponse>("/user/signup", {
+  const response = await apiClient.post<ApiResponse<string>>("/user/signup", {
     username,
     password,
     member_group,
@@ -33,7 +30,7 @@ export const register = async ({
 };
 
 export const login = async (username: string, password: string) => {
-  const response = await apiClient.post<LoginResponse>("/user/signin", {
+  const response = await apiClient.post<ApiResponse<string>>("/user/signin", {
     username,
     password,
   });

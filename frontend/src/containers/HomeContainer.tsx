@@ -1,7 +1,7 @@
 /** @jsx jsx */
 import { css, jsx } from "@emotion/core";
-import format from "date-fns/format";
 import { ArrowButton } from "../components/common/ArrowButton";
+import { Card } from "../components/magazine/Card";
 
 const BranchSvg: React.FC = (props) => (
   <svg
@@ -54,83 +54,6 @@ const BranchSvg: React.FC = (props) => (
     />
     <path d="M209 457l-7.5 4.33v-8.66L209 457z" fill="#333" />
   </svg>
-);
-
-const Card: React.FC<{
-  src: string;
-  title: string;
-  source: string;
-  created_at: string;
-}> = ({ src, title, source, created_at, ...props }) => (
-  <div
-    css={css`
-      width: 265px;
-      display: flex;
-      flex-direction: column;
-    `}
-    {...props}
-  >
-    <div
-      css={css`
-        width: 265px;
-        height: 188px;
-        background-size: 265px 188px;
-        background-image: url(${src});
-        background-repeat: no-repeat;
-      `}
-    />
-    <div
-      css={css`
-        padding: 18px;
-        padding-top: 16px;
-        display: flex;
-        flex-direction: column;
-      `}
-    >
-      <div
-        css={css`
-          font-style: normal;
-          font-weight: bold;
-          font-size: 18px;
-          line-height: 26px;
-          letter-spacing: -0.02em;
-          text-align: left;
-          text-overflow: ellipsis;
-          word-break: break-word;
-          overflow-wrap: break-word;
-          display: -webkit-box;
-          -webkit-line-clamp: 2;
-          -webkit-box-orient: vertical;
-          overflow: hidden;
-
-          color: #242627;
-
-          padding-bottom: 18px;
-          display: flex;
-          flex-direction: column;
-        `}
-      >
-        {title}
-      </div>
-      <div
-        css={css`
-          font-style: normal;
-          font-weight: normal;
-          font-size: 12px;
-          line-height: 17px;
-          letter-spacing: -0.02em;
-
-          color: #85898b;
-
-          display: flex;
-          flex-direction: column;
-        `}
-      >
-        <div>{source}</div>
-        <div>{format(new Date(created_at), "yyyy.MM.dd")}</div>
-      </div>
-    </div>
-  </div>
 );
 
 export const HomeContainer: React.FC = () => {
@@ -518,7 +441,7 @@ export const HomeContainer: React.FC = () => {
             </div>
           </div>
           <ArrowButton
-            to="/"
+            to="/magazine"
             css={css`
               align-self: flex-end;
               margin-bottom: 36px;
@@ -536,25 +459,29 @@ export const HomeContainer: React.FC = () => {
             `}
           >
             <Card
-              src="content-1.png"
-              title="Python 3.10.0a1 Documentation"
-              source="Python Software Foundation"
+              id="1"
+              src="magazine-1.png"
+              title="초보 개발자가 꼭 알아야 할 GitHub 협업 가이드"
+              source="Luavis Dev Story"
               created_at="2020-10-16"
             />
             <Card
-              src="content-2.png"
+              id="2"
+              src="magazine-3.png"
               title="WebXR Device API를 이용한 웹 AR 구현, 그 한계와 대안"
               source="NAVER D2 Hello World"
               created_at="2020-10-16"
             />
             <Card
-              src="content-3.png"
+              id="3"
+              src="magazine-4.png"
               title="2020년과 이후 JavaScript의 동향 - WebAssembly"
               source="NAVER D2 Hello World"
               created_at="2020-09-02"
             />
             <Card
-              src="content-4.png"
+              id="4"
+              src="magazine-5.png"
               title="TypeScript 환경에서 Redux를 프로처럼 사용하기"
               source="velopert.log"
               created_at="2020-10-16"

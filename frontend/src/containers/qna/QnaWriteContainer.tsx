@@ -13,7 +13,7 @@ export const QnaWriteContainer: React.FC = ({ ...props }) => {
   const [text, setText] = useState("");
   const onSubmit = useCallback(async () => {
     const post = await writePost(text, title, tags);
-    history.push(`/qna/${post.id}`);
+    history.replace(`/qna/${post.id}`);
   }, [history, text, title, tags]);
   return (
     <QnaWriteForm

@@ -77,7 +77,9 @@ export const Header: React.FC<HeaderProps> = ({ user, onLogout, ...props }) => {
           <div>
             <WrapperLink to="/qna">Q&A</WrapperLink>
           </div>
-          <div>Magazine</div>
+          <div>
+            <WrapperLink to="/magazine">Magazine</WrapperLink>
+          </div>
           <div>GitLab</div>
         </div>
         <VerticalDivider
